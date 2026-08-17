@@ -76,13 +76,3 @@ This repository contains the complete implementation for **Student 1 (Gateway Le
 
 ---
 
-## 📸 Screenshots Needed for Final Report (Student 1)
-
-Take screenshots of the following for your report PDF:
-1. **Docker Running**: Screenshot of Docker Desktop or PowerShell showing `docker compose up` running without errors.
-2. **Swagger UI**: Open `http://localhost:8080/swagger-ui.html` in browser showing all endpoints (`/auth/register`, `/auth/login`, `/users/profile`, etc.).
-3. **Postman Register (`POST /auth/register`)**: Response showing status `201 Created` with JWT token and API Key.
-4. **Postman Login (`POST /auth/login`)**: Response showing status `200 OK` with token.
-5. **Postman Get Profile (`GET /users/profile`)**: Response showing user details with `Authorization: Bearer <token>` header.
-6. **Postman Rate Limiting Test**: Send request 11 times quickly to see `429 Too Many Requests`.
-7. **Postman API Key Test**: Remove `X-API-KEY` header to show `401 Unauthorized` response.
