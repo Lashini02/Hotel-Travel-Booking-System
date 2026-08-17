@@ -1,0 +1,25 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: auth-gateway-service
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/soc_auth_db}
+
+jwt:
+  # Base64 encoded secret key (min 256 bits)
+  secret: SOC_PROJECT_STUDENT_1_VERY_SECRET_KEY_FOR_JWT_TOKEN_SIGNING_2026
+  expirationMs: 86400000 # 24 Hours
+
+apikey:
+  header: X-API-KEY
+  secret: SOC-SECRET-API-KEY-2026
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
