@@ -99,14 +99,3 @@ If the header is missing or incorrect, the service returns:
 
 ---
 
-## 🧪 Testing with Postman
-
-1. Open Postman.
-2. Click **Import** -> Select file `Hotel_Room_Service.postman_collection.json`.
-3. Execute any request in the collection! The header `X-API-KEY` is already pre-configured.
-
----
-
-## 📄 Final Report Documentation Guide
-For step-by-step instructions on what screenshots to take and what text to copy into your PDF assignment report, open:
-`STUDENT_2_REPORT_GUIDE.md`
