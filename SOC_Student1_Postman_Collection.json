@@ -1,0 +1,213 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "SOC Student 1 - API Gateway & Auth Service",
+		"description": "Postman Collection for testing Student 1 Microservice API endpoints (Auth, User Profile, OAuth/JWT, Rate Limiting, API Key Security)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_api_key",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Auth - Register User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"if (jsonData.token) {",
+							"    pm.collectionVariables.set(\"jwt_token\", jsonData.token);",
+							"    pm.collectionVariables.set(\"user_api_key\", jsonData.apiKey);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-API-KEY",
+						"value": "SOC-SECRET-API-KEY-2026"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"username\": \"student1_user\",\n  \"email\": \"student1@example.com\",\n  \"password\": \"Secret123!\",\n  \"fullName\": \"Kasun Perera\",\n  \"phone\": \"+94771234567\",\n  \"address\": \"Colombo, Sri Lanka\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8085/auth/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"auth",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. Auth - Login User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"if (jsonData.token) {",
+							"    pm.collectionVariables.set(\"jwt_token\", jsonData.token);",
+							"    pm.collectionVariables.set(\"user_api_key\", jsonData.apiKey);",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "X-API-KEY",
+						"value": "SOC-SECRET-API-KEY-2026"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"emailOrUsername\": \"student1_user\",\n  \"password\": \"Secret123!\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8085/auth/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. User - Get Profile (Secured)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "X-API-KEY",
+						"value": "SOC-SECRET-API-KEY-2026"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8085/users/profile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"users",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. User - Update Profile (Secured)",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					},
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "X-API-KEY",
+						"value": "SOC-SECRET-API-KEY-2026"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"fullName\": \"Kasun Perera (Updated)\",\n  \"phone\": \"+94779998888\",\n  \"address\": \"Kandy, Sri Lanka\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8085/users/profile",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"users",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5. Auth - Validate JWT Token",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{jwt_token}}"
+					},
+					{
+						"key": "X-API-KEY",
+						"value": "SOC-SECRET-API-KEY-2026"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8085/auth/validate",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8085",
+					"path": [
+						"auth",
+						"validate"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
