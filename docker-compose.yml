@@ -1,0 +1,38 @@
+services:
+  # MongoDB Database Service
+  mongodb:
+    image: mongo:6.0
+    container_name: soc-mongodb
+    restart: always
+    ports:
+      - "27019:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=soc_auth_db
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - soc-network
+
+  # Student 1: Gateway & Auth Microservice
+  auth-gateway-service:
+    build:
+      context: ./auth-gateway-service
+      dockerfile: Dockerfile
+    image: soc-auth-gateway-service:1.0
+    container_name: soc-auth-gateway-service
+    restart: always
+    ports:
+      - "8085:8080"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/soc_auth_db
+    depends_on:
+      - mongodb
+    networks:
+      - soc-network
+
+networks:
+  soc-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
