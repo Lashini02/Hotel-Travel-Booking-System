@@ -1,0 +1,284 @@
+{
+	"info": {
+		"_postman_id": "a2b3c4d5-6789-4100-9abc-def012345678",
+		"name": "SOC Student 2 - Hotel & Room Service API",
+		"description": "Complete Postman Collection for Student 2 (Hotel & Room Service Microservice).\nIncludes API Key authentication headers, CRUD operations for Hotels and Rooms, availability management, and error handling tests.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Hotels Management",
+			"item": [
+				{
+					"name": "GET All Hotels",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "hotel-service-secret-key-123",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8082/api/v1/hotels",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"v1",
+								"hotels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET Hotels Filtered by Location (Colombo)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "hotel-service-secret-key-123",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8082/api/v1/hotels?location=Colombo",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"v1",
+								"hotels"
+							],
+							"query": [
+								{
+									"key": "location",
+									"value": "Colombo"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Create New Hotel (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "hotel-service-secret-key-123",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Ella Cloud View Resort\",\n  \"description\": \"Stunning mountain boutique hotel near Nine Arch Bridge.\",\n  \"location\": \"Ella\",\n  \"address\": \"15 Waterfall Road, Ella\",\n  \"rating\": 4.9,\n  \"amenities\": [\"WiFi\", \"Infinity Pool\", \"Breakfast Included\", \"Mountain View\"],\n  \"contactEmail\": \"booking@ellacloudview.com\",\n  \"contactPhone\": \"+94572234999\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/v1/hotels",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"v1",
+								"hotels"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Hotel Details",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "hotel-service-secret-key-123",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Grand Palace Hotel & Luxury Spa\",\n  \"rating\": 4.9\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/v1/hotels/REPLACE_WITH_HOTEL_ID",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"v1",
+								"hotels",
+								"REPLACE_WITH_HOTEL_ID"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. Room & Availability Management",
+			"item": [
+				{
+					"name": "GET Rooms for a Hotel",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "hotel-service-secret-key-123",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8082/api/v1/hotels/REPLACE_WITH_HOTEL_ID/rooms",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"v1",
+								"hotels",
+								"REPLACE_WITH_HOTEL_ID",
+								"rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST Add Room to Hotel",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "hotel-service-secret-key-123",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"roomNumber\": \"305\",\n  \"roomType\": \"DELUXE\",\n  \"pricePerNight\": 180.00,\n  \"capacity\": 2,\n  \"available\": true,\n  \"description\": \"Panoramic mountain view deluxe suite with private terrace.\",\n  \"features\": [\"King Bed\", \"Balcony\", \"AC\", \"Bathtub\"]\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/v1/hotels/REPLACE_WITH_HOTEL_ID/rooms",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"v1",
+								"hotels",
+								"REPLACE_WITH_HOTEL_ID",
+								"rooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT Update Room Availability Status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "hotel-service-secret-key-123",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"available\": false\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/v1/rooms/REPLACE_WITH_ROOM_ID/availability",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"v1",
+								"rooms",
+								"REPLACE_WITH_ROOM_ID",
+								"availability"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "3. Security Verification Tests",
+			"item": [
+				{
+					"name": "UNAUTHORIZED - GET Hotels Without API Key (401 Check)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8082/api/v1/hotels",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8082",
+							"path": [
+								"api",
+								"v1",
+								"hotels"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

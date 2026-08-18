@@ -1,0 +1,21 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: hotel-room-service
+  data:
+    mongodb:
+      host: ${SPRING_DATA_MONGODB_HOST:localhost}
+      port: ${SPRING_DATA_MONGODB_PORT:27017}
+      database: ${SPRING_DATA_MONGODB_DATABASE:hotel_db}
+
+security:
+  api-key: ${SECURITY_API_KEY:hotel-service-secret-key-123}
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
