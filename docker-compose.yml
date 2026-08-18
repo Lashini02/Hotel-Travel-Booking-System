@@ -7,7 +7,7 @@ services:
     container_name: hotel_mongodb
     restart: always
     ports:
-      - "27017:27017"
+      - "27018:27017"  # Host Port 27018 mapped to Container Port 27017 (Avoids conflict with local Windows mongod.exe)
     environment:
       - MONGO_INITDB_DATABASE=reservation_db
     volumes:
