@@ -1,0 +1,132 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+		"name": "SOC - Review & Rating Service",
+		"description": "Postman collection for Student 4 - Review & Rating Service",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Add Review",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-KEY",
+						"value": "soc-secret-key-12345",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"hotelId\": \"HOTEL-001\",\r\n    \"userId\": \"USER-123\",\r\n    \"rating\": 5,\r\n    \"comment\": \"Excellent stay, very clean!\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8084/reviews",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"reviews"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. Get Reviews by Hotel ID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-API-KEY",
+						"value": "soc-secret-key-12345",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8084/reviews/hotel/HOTEL-001",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"reviews",
+						"hotel",
+						"HOTEL-001"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. Update Review",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "X-API-KEY",
+						"value": "soc-secret-key-12345",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"rating\": 4,\r\n    \"comment\": \"Good, but room service was a bit slow.\"\r\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8084/reviews/PLACE_REVIEW_ID_HERE",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"reviews",
+						"PLACE_REVIEW_ID_HERE"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. Delete Review (Moderation)",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "X-API-KEY",
+						"value": "soc-secret-key-12345",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8084/reviews/PLACE_REVIEW_ID_HERE",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8084",
+					"path": [
+						"reviews",
+						"PLACE_REVIEW_ID_HERE"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
