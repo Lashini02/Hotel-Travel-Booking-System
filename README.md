@@ -38,8 +38,9 @@ Using Docker (Recommended for Submission)
 1. Open Docker Desktop on your computer.
 2. Open PowerShell / Terminal in the project root folder.
 3. Run the following command:
-Bash - 
+```bash
 docker compose up --build
+``` 
 4. Docker will download MongoDB and build notification-offer-service.
 5. Access Swagger UI in your browser: http://localhost:8085/swagger-ui/index.html
 
