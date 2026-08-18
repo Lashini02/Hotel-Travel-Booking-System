@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # MongoDB Database Service for Reservation Service
+  mongodb:
+    image: mongo:6.0
+    container_name: hotel_mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=reservation_db
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - hotel-network
+
+  # Student 3: Reservation Microservice
+  reservation-service:
+    build:
+      context: ./reservation-service
+      dockerfile: Dockerfile
+    container_name: reservation_service
+    restart: always
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/reservation_db
+      - SERVICE_API_KEY=reservation-secret-api-key-12345
+    depends_on:
+      - mongodb
+    networks:
+      - hotel-network
+
+networks:
+  hotel-network:
+    driver: bridge
+
+volumes:
+  mongo_data:
