@@ -1,0 +1,203 @@
+{
+	"info": {
+		"_postman_id": "a3b4c5d6-1234-4321-9876-abcdef123456",
+		"name": "SOC - Student 3 (Reservation Service)",
+		"description": "Postman Collection for testing Student 3 Reservation Microservice Endpoints & API Key Security",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8083",
+			"type": "string"
+		},
+		{
+			"key": "apiKey",
+			"value": "reservation-secret-api-key-12345",
+			"type": "string"
+		},
+		{
+			"key": "reservationId",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Create Reservation (POST)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var jsonData = pm.response.json();",
+							"if (jsonData.id) {",
+							"    pm.collectionVariables.set('reservationId', jsonData.id);",
+							"    console.log('Saved reservationId: ' + jsonData.id);",
+							"}",
+							"pm.test('Status code is 201 Created', function () {",
+							"    pm.response.to.have.status(201);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-API-KEY",
+						"value": "{{apiKey}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"userId\": \"user_101\",\n  \"hotelId\": \"hotel_55\",\n  \"hotelName\": \"Grand Hyatt Luxury Resort\",\n  \"roomId\": \"room_302\",\n  \"roomType\": \"Deluxe Sea View Suite\",\n  \"checkInDate\": \"2026-09-01\",\n  \"checkOutDate\": \"2026-09-05\",\n  \"guestName\": \"John Doe\",\n  \"guestEmail\": \"johndoe@example.com\",\n  \"numberOfGuests\": 2,\n  \"totalPrice\": 450.00\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/reservations",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"reservations"
+					]
+				},
+				"description": "Creates a new reservation with stay dates, guest details and hotel information."
+			},
+			"response": []
+		},
+		{
+			"name": "2. Get Reservation By ID (GET)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-API-KEY",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/reservations/{{reservationId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"reservations",
+						"{{reservationId}}"
+					]
+				},
+				"description": "Retrieves reservation details using unique reservation ID."
+			},
+			"response": []
+		},
+		{
+			"name": "3. Get User Booking History (GET)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-API-KEY",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/reservations/user/user_101",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"reservations",
+						"user",
+						"user_101"
+					]
+				},
+				"description": "Retrieves all bookings made by a specific user."
+			},
+			"response": []
+		},
+		{
+			"name": "4. Cancel Reservation (PATCH)",
+			"request": {
+				"method": "PATCH",
+				"header": [
+					{
+						"key": "X-API-KEY",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/reservations/{{reservationId}}/cancel",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"reservations",
+						"{{reservationId}}",
+						"cancel"
+					]
+				},
+				"description": "Cancels an existing reservation and changes status to CANCELLED."
+			},
+			"response": []
+		},
+		{
+			"name": "5. Get All Reservations (GET)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-API-KEY",
+						"value": "{{apiKey}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/reservations",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"reservations"
+					]
+				},
+				"description": "Returns full list of all reservations."
+			},
+			"response": []
+		},
+		{
+			"name": "6. Security Check - Invalid API Key (401 Error)",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-API-KEY",
+						"value": "invalid-key-test",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/reservations",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"reservations"
+					]
+				},
+				"description": "Tests API Key security enforcement. Should return 401 Unauthorized."
+			},
+			"response": []
+		}
+	]
+}
