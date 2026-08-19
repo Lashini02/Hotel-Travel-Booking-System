@@ -51,6 +51,11 @@ services:
     restart: always
     ports:
       - "8083:8083"
+    environment:
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/reservation_db
+      - SERVICE_API_KEY=reservation-secret-api-key-12345
+    depends_on:
+      - mongodb
     networks:
       - soc-network
 
