@@ -152,27 +152,27 @@
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-3">
                     <li class="nav-item">
                         <a class="nav-link nav-link-custom active" id="nav-hotels" href="#catalog-section" onclick="switchSection('catalog-section')">
-                            <i class="fa-solid fa-compass me-1"></i> Explore Hotels
+                            <i class="fa-solid fa-compass me-1"></i> Explore Hotels (Student 2)
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link nav-link-custom" id="nav-bookings" href="#bookings-section" onclick="switchSection('bookings-section')">
-                            <i class="fa-solid fa-suitcase me-1"></i> My Bookings
+                            <i class="fa-solid fa-suitcase me-1"></i> My Bookings (Student 3)
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link nav-link-custom" id="nav-auth" href="#auth-section" onclick="switchSection('auth-section')">
-                            <i class="fa-solid fa-key me-1"></i> Account & Profile
+                            <i class="fa-solid fa-key me-1"></i> Account & Profile (Student 1)
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link nav-link-custom" id="nav-reviews" href="#reviews-section" onclick="switchSection('reviews-section')">
-                            <i class="fa-solid fa-star me-1"></i> Guest Reviews
+                            <i class="fa-solid fa-star me-1"></i> Guest Reviews (Student 4)
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link nav-link-custom" id="nav-offers" href="#offers-section" onclick="switchSection('offers-section')">
-                            <i class="fa-solid fa-gift me-1"></i> Offers & Rewards
+                            <i class="fa-solid fa-gift me-1"></i> Offers & Rewards (Student 5)
                         </a>
                     </li>
                 </ul>
@@ -240,11 +240,11 @@
         <section id="catalog-section" class="content-section">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
-                    <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-building text-success me-2"></i> Featured Hotels & Room Availability</h2>
+                    <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-building text-success me-2"></i> Featured Hotels & Room Availability (Student 2)</h2>
                     <p class="text-muted mb-0">Browse luxury hotel property listings, amenities, and room rate categories.</p>
                 </div>
                 <div>
-                    <button class="btn btn-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addHotelModal">
+                    <button class="btn btn-success btn-sm me-2" onclick="openAddHotelModal()">
                         <i class="fa-solid fa-plus me-1"></i> Add Hotel Property (`POST /api/v1/hotels`)
                     </button>
                     <button class="btn btn-outline-dark btn-sm" onclick="fetchLiveHotels()"><i class="fa-solid fa-rotate me-1"></i> Refresh Catalog</button>
@@ -263,7 +263,7 @@
             <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-suitcase text-primary me-2"></i> Stay Reservations & History</h2>
+                        <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-suitcase text-primary me-2"></i> Stay Reservations & History (Student 3)</h2>
                         <p class="text-muted mb-0">Manage active hotel stay bookings, check-in dates, and process cancellation refunds.</p>
                     </div>
                     <div>
@@ -301,7 +301,7 @@
         <!-- SECTION 0: DIRECT ON-PAGE AUTH & USER PROFILE MANAGEMENT (STUDENT 1) -->
         <section id="auth-section" class="content-section d-none">
             <div class="mb-4">
-                <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-user-shield text-primary me-2"></i> User Registration, Login & Profile Management</h2>
+                <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-user-shield text-primary me-2"></i> User Registration, Login & Profile Management (Student 1)</h2>
                 <p class="text-muted mb-0">Create an account, authenticate to obtain JWT OAuth 2.0 tokens, and update profile credentials.</p>
             </div>
 
@@ -396,7 +396,7 @@
             <div class="row">
                 <div class="col-lg-5 mb-4">
                     <div class="card border-0 shadow-sm rounded-4 p-4">
-                        <h3 class="fw-bold text-dark mb-3"><i class="fa-solid fa-pen-to-square text-warning me-2"></i> Share Your Experience</h3>
+                        <h3 class="fw-bold text-dark mb-3"><i class="fa-solid fa-pen-to-square text-warning me-2"></i> Share Your Experience (Student 4)</h3>
                         <form onsubmit="handleReviewSubmit(event)">
                             <div class="mb-3">
                                 <label class="form-label text-muted small fw-bold">Select Hotel</label>
@@ -441,7 +441,7 @@
             <div class="row">
                 <div class="col-lg-6 mb-4">
                     <div class="card border-0 shadow-sm rounded-4 p-4">
-                        <h3 class="fw-bold text-dark mb-3"><i class="fa-solid fa-tags text-danger me-2"></i> Redeem Promo Code</h3>
+                        <h3 class="fw-bold text-dark mb-3"><i class="fa-solid fa-tags text-danger me-2"></i> Redeem Promo Code (Student 5)</h3>
                         <p class="text-muted small">Apply active promotional coupons to calculate instant discount savings.</p>
                         <form onsubmit="handlePromoValidation(event)">
                             <div class="mb-3">
@@ -607,10 +607,12 @@
 
         // On Load Initialization
         document.addEventListener('DOMContentLoaded', () => {
-            fetchLiveHotels();
-            fetchLiveReservations();
+            renderHotels();
+            renderBookings();
             renderReviews();
             updateSessionUI();
+            fetchLiveHotels();
+            fetchLiveReservations();
 
             // Set default checkin date
             const tomorrow = new Date();
@@ -618,6 +620,25 @@
             if(document.getElementById('modalCheckIn')) document.getElementById('modalCheckIn').value = tomorrow.toISOString().split('T')[0];
             if(document.getElementById('searchCheckIn')) document.getElementById('searchCheckIn').value = tomorrow.toISOString().split('T')[0];
         });
+
+        // Safe Modal Helper
+        function hideModal(modalId) {
+            try {
+                const el = document.getElementById(modalId);
+                if (!el) return;
+                const modal = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
+                if (modal) modal.hide();
+            } catch(e) {}
+        }
+
+        function showModal(modalId) {
+            try {
+                const el = document.getElementById(modalId);
+                if (!el) return;
+                const modal = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
+                if (modal) modal.show();
+            } catch(e) {}
+        }
 
         // Navigation Section Switcher
         function switchSection(sectionId) {
@@ -696,13 +717,17 @@
             `).join('');
         }
 
+        function openAddHotelModal() {
+            showModal('addHotelModal');
+        }
+
         async function handleAddHotelSubmit(e) {
             e.preventDefault();
-            const name = getInputValue('addHotelName');
-            const location = getInputValue('addHotelLocation');
+            const name = getInputValue('addHotelName', 'Luxury Beach Resort');
+            const location = getInputValue('addHotelLocation', 'Bentota');
             const rating = parseFloat(getInputValue('addHotelRating', '4.8'));
-            const address = getInputValue('addHotelAddress');
-            const contactEmail = getInputValue('addHotelEmail');
+            const address = getInputValue('addHotelAddress', 'Beach Road, Bentota');
+            const contactEmail = getInputValue('addHotelEmail', 'info@resort.com');
 
             try {
                 const res = await fetch(`${API_HOTEL}/api/v1/hotels`, {
@@ -723,7 +748,7 @@
             hotelsData.unshift({ id: 'H' + (hotelsData.length + 101), name, location, rating, price: 175, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80', address, contactEmail });
             renderHotels();
 
-            bootstrap.Modal.getInstance(document.getElementById('addHotelModal')).hide();
+            hideModal('addHotelModal');
             alert('🎉 Hotel property "' + name + '" added to catalog!');
         }
 
@@ -776,8 +801,7 @@
         }
 
         function openNewBookingModal() {
-            const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
-            modal.show();
+            showModal('bookingModal');
         }
 
         function openBookingModal(hotelId, hotelName) {
@@ -789,8 +813,7 @@
                 if(document.getElementById('modalGuestEmail')) document.getElementById('modalGuestEmail').value = currentUserData.email || 'guest@example.com';
             }
 
-            const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
-            modal.show();
+            showModal('bookingModal');
         }
 
         async function handleModalBookingSubmit(e) {
@@ -836,7 +859,7 @@
             bookingsData.unshift({ id: newResId, hotelName, roomType, checkIn: checkInDate, checkOut: checkOutDate, guestName, price: 450, status: 'CONFIRMED' });
             renderBookings();
 
-            bootstrap.Modal.getInstance(document.getElementById('bookingModal')).hide();
+            hideModal('bookingModal');
             switchSection('bookings-section');
 
             alert('🎉 Stay Booking Confirmed! Code: ' + newResId);
