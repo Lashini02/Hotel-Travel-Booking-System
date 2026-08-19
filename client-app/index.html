@@ -778,8 +778,10 @@
             // Set default checkin date
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
-            document.getElementById('modalCheckIn').value = tomorrow.toISOString().split('T')[0];
-            document.getElementById('searchCheckIn').value = tomorrow.toISOString().split('T')[0];
+            const modalCheckIn = document.getElementById('modalCheckIn');
+            if (modalCheckIn) modalCheckIn.value = tomorrow.toISOString().split('T')[0];
+            const searchCheckIn = document.getElementById('searchCheckIn');
+            if (searchCheckIn) searchCheckIn.value = tomorrow.toISOString().split('T')[0];
         });
 
         // Fetch Live Hotels from Backend API (Student 2 Service / Gateway)
@@ -1016,7 +1018,7 @@
             `).join('');
         }
 
-        // Resilient Modal Toggle Helpers
+        // Resilient Modal Toggle Helpers (With Automatic Dark Backdrop Overlay)
         function showModalById(id) {
             const el = document.getElementById(id);
             if (!el) return;
@@ -1030,8 +1032,20 @@
             } catch (e) {
                 console.log('Bootstrap Modal fallback:', e);
             }
+
             el.classList.add('show');
             el.style.display = 'block';
+            el.setAttribute('aria-modal', 'true');
+            el.removeAttribute('aria-hidden');
+            document.body.classList.add('modal-open');
+
+            let backdrop = document.getElementById('auraModalBackdrop');
+            if (!backdrop) {
+                backdrop = document.createElement('div');
+                backdrop.id = 'auraModalBackdrop';
+                backdrop.className = 'modal-backdrop fade show';
+                document.body.appendChild(backdrop);
+            }
         }
 
         function hideModalById(id) {
@@ -1043,8 +1057,17 @@
                     if (instance) instance.hide();
                 }
             } catch (e) {}
+
             el.classList.remove('show');
             el.style.display = 'none';
+            el.setAttribute('aria-hidden', 'true');
+            el.removeAttribute('aria-modal');
+            document.body.classList.remove('modal-open');
+
+            const backdrop = document.getElementById('auraModalBackdrop');
+            if (backdrop) backdrop.remove();
+
+            document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
         }
 
         // -------------------------------------------------------------
