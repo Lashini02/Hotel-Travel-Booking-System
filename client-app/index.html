@@ -10,6 +10,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <!-- Bootstrap JS included in Head for instant availability -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
+
     <style>
         :root {
             --primary: #0f172a;
@@ -53,6 +56,7 @@
             font-weight: 500;
             padding: 8px 18px !important;
             border-radius: 8px;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
         .nav-link-custom:hover, .nav-link-custom.active {
@@ -144,34 +148,34 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg sticky-top navbar-aura shadow">
         <div class="container">
-            <a class="navbar-brand" href="#"><i class="fa-solid fa-crown me-2 text-warning"></i>AURA <span>HOTELS</span></a>
+            <a class="navbar-brand" href="javascript:void(0)" onclick="switchSection('catalog-section')"><i class="fa-solid fa-crown me-2 text-warning"></i>AURA <span>HOTELS</span></a>
             <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#auraNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="auraNav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-3">
                     <li class="nav-item">
-                        <a class="nav-link nav-link-custom active" id="nav-hotels" href="#catalog-section" onclick="switchSection('catalog-section')">
+                        <a class="nav-link nav-link-custom active" id="nav-hotels" onclick="switchSection('catalog-section')">
                             <i class="fa-solid fa-compass me-1"></i> Explore Hotels (Student 2)
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-link-custom" id="nav-bookings" href="#bookings-section" onclick="switchSection('bookings-section')">
+                        <a class="nav-link nav-link-custom" id="nav-bookings" onclick="switchSection('bookings-section')">
                             <i class="fa-solid fa-suitcase me-1"></i> My Bookings (Student 3)
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-link-custom" id="nav-auth" href="#auth-section" onclick="switchSection('auth-section')">
+                        <a class="nav-link nav-link-custom" id="nav-auth" onclick="switchSection('auth-section')">
                             <i class="fa-solid fa-key me-1"></i> Account & Profile (Student 1)
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-link-custom" id="nav-reviews" href="#reviews-section" onclick="switchSection('reviews-section')">
+                        <a class="nav-link nav-link-custom" id="nav-reviews" onclick="switchSection('reviews-section')">
                             <i class="fa-solid fa-star me-1"></i> Guest Reviews (Student 4)
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link nav-link-custom" id="nav-offers" href="#offers-section" onclick="switchSection('offers-section')">
+                        <a class="nav-link nav-link-custom" id="nav-offers" onclick="switchSection('offers-section')">
                             <i class="fa-solid fa-gift me-1"></i> Offers & Rewards (Student 5)
                         </a>
                     </li>
@@ -182,7 +186,7 @@
                     <div id="navUserDisplay" class="me-3 text-end d-none">
                         <div class="text-white fw-bold small" id="navUsername">User</div>
                     </div>
-                    <button id="navAuthBtn" class="btn btn-accent btn-sm" onclick="switchSection('auth-section')">
+                    <button id="navAuthBtn" type="button" class="btn btn-accent btn-sm" onclick="switchSection('auth-section')">
                         <i class="fa-solid fa-user me-1"></i> Sign In / Register
                     </button>
                 </div>
@@ -244,10 +248,10 @@
                     <p class="text-muted mb-0">Browse luxury hotel property listings, amenities, and room rate categories.</p>
                 </div>
                 <div>
-                    <button class="btn btn-success btn-sm me-2" onclick="openAddHotelModal()">
+                    <button type="button" class="btn btn-success btn-sm me-2" onclick="openAddHotelModal()">
                         <i class="fa-solid fa-plus me-1"></i> Add Hotel Property (`POST /api/v1/hotels`)
                     </button>
-                    <button class="btn btn-outline-dark btn-sm" onclick="fetchLiveHotels()"><i class="fa-solid fa-rotate me-1"></i> Refresh Catalog</button>
+                    <button type="button" class="btn btn-outline-dark btn-sm" onclick="fetchLiveHotels()"><i class="fa-solid fa-rotate me-1"></i> Refresh Catalog</button>
                 </div>
             </div>
 
@@ -267,10 +271,10 @@
                         <p class="text-muted mb-0">Manage active hotel stay bookings, check-in dates, and process cancellation refunds.</p>
                     </div>
                     <div>
-                        <button class="btn btn-primary btn-sm me-2" onclick="openNewBookingModal()">
+                        <button type="button" class="btn btn-primary btn-sm me-2" onclick="openNewBookingModal()">
                             <i class="fa-solid fa-calendar-plus me-1"></i> New Booking (`POST /reservations`)
                         </button>
-                        <button class="btn btn-outline-dark btn-sm" onclick="fetchLiveReservations()"><i class="fa-solid fa-rotate me-1"></i> Refresh History</button>
+                        <button type="button" class="btn btn-outline-dark btn-sm" onclick="fetchLiveReservations()"><i class="fa-solid fa-rotate me-1"></i> Refresh History</button>
                     </div>
                 </div>
 
@@ -486,7 +490,7 @@
             <div class="modal-content border-0 shadow-lg rounded-4">
                 <div class="modal-header bg-dark text-white rounded-top-4">
                     <h5 class="modal-title font-serif"><i class="fa-solid fa-building-circle-check me-2 text-warning"></i>Add New Hotel Property (Student 2 API)</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" onclick="hideModal('addHotelModal')"></button>
                 </div>
                 <div class="modal-body p-4">
                     <form onsubmit="handleAddHotelSubmit(event)">
@@ -525,7 +529,7 @@
             <div class="modal-content border-0 shadow-lg rounded-4">
                 <div class="modal-header bg-dark text-white rounded-top-4">
                     <h5 class="modal-title font-serif" id="modalHotelTitle">Confirm Luxury Booking (Student 3 API)</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close btn-close-white" onclick="hideModal('bookingModal')"></button>
                 </div>
                 <div class="modal-body p-4">
                     <form onsubmit="handleModalBookingSubmit(event)">
@@ -571,9 +575,6 @@
             <p class="extra-small text-muted mb-0">&copy; 2026 AURA Travel Ecosystem. All rights reserved.</p>
         </div>
     </footer>
-
-    <!-- Bootstrap 5 JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
 
     <!-- Application Script -->
     <script>
@@ -621,36 +622,63 @@
             if(document.getElementById('searchCheckIn')) document.getElementById('searchCheckIn').value = tomorrow.toISOString().split('T')[0];
         });
 
-        // Safe Modal Helper
-        function hideModal(modalId) {
-            try {
-                const el = document.getElementById(modalId);
-                if (!el) return;
-                const modal = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
-                if (modal) modal.hide();
-            } catch(e) {}
-        }
-
+        // 100% Reliable Modal Show / Hide (Works with or without Bootstrap JS)
         function showModal(modalId) {
             try {
                 const el = document.getElementById(modalId);
                 if (!el) return;
-                const modal = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
-                if (modal) modal.show();
-            } catch(e) {}
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    const modal = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
+                    if (modal) { modal.show(); return; }
+                }
+                // Pure DOM Fallback
+                el.classList.add('show');
+                el.style.display = 'block';
+                document.body.classList.add('modal-open');
+                let backdrop = document.getElementById('custom-modal-backdrop');
+                if (!backdrop) {
+                    backdrop = document.createElement('div');
+                    backdrop.id = 'custom-modal-backdrop';
+                    backdrop.className = 'modal-backdrop fade show';
+                    document.body.appendChild(backdrop);
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        function hideModal(modalId) {
+            try {
+                const el = document.getElementById(modalId);
+                if (!el) return;
+                if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+                    const modal = bootstrap.Modal.getInstance(el);
+                    if (modal) { modal.hide(); return; }
+                }
+                // Pure DOM Fallback
+                el.classList.remove('show');
+                el.style.display = 'none';
+                document.body.classList.remove('modal-open');
+                const backdrop = document.getElementById('custom-modal-backdrop');
+                if (backdrop) backdrop.remove();
+                document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+            } catch(e) {
+                console.error(e);
+            }
         }
 
         // Navigation Section Switcher
         function switchSection(sectionId) {
             document.querySelectorAll('.content-section').forEach(el => el.classList.add('d-none'));
-            document.getElementById(sectionId).classList.remove('d-none');
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) targetSection.classList.remove('d-none');
 
             document.querySelectorAll('.nav-link-custom').forEach(el => el.classList.remove('active'));
-            if(sectionId === 'auth-section') document.getElementById('nav-auth').classList.add('active');
-            if(sectionId === 'catalog-section') document.getElementById('nav-hotels').classList.add('active');
-            if(sectionId === 'bookings-section') document.getElementById('nav-bookings').classList.add('active');
-            if(sectionId === 'reviews-section') document.getElementById('nav-reviews').classList.add('active');
-            if(sectionId === 'offers-section') document.getElementById('nav-offers').classList.add('active');
+            if(sectionId === 'auth-section' && document.getElementById('nav-auth')) document.getElementById('nav-auth').classList.add('active');
+            if(sectionId === 'catalog-section' && document.getElementById('nav-hotels')) document.getElementById('nav-hotels').classList.add('active');
+            if(sectionId === 'bookings-section' && document.getElementById('nav-bookings')) document.getElementById('nav-bookings').classList.add('active');
+            if(sectionId === 'reviews-section' && document.getElementById('nav-reviews')) document.getElementById('nav-reviews').classList.add('active');
+            if(sectionId === 'offers-section' && document.getElementById('nav-offers')) document.getElementById('nav-offers').classList.add('active');
         }
 
         // Helper to safely get input value
@@ -689,6 +717,7 @@
 
         function renderHotels(filteredLocation = '') {
             const container = document.getElementById('hotelGridContainer');
+            if (!container) return;
             const filtered = filteredLocation ? hotelsData.filter(h => h.location.toLowerCase() === filteredLocation.toLowerCase()) : hotelsData;
 
             container.innerHTML = filtered.map(h => `
@@ -707,7 +736,7 @@
                                     <span class="text-muted small">Starting from</span>
                                     <div class="fw-bold text-dark fs-5">$${h.price} <span class="fs-6 text-muted font-sans font-normal">/ night</span></div>
                                 </div>
-                                <button class="btn btn-accent btn-sm" onclick="openBookingModal('${h.id}', '${h.name}')">
+                                <button type="button" class="btn btn-accent btn-sm" onclick="openBookingModal('${h.id}', '${h.name}')">
                                     <i class="fa-solid fa-calendar-plus me-1"></i> Reserve Suite
                                 </button>
                             </div>
@@ -784,6 +813,7 @@
 
         function renderBookings() {
             const tbody = document.getElementById('bookingsTableBody');
+            if (!tbody) return;
             tbody.innerHTML = bookingsData.map(b => `
                 <tr>
                     <td><code class="fw-bold text-primary">${b.id}</code></td>
@@ -794,7 +824,7 @@
                     <td class="fw-bold text-dark">$${b.price}</td>
                     <td><span class="status-badge ${b.status === 'CONFIRMED' ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary'}">${b.status}</span></td>
                     <td>
-                        ${b.status === 'CONFIRMED' ? `<button class="btn btn-outline-danger btn-sm" onclick="cancelBooking('${b.id}')"><i class="fa-solid fa-xmark me-1"></i> Cancel</button>` : '<span class="text-muted small">N/A</span>'}
+                        ${b.status === 'CONFIRMED' ? `<button type="button" class="btn btn-outline-danger btn-sm" onclick="cancelBooking('${b.id}')"><i class="fa-solid fa-xmark me-1"></i> Cancel</button>` : '<span class="text-muted small">N/A</span>'}
                     </td>
                 </tr>
             `).join('');
@@ -805,8 +835,8 @@
         }
 
         function openBookingModal(hotelId, hotelName) {
-            document.getElementById('modalHotelId').value = hotelId;
-            document.getElementById('modalHotelTitle').innerText = 'Reserve at ' + hotelName;
+            if (document.getElementById('modalHotelId')) document.getElementById('modalHotelId').value = hotelId;
+            if (document.getElementById('modalHotelTitle')) document.getElementById('modalHotelTitle').innerText = 'Reserve at ' + hotelName;
 
             if (currentUserData) {
                 if(document.getElementById('modalGuestName')) document.getElementById('modalGuestName').value = currentUserData.fullName || currentUserData.username;
@@ -819,10 +849,10 @@
         async function handleModalBookingSubmit(e) {
             e.preventDefault();
             const hotelId = getInputValue('modalHotelId', 'H101');
-            const hotelName = document.getElementById('modalHotelTitle').innerText.replace('Reserve at ', '');
-            const roomType = document.getElementById('modalRoomType').value;
-            const checkInDate = document.getElementById('modalCheckIn').value;
-            const checkOutDate = document.getElementById('modalCheckOut').value;
+            const hotelName = document.getElementById('modalHotelTitle') ? document.getElementById('modalHotelTitle').innerText.replace('Reserve at ', '') : 'Grand Hotel Colombo';
+            const roomType = getInputValue('modalRoomType', 'Deluxe Suite');
+            const checkInDate = getInputValue('modalCheckIn', '2026-09-01');
+            const checkOutDate = getInputValue('modalCheckOut', '2026-09-05');
             const guestName = getInputValue('modalGuestName', currentUserData ? currentUserData.username : 'Guest User');
             const guestEmail = getInputValue('modalGuestEmail', currentUserData ? currentUserData.email : 'guest@example.com');
             const userId = currentUserData ? currentUserData.id || '6a859acad763c362b3bc1612' : '6a859acad763c362b3bc1612';
@@ -889,7 +919,7 @@
         async function handleRegisterSubmit(e) {
             e.preventDefault();
             const resBox = document.getElementById('regResponseBox');
-            resBox.innerHTML = '<div class="alert alert-info py-2 small">Processing registration...</div>';
+            if (resBox) resBox.innerHTML = '<div class="alert alert-info py-2 small">Processing registration...</div>';
 
             const username = getInputValue('regUser', 'user_' + Math.floor(Math.random() * 1000));
             const email = getInputValue('regEmailAddr', 'user@example.com');
@@ -917,10 +947,10 @@
                     localStorage.setItem('aura_user', JSON.stringify(currentUserData));
                     updateSessionUI();
 
-                    resBox.innerHTML = `<div class="alert alert-success border-0 rounded-3 small"><strong>🎉 Registered & Saved to MongoDB!</strong><br>Token: <code>${data.token.substring(0, 20)}...</code><br>API Key: <code>${data.apiKey}</code></div>`;
+                    if (resBox) resBox.innerHTML = `<div class="alert alert-success border-0 rounded-3 small"><strong>🎉 Registered & Saved to MongoDB!</strong><br>Token: <code>${data.token.substring(0, 20)}...</code><br>API Key: <code>${data.apiKey}</code></div>`;
                     alert('🎉 Account Registered & Saved to Database Successfully!\nUsername: ' + username + '\nAPI Key: ' + data.apiKey);
                 } else {
-                    resBox.innerHTML = `<div class="alert alert-danger border-0 rounded-3 small">⚠️ ${data.message || 'Registration failed'}</div>`;
+                    if (resBox) resBox.innerHTML = `<div class="alert alert-danger border-0 rounded-3 small">⚠️ ${data.message || 'Registration failed'}</div>`;
                     alert('⚠️ ' + (data.message || 'Registration failed'));
                 }
             } catch (err) {
@@ -931,7 +961,7 @@
                 localStorage.setItem('aura_user', JSON.stringify(currentUserData));
                 updateSessionUI();
 
-                resBox.innerHTML = `<div class="alert alert-success border-0 rounded-3 small"><strong>🎉 Account Registered!</strong><br>Welcome, ${username}</div>`;
+                if (resBox) resBox.innerHTML = `<div class="alert alert-success border-0 rounded-3 small"><strong>🎉 Account Registered!</strong><br>Welcome, ${username}</div>`;
                 alert('🎉 Account Registered Successfully! Welcome, ' + username);
             }
         }
@@ -939,7 +969,7 @@
         async function handleLoginSubmit(e) {
             e.preventDefault();
             const resBox = document.getElementById('loginResponseBox');
-            resBox.innerHTML = '<div class="alert alert-info py-2 small">Authenticating credentials...</div>';
+            if (resBox) resBox.innerHTML = '<div class="alert alert-info py-2 small">Authenticating credentials...</div>';
 
             const emailOrUsername = getInputValue('loginUser', 'student1_user');
             const password = getInputValue('loginPass', 'Secret123!');
@@ -963,10 +993,10 @@
                     localStorage.setItem('aura_user', JSON.stringify(currentUserData));
                     updateSessionUI();
 
-                    resBox.innerHTML = `<div class="alert alert-success border-0 rounded-3 small"><strong>✅ Login Successful!</strong><br>User: ${data.username}<br>Role: ${data.role}</div>`;
+                    if (resBox) resBox.innerHTML = `<div class="alert alert-success border-0 rounded-3 small"><strong>✅ Login Successful!</strong><br>User: ${data.username}<br>Role: ${data.role}</div>`;
                     alert('✅ Login Successful! Welcome back, ' + currentUserData.username);
                 } else {
-                    resBox.innerHTML = `<div class="alert alert-danger border-0 rounded-3 small">⚠️ ${data.message || 'Invalid credentials'}</div>`;
+                    if (resBox) resBox.innerHTML = `<div class="alert alert-danger border-0 rounded-3 small">⚠️ ${data.message || 'Invalid credentials'}</div>`;
                     alert('⚠️ ' + (data.message || 'Invalid credentials'));
                 }
             } catch (err) {
@@ -977,7 +1007,7 @@
                 localStorage.setItem('aura_user', JSON.stringify(currentUserData));
                 updateSessionUI();
 
-                resBox.innerHTML = `<div class="alert alert-success border-0 rounded-3 small"><strong>✅ Login Successful!</strong><br>User: ${emailOrUsername}</div>`;
+                if (resBox) resBox.innerHTML = `<div class="alert alert-success border-0 rounded-3 small"><strong>✅ Login Successful!</strong><br>User: ${emailOrUsername}</div>`;
                 alert('✅ Login Successful! Welcome back, ' + currentUserData.username);
             }
         }
@@ -1030,6 +1060,7 @@
 
         function renderReviews() {
             const container = document.getElementById('reviewsFeedContainer');
+            if (!container) return;
             container.innerHTML = reviewsData.map(r => `
                 <div class="p-3 mb-3 bg-light rounded-3 border-0">
                     <div class="d-flex justify-content-between align-items-center mb-1">
@@ -1043,9 +1074,9 @@
 
         async function handleReviewSubmit(e) {
             e.preventDefault();
-            const hotelId = document.getElementById('revHotelSelect').value;
-            const rating = parseInt(document.getElementById('revRatingSelect').value);
-            const comment = document.getElementById('revCommentText').value;
+            const hotelId = getInputValue('revHotelSelect', 'H101');
+            const rating = parseInt(getInputValue('revRatingSelect', '5'));
+            const comment = getInputValue('revCommentText', 'Great stay!');
             const author = currentUserData ? currentUserData.username : 'Verified Guest';
 
             try {
@@ -1058,15 +1089,16 @@
 
             reviewsData.unshift({ id: 'RV' + (reviewsData.length + 1), hotelId, author, rating, comment });
             renderReviews();
-            document.getElementById('revCommentText').value = '';
+            if (document.getElementById('revCommentText')) document.getElementById('revCommentText').value = '';
             alert('⭐ Guest review posted on Student 4 Review Service!');
         }
 
         function handlePromoValidation(e) {
             e.preventDefault();
-            const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
-            const amount = parseFloat(document.getElementById('promoAmountInput').value);
+            const code = getInputValue('promoCodeInput', 'SUMMER2026').toUpperCase();
+            const amount = parseFloat(getInputValue('promoAmountInput', '300'));
             const feedback = document.getElementById('promoFeedbackBox');
+            if (!feedback) return;
 
             if (code === 'SUMMER2026') {
                 const discount = amount * 0.20;
@@ -1088,21 +1120,22 @@
 
         function handleOfferSubscription(e) {
             e.preventDefault();
-            const email = document.getElementById('subEmailInput').value;
+            const email = getInputValue('subEmailInput', 'vip@example.com');
             alert('📩 VIP Discount subscription activated for ' + email);
             addLog(`🔔 Promotional alert subscription registered for ${email}.`);
-            document.getElementById('subEmailInput').value = '';
+            if (document.getElementById('subEmailInput')) document.getElementById('subEmailInput').value = '';
         }
 
         function handleSearch(e) {
             e.preventDefault();
-            const loc = document.getElementById('searchLocation').value;
+            const loc = getInputValue('searchLocation', '');
             renderHotels(loc);
             switchSection('catalog-section');
         }
 
         function addLog(msg) {
             const logBox = document.getElementById('notificationLogBox');
+            if (!logBox) return;
             const time = new Date().toLocaleTimeString();
             logBox.innerHTML = `<div class="mb-1 text-primary"><strong>[${time}]</strong> ${msg}</div>` + logBox.innerHTML;
         }
@@ -1112,27 +1145,31 @@
             const authBtn = document.getElementById('navAuthBtn');
 
             if (currentUserData && jwtToken) {
-                userDisplay.classList.remove('d-none');
-                document.getElementById('navUsername').innerText = currentUserData.username;
+                if (userDisplay) userDisplay.classList.remove('d-none');
+                if (document.getElementById('navUsername')) document.getElementById('navUsername').innerText = currentUserData.username;
 
-                document.getElementById('displayUsernameText').innerText = currentUserData.username;
-                document.getElementById('displayApiKeyText').innerText = currentUserData.apiKey || 'SOC-SECRET-API-KEY-2026';
-                document.getElementById('displayTokenText').innerText = jwtToken.substring(0, 30) + '...';
+                if (document.getElementById('displayUsernameText')) document.getElementById('displayUsernameText').innerText = currentUserData.username;
+                if (document.getElementById('displayApiKeyText')) document.getElementById('displayApiKeyText').innerText = currentUserData.apiKey || 'SOC-SECRET-API-KEY-2026';
+                if (document.getElementById('displayTokenText')) document.getElementById('displayTokenText').innerText = jwtToken.substring(0, 30) + '...';
 
                 if (document.getElementById('profFullName')) document.getElementById('profFullName').value = currentUserData.fullName || '';
                 if (document.getElementById('profPhone')) document.getElementById('profPhone').value = currentUserData.phone || '';
                 if (document.getElementById('profAddress')) document.getElementById('profAddress').value = currentUserData.address || '';
 
-                authBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket me-1"></i> Sign Out`;
-                authBtn.onclick = logoutUser;
+                if (authBtn) {
+                    authBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket me-1"></i> Sign Out`;
+                    authBtn.onclick = logoutUser;
+                }
             } else {
-                userDisplay.classList.add('d-none');
-                document.getElementById('displayUsernameText').innerText = 'Not Logged In';
-                document.getElementById('displayApiKeyText').innerText = 'SOC-SECRET-API-KEY-2026';
-                document.getElementById('displayTokenText').innerText = 'No Active Token';
+                if (userDisplay) userDisplay.classList.add('d-none');
+                if (document.getElementById('displayUsernameText')) document.getElementById('displayUsernameText').innerText = 'Not Logged In';
+                if (document.getElementById('displayApiKeyText')) document.getElementById('displayApiKeyText').innerText = 'SOC-SECRET-API-KEY-2026';
+                if (document.getElementById('displayTokenText')) document.getElementById('displayTokenText').innerText = 'No Active Token';
 
-                authBtn.innerHTML = `<i class="fa-solid fa-user me-1"></i> Sign In / Register`;
-                authBtn.onclick = () => switchSection('auth-section');
+                if (authBtn) {
+                    authBtn.innerHTML = `<i class="fa-solid fa-user me-1"></i> Sign In / Register`;
+                    authBtn.onclick = () => switchSection('auth-section');
+                }
             }
         }
 
