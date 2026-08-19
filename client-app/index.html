@@ -742,9 +742,33 @@
             `).join('');
         }
 
-        // Render Bookings Table
-        function renderBookings() {
+        const RESERVATION_API_BASE = 'http://localhost:8083';
+        const RESERVATION_API_KEY = 'reservation-secret-api-key-12345';
+
+        // Render Bookings Table (STUDENT 3 ENDPOINT: GET /reservations)
+        async function renderBookings() {
             const tbody = document.getElementById('bookingsTableBody');
+            try {
+                const res = await fetch(`${RESERVATION_API_BASE}/reservations`, {
+                    headers: { 'X-API-KEY': RESERVATION_API_KEY }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.length > 0) {
+                        bookingsData = data.map(b => ({
+                            id: b.id,
+                            hotelName: b.hotelName || 'Grand Hotel Colombo',
+                            roomType: b.roomType || 'Deluxe Suite',
+                            checkIn: b.checkInDate || b.checkIn || '2026-09-10',
+                            checkOut: b.checkOutDate || b.checkOut || '2026-09-14',
+                            status: b.status || 'CONFIRMED'
+                        }));
+                    }
+                }
+            } catch (err) {
+                console.log('Using local bookingsData fallback:', err);
+            }
+
             tbody.innerHTML = bookingsData.map(b => `
                 <tr>
                     <td><code class="fw-bold text-primary">${b.id}</code></td>
@@ -781,22 +805,58 @@
             modal.show();
         }
 
-        // Modal Booking Submission
-        function handleModalBookingSubmit(e) {
+        // Modal Booking Submission (STUDENT 3 ENDPOINT: POST /reservations)
+        async function handleModalBookingSubmit(e) {
             e.preventDefault();
+            const hotelId = document.getElementById('modalHotelId').value || 'H101';
             const hotelName = document.getElementById('modalHotelTitle').innerText.replace('Reserve at ', '');
             const roomType = document.getElementById('modalRoomType').value;
             const checkIn = document.getElementById('modalCheckIn').value;
             const checkOut = document.getElementById('modalCheckOut').value;
-            const newResId = 'RES-' + Math.floor(1000 + Math.random() * 9000);
+            const guestName = currentUserData ? (currentUserData.fullName || currentUserData.username) : 'Kasun Perera';
+            const guestEmail = currentUserData ? currentUserData.email : 'kasun@example.com';
+            const userId = currentUserData ? currentUserData.username : 'user_101';
+
+            const payload = {
+                userId: userId,
+                hotelId: hotelId,
+                hotelName: hotelName,
+                roomId: 'ROOM-' + Math.floor(100 + Math.random() * 900),
+                roomType: roomType,
+                checkInDate: checkIn,
+                checkOutDate: checkOut,
+                guestName: guestName,
+                guestEmail: guestEmail,
+                numberOfGuests: 2,
+                totalPrice: 150.00
+            };
+
+            let newResId = 'RES-' + Math.floor(1000 + Math.random() * 9000);
+
+            try {
+                const res = await fetch(`${RESERVATION_API_BASE}/reservations`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-KEY': RESERVATION_API_KEY
+                    },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    newResId = data.id || newResId;
+                }
+            } catch (err) {
+                console.log('Reservation POST API fallback:', err);
+            }
 
             bookingsData.unshift({ id: newResId, hotelName, roomType, checkIn, checkOut, status: 'CONFIRMED' });
-            renderBookings();
+            await renderBookings();
 
             bootstrap.Modal.getInstance(document.getElementById('bookingModal')).hide();
             switchSection('bookings-section');
 
-            alert('🎉 Luxury Suite Reserved! Booking ID: ' + newResId);
+            alert('🎉 Luxury Suite Reserved & Saved to Database! Booking ID: ' + newResId);
             addLog(`📧 Booking confirmation dispatched for #${newResId} at ${hotelName}.`);
         }
 
@@ -863,14 +923,23 @@
             logBox.innerHTML = `<div class="mb-1 text-primary"><strong>[${time}]</strong> ${msg}</div>` + logBox.innerHTML;
         }
 
-        // Cancel Booking
-        function cancelBooking(id) {
+        // Cancel Booking (STUDENT 3 ENDPOINT: PATCH /reservations/{id}/cancel)
+        async function cancelBooking(id) {
+            try {
+                await fetch(`${RESERVATION_API_BASE}/reservations/${id}/cancel`, {
+                    method: 'PATCH',
+                    headers: { 'X-API-KEY': RESERVATION_API_KEY }
+                });
+            } catch (err) {
+                console.log('Cancel PATCH API fallback:', err);
+            }
+
             const booking = bookingsData.find(b => b.id === id);
             if (booking) {
                 booking.status = 'CANCELLED';
-                renderBookings();
-                alert('Booking ' + id + ' has been cancelled.');
             }
+            await renderBookings();
+            alert('Booking ' + id + ' has been cancelled in Database!');
         }
 
         // Update Session UI

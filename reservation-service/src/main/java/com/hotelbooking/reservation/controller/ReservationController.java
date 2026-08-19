@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 @RequestMapping("/reservations")
 @Tag(name = "Reservation Controller", description = "Endpoints for managing hotel reservations, stay dates, cancellations, and user history (Student 3)")
