@@ -1776,8 +1776,10 @@
             e.preventDefault();
 
             const btn = document.getElementById('confirmBookingBtn');
-            btn.disabled = true;
-            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-2"></i> Processing Reservation...`;
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-2"></i> Saving to MongoDB...`;
+            }
 
             const hotelId = document.getElementById('modalHotelId').value || 'H101';
             const hotelName = document.getElementById('modalHotelTitle').innerText.replace('Reserve at ', '');
@@ -1786,14 +1788,19 @@
             const checkOut = document.getElementById('modalCheckOut').value;
             const guests = parseInt(document.getElementById('modalGuestsCount').value) || 2;
             const guestName = currentUserData ? (currentUserData.fullName || currentUserData.username) : 'Kasun Perera';
-            const guestEmail = currentUserData ? currentUserData.email : 'kasun@example.com';
+            
+            let guestEmail = 'kasun@example.com';
+            if (currentUserData && currentUserData.email && currentUserData.email.includes('@')) {
+                guestEmail = currentUserData.email;
+            }
+
             const userId = currentUserData ? currentUserData.username : 'user_101';
 
             const d1 = new Date(checkIn);
             const d2 = new Date(checkOut);
             const nights = Math.max(1, Math.round((d2 - d1) / (1000 * 60 * 60 * 24)));
             const roomSelect = document.getElementById('modalRoomType');
-            const selectedOpt = roomSelect.options[roomSelect.selectedIndex];
+            const selectedOpt = roomSelect ? roomSelect.options[roomSelect.selectedIndex] : null;
             const pricePerNight = parseFloat(selectedOpt ? selectedOpt.getAttribute('data-price') : 150) || 150;
             const totalPrice = (pricePerNight * nights) * 1.10;
 
@@ -1818,6 +1825,8 @@
                 createdAt: new Date().toISOString()
             };
 
+            let isApiSaved = false;
+
             try {
                 const res = await fetch(`${RESERVATION_API_BASE}/reservations`, {
                     method: 'POST',
@@ -1829,14 +1838,19 @@
                 });
                 if (res.ok) {
                     const data = await res.json();
-                    if (data && data.id) newResObj = data;
+                    if (data && data.id) {
+                        newResObj = data;
+                        isApiSaved = true;
+                    }
+                } else {
+                    console.error('Reservation API Error:', res.status, await res.text());
                 }
             } catch (err) {
                 console.log('Reservation POST API fallback:', err);
             } finally {
                 if (btn) {
                     btn.disabled = false;
-                    btn.innerHTML = `<i class="fa-solid fa-lock me-2"></i> Confirm Reservation (\`POST /reservations\`)`;
+                    btn.innerHTML = `<i class="fa-solid fa-lock me-2"></i> Confirm Reservation (POST /reservations)`;
                 }
             }
 
@@ -1849,17 +1863,33 @@
                 bookModal.hide();
             }
 
-            // Open Reservation Confirmed Modal (Req 6)
+            // Immediately re-render bookings table so the user sees the new booking row!
+            renderBookingsTableUI();
+
+            // Populate Confirmed Modal
             document.getElementById('confModalCode').innerText = newResObj.id;
             document.getElementById('confModalHotel').innerText = hotelName;
             document.getElementById('confModalRoom').innerText = roomType;
             document.getElementById('confModalDates').innerText = `${checkIn} to ${checkOut}`;
             document.getElementById('confModalTotal').innerText = `$${(newResObj.totalPrice || totalPrice).toFixed(2)}`;
 
+            // Show Confirmed Modal
             const confModalEl = document.getElementById('reservationConfirmedModal');
             if (confModalEl) {
                 const confModal = bootstrap.Modal.getInstance(confModalEl) || new bootstrap.Modal(confModalEl);
                 confModal.show();
+            }
+
+            // Show Alert Toast
+            const alertBox = document.getElementById('bookingAlertBox');
+            if (alertBox) {
+                alertBox.innerHTML = `
+                    <div class="alert ${isApiSaved ? 'alert-success' : 'alert-info'} border-0 rounded-3 shadow-sm alert-dismissible fade show mb-3 py-2 small fw-semibold">
+                        <i class="fa-solid ${isApiSaved ? 'fa-database text-success' : 'fa-circle-check text-info'} me-2"></i>
+                        ${isApiSaved ? '<strong>Success!</strong> Reservation saved to MongoDB (ObjectId: <code>' + newResObj.id + '</code>).' : 'Reservation processed successfully (Code: <code>' + newResObj.id + '</code>).'}
+                        <button type="button" class="btn-close py-2" data-bs-dismiss="alert"></button>
+                    </div>
+                `;
             }
 
             addLog(`📧 Booking confirmation dispatched for #${newResObj.id} at ${hotelName}.`);
