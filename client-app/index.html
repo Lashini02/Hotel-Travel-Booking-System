@@ -241,7 +241,7 @@
     <main class="container">
 
         <!-- SECTION 0: DIRECT ON-PAGE AUTH & USER PROFILE MANAGEMENT -->
-        <section id="auth-section" class="content-section">
+        <section id="auth-section" class="content-section d-none">
             <div class="mb-4">
                 <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-user-shield text-primary me-2"></i> User Registration, Login & Profile Management</h2>
                 <p class="text-muted mb-0">Create an account, authenticate to obtain JWT OAuth 2.0 tokens, and update profile credentials.</p>
@@ -334,7 +334,7 @@
         </section>
 
         <!-- SECTION 1: HOTEL CATALOG & ROOM SELECTION -->
-        <section id="catalog-section" class="content-section d-none">
+        <section id="catalog-section" class="content-section">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h2 class="fw-bold text-dark mb-1">Featured Hotels & Resorts</h2>
@@ -1025,14 +1025,44 @@
             `).join('');
         }
 
+        // Resilient Modal Toggle Helpers
+        function showModalById(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            try {
+                if (window.bootstrap && bootstrap.Modal) {
+                    let instance = bootstrap.Modal.getInstance(el);
+                    if (!instance) instance = new bootstrap.Modal(el);
+                    instance.show();
+                    return;
+                }
+            } catch (e) {
+                console.log('Bootstrap Modal fallback:', e);
+            }
+            el.classList.add('show');
+            el.style.display = 'block';
+        }
+
+        function hideModalById(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            try {
+                if (window.bootstrap && bootstrap.Modal) {
+                    const instance = bootstrap.Modal.getInstance(el);
+                    if (instance) instance.hide();
+                }
+            } catch (e) {}
+            el.classList.remove('show');
+            el.style.display = 'none';
+        }
+
         // -------------------------------------------------------------
         // STUDENT 2 (SERVICE 2): HOTEL & ROOM SERVICE FUNCTIONS
         // -------------------------------------------------------------
 
         // Open Add New Hotel Modal (Admin)
         function openAddHotelModal() {
-            const modal = new bootstrap.Modal(document.getElementById('addHotelModal'));
-            modal.show();
+            showModalById('addHotelModal');
         }
 
         // Submit New Hotel to MongoDB (POST /api/v1/hotels)
@@ -1078,9 +1108,7 @@
 
                 if (response && response.ok) {
                     alert('✅ New Hotel Saved Successfully into MongoDB Database!');
-                    const modalEl = document.getElementById('addHotelModal');
-                    const modal = bootstrap.Modal.getInstance(modalEl);
-                    if (modal) modal.hide();
+                    hideModalById('addHotelModal');
                     fetchLiveHotels();
                 } else {
                     alert('⚠️ Failed to save hotel into MongoDB. Please check service connection.');
@@ -1099,8 +1127,7 @@
             } else {
                 selectEl.innerHTML = '<option value="">-- No Hotels Available in DB --</option>';
             }
-            const modal = new bootstrap.Modal(document.getElementById('addRoomModal'));
-            modal.show();
+            showModalById('addRoomModal');
         }
 
         // Submit New Room to MongoDB (POST /api/v1/hotels/{hotelId}/rooms)
@@ -1151,9 +1178,7 @@
 
                 if (response && response.ok) {
                     alert(`✅ Room #${roomNumber} Saved Successfully into MongoDB under Hotel!`);
-                    const modalEl = document.getElementById('addRoomModal');
-                    const modal = bootstrap.Modal.getInstance(modalEl);
-                    if (modal) modal.hide();
+                    hideModalById('addRoomModal');
                 } else {
                     alert('⚠️ Failed to save room into MongoDB. Please check service connection.');
                 }
@@ -1169,8 +1194,7 @@
             const container = document.getElementById('roomsContainer');
             container.innerHTML = '<div class="text-center py-4"><i class="fa-solid fa-spinner fa-spin fa-2x text-muted"></i><p class="mt-2 text-muted">Loading rooms from MongoDB...</p></div>';
 
-            const modal = new bootstrap.Modal(document.getElementById('viewRoomsModal'));
-            modal.show();
+            showModalById('viewRoomsModal');
 
             try {
                 let response;
@@ -1326,8 +1350,7 @@
                 console.log('Using default room category dropdown options:', e);
             }
 
-            const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
-            modal.show();
+            showModalById('bookingModal');
         }
 
         // Modal Booking Submission
@@ -1342,7 +1365,7 @@
             bookingsData.unshift({ id: newResId, hotelName, roomType, checkIn, checkOut, status: 'CONFIRMED' });
             renderBookings();
 
-            bootstrap.Modal.getInstance(document.getElementById('bookingModal')).hide();
+            hideModalById('bookingModal');
             switchSection('bookings-section');
 
             alert('🎉 Luxury Suite Reserved! Booking ID: ' + newResId);
