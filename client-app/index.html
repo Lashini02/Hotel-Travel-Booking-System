@@ -269,6 +269,10 @@
                                 <label class="form-label text-muted small fw-bold">Phone Number</label>
                                 <input type="text" id="regPhone" class="form-control bg-light border-0" placeholder="+94771234567">
                             </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Address</label>
+                                <input type="text" id="regAddress" class="form-control bg-light border-0" placeholder="Colombo, Sri Lanka">
+                            </div>
                             <button type="submit" class="btn btn-primary w-100 py-2 fw-bold"><i class="fa-solid fa-user-check me-2"></i>Register Customer (`POST /auth/register`)</button>
                         </form>
                         <div id="regResponseBox" class="mt-3"></div>
@@ -561,18 +565,24 @@
             if(sectionId === 'offers-section') document.getElementById('nav-offers').classList.add('active');
         }
 
+        // Helper to safely get input value without throwing JS TypeError
+        function getInputValue(id, fallback = '') {
+            const el = document.getElementById(id);
+            return el ? el.value.trim() : fallback;
+        }
+
         // 1. REGISTER USER (STUDENT 1 ENDPOINT: POST /auth/register)
         async function handleRegisterSubmit(e) {
             e.preventDefault();
             const resBox = document.getElementById('regResponseBox');
             resBox.innerHTML = '<div class="alert alert-info py-2 small">Processing registration...</div>';
 
-            const username = document.getElementById('regUser').value.trim();
-            const email = document.getElementById('regEmailAddr').value.trim();
-            const password = document.getElementById('regPass').value;
-            const fullName = document.getElementById('regName').value || username;
-            const phone = document.getElementById('regPhone').value || '+94771234567';
-            const address = document.getElementById('regAddress').value || 'Colombo';
+            const username = getInputValue('regUser', 'user_' + Math.floor(Math.random() * 1000));
+            const email = getInputValue('regEmailAddr', 'user@example.com');
+            const password = getInputValue('regPass', 'Secret123!');
+            const fullName = getInputValue('regName', username);
+            const phone = getInputValue('regPhone', '+94771234567');
+            const address = getInputValue('regAddress', 'Colombo, Sri Lanka');
 
             try {
                 const res = await fetch(`${API_BASE}/auth/register`, {
@@ -593,10 +603,11 @@
                     localStorage.setItem('aura_user', JSON.stringify(currentUserData));
                     updateSessionUI();
 
-                    resBox.innerHTML = `<div class="alert alert-success border-0 rounded-3 small"><strong>🎉 Registered!</strong><br>Token: <code>${data.token.substring(0, 25)}...</code><br>API Key: <code>${data.apiKey}</code></div>`;
-                    alert('🎉 Account Registered & Logged In Successfully!\nUsername: ' + username + '\nAPI Key: ' + data.apiKey);
+                    resBox.innerHTML = `<div class="alert alert-success border-0 rounded-3 small"><strong>🎉 Registered & Saved to MongoDB!</strong><br>Token: <code>${data.token.substring(0, 20)}...</code><br>API Key: <code>${data.apiKey}</code></div>`;
+                    alert('🎉 Account Registered & Saved to Database Successfully!\nUsername: ' + username + '\nAPI Key: ' + data.apiKey);
                 } else {
                     resBox.innerHTML = `<div class="alert alert-danger border-0 rounded-3 small">⚠️ ${data.message || 'Registration failed'}</div>`;
+                    alert('⚠️ ' + (data.message || 'Registration failed'));
                 }
             } catch (err) {
                 // Fallback local registration
@@ -617,8 +628,8 @@
             const resBox = document.getElementById('loginResponseBox');
             resBox.innerHTML = '<div class="alert alert-info py-2 small">Authenticating credentials...</div>';
 
-            const emailOrUsername = document.getElementById('loginUser').value.trim();
-            const password = document.getElementById('loginPass').value;
+            const emailOrUsername = getInputValue('loginUser', 'student1_user');
+            const password = getInputValue('loginPass', 'Secret123!');
 
             try {
                 const res = await fetch(`${API_BASE}/auth/login`, {
@@ -643,6 +654,7 @@
                     alert('✅ Login Successful! Welcome back, ' + currentUserData.username);
                 } else {
                     resBox.innerHTML = `<div class="alert alert-danger border-0 rounded-3 small">⚠️ ${data.message || 'Invalid credentials'}</div>`;
+                    alert('⚠️ ' + (data.message || 'Invalid credentials'));
                 }
             } catch (err) {
                 // Fallback login
@@ -661,9 +673,9 @@
         async function handleProfileUpdateSubmit(e) {
             e.preventDefault();
 
-            const fullName = document.getElementById('profFullName').value;
-            const phone = document.getElementById('profPhone').value;
-            const address = document.getElementById('profAddress').value;
+            const fullName = getInputValue('profFullName', 'Kasun Perera');
+            const phone = getInputValue('profPhone', '+94771234567');
+            const address = getInputValue('profAddress', 'Colombo');
 
             try {
                 const res = await fetch(`${API_BASE}/users/profile`, {
@@ -874,9 +886,9 @@
                 document.getElementById('displayApiKeyText').innerText = currentUserData.apiKey || 'SOC-SECRET-API-KEY-2026';
                 document.getElementById('displayTokenText').innerText = jwtToken.substring(0, 30) + '...';
 
-                document.getElementById('profFullName').value = currentUserData.fullName || '';
-                document.getElementById('profPhone').value = currentUserData.phone || '';
-                document.getElementById('profAddress').value = currentUserData.address || '';
+                if (document.getElementById('profFullName')) document.getElementById('profFullName').value = currentUserData.fullName || '';
+                if (document.getElementById('profPhone')) document.getElementById('profPhone').value = currentUserData.phone || '';
+                if (document.getElementById('profAddress')) document.getElementById('profAddress').value = currentUserData.address || '';
 
                 authBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket me-1"></i> Sign Out`;
                 authBtn.onclick = logoutUser;
