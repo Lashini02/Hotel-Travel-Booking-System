@@ -541,6 +541,7 @@
         // On Load Initialization
         document.addEventListener('DOMContentLoaded', () => {
             renderHotels();
+            fetchLiveHotels();
             renderBookings();
             renderReviews();
             updateSessionUI();
@@ -551,6 +552,45 @@
             document.getElementById('modalCheckIn').value = tomorrow.toISOString().split('T')[0];
             document.getElementById('searchCheckIn').value = tomorrow.toISOString().split('T')[0];
         });
+
+        // Fetch Live Hotels from Backend API (Student 2 Service / Gateway)
+        async function fetchLiveHotels() {
+            try {
+                let response;
+                try {
+                    response = await fetch('http://localhost:8080/api/v1/hotels', {
+                        headers: { 'X-API-KEY': 'hotel-service-secret-key-123' }
+                    });
+                    if (!response.ok) throw new Error('Gateway fallback');
+                } catch (e) {
+                    response = await fetch('http://localhost:8082/api/v1/hotels', {
+                        headers: { 'X-API-KEY': 'hotel-service-secret-key-123' }
+                    });
+                }
+                if (response && response.ok) {
+                    const result = await response.json();
+                    if (result.success && Array.isArray(result.data) && result.data.length > 0) {
+                        const sampleImages = [
+                            'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
+                            'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80',
+                            'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=600&q=80',
+                            'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80'
+                        ];
+                        hotelsData = result.data.map((h, index) => ({
+                            id: h.id,
+                            name: h.name,
+                            location: h.location || 'Sri Lanka',
+                            rating: h.rating || 4.8,
+                            price: 150 + (index * 20),
+                            image: sampleImages[index % sampleImages.length]
+                        }));
+                        renderHotels();
+                    }
+                }
+            } catch (err) {
+                console.log('Using static catalog data fallback:', err);
+            }
+        }
 
         // Navigation Section Switcher
         function switchSection(sectionId) {

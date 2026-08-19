@@ -18,6 +18,11 @@ public class ApiKeyInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String path = request.getRequestURI();
 
+        // Allow HTTP OPTIONS pre-flight requests for CORS
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
+
         // Bypass security check for Swagger UI and OpenAPI documentation
         if (path.contains("/swagger-ui") || 
             path.contains("/v3/api-docs") || 
