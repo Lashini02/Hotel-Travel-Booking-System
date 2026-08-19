@@ -505,217 +505,208 @@
                 </div>
             </div>
         </div>
-    <!-- MODAL: ADD NEW HOTEL (STUDENT 2 - ADMIN) -->
-    <div class="modal fade" id="addHotelModal" tabindex="-1">
+    <!-- MODAL 1: ADD NEW HOTEL (ADMIN - AURA HOTELS THEME) -->
+    <div class="modal fade" id="addHotelModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header bg-dark text-white rounded-top-4">
-                    <h5 class="modal-title font-serif"><i class="fa-solid fa-hotel text-warning me-2"></i>Add New Hotel Listing (Student 2 Admin)</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <!-- Modal Header -->
+                <div class="modal-header bg-dark text-white p-4 border-0 position-relative">
+                    <div>
+                        <h4 class="modal-title font-serif fw-bold mb-1"><i class="fa-solid fa-hotel text-warning me-2"></i>Add New Hotel</h4>
+                        <p class="small text-white-50 mb-0">Create a new hotel property and add it to AURA HOTELS.</p>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-4" data-bs-dismiss="modal" onclick="hideModalById('addHotelModal')"></button>
                 </div>
-                <div class="modal-body p-4">
-                    <form onsubmit="submitNewHotel(event)">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label text-muted small fw-bold">Hotel Name</label>
-                                <input type="text" id="newHotelName" class="form-control bg-light border-0" placeholder="e.g. Shangri-La Resort" required>
+                <!-- Modal Body -->
+                <div class="modal-body p-4 p-md-5 bg-white">
+                    <form id="addHotelForm" onsubmit="submitNewHotel(event)" novalidate>
+                        <!-- 2-Column Desktop Grid -->
+                        <div class="row g-3">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-semibold text-dark small">Hotel Name <span class="text-danger">*</span></label>
+                                <input type="text" id="newHotelName" class="form-control bg-light border-1 py-2 rounded-3" placeholder="e.g. Shangri-La Resort" required>
+                                <div class="invalid-feedback small">Please provide a valid hotel name.</div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label text-muted small fw-bold">Location / Destination (City Dropdown)</label>
-                                <select id="newHotelLocation" class="form-select bg-light border-0" required>
-                                    <option value="">-- Select Destination City --</option>
-                                    <option value="Colombo" selected>Colombo</option>
-                                    <option value="Kandy">Kandy</option>
-                                    <option value="Galle">Galle</option>
-                                    <option value="Nuwara Eliya">Nuwara Eliya</option>
-                                    <option value="Ella">Ella</option>
-                                    <option value="Mirissa">Mirissa</option>
-                                    <option value="Negombo">Negombo</option>
-                                    <option value="Jaffna">Jaffna</option>
-                                </select>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-semibold text-dark small">Location / City <span class="text-danger">*</span></label>
+                                <input type="text" id="newHotelLocation" class="form-control bg-light border-1 py-2 rounded-3" placeholder="e.g. Colombo" required>
+                                <div class="invalid-feedback small">Please specify the location or city.</div>
                             </div>
                         </div>
+
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Street Address</label>
-                            <input type="text" id="newHotelAddress" class="form-control bg-light border-0" placeholder="e.g. 100 Galle Face Green, Colombo 03" required>
+                            <label class="form-label fw-semibold text-dark small">Description</label>
+                            <textarea id="newHotelDescription" class="form-control bg-light border-1 py-2 rounded-3" rows="3" placeholder="Describe property view, star ratings, and luxury services..."></textarea>
                         </div>
-                        <div class="row">
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label text-muted small fw-bold">Star Rating</label>
-                                <select id="newHotelRating" class="form-select bg-light border-0">
-                                    <option value="5.0">5.0 ★★★★★ (Ultra Luxury)</option>
-                                    <option value="4.8" selected>4.8 ★★★★★ (Luxury Resort)</option>
-                                    <option value="4.5">4.5 ★★★★☆ (Premium Hotel)</option>
-                                    <option value="4.0">4.0 ★★★★☆ (Deluxe Hotel)</option>
-                                    <option value="3.5">3.5 ★★★☆☆ (Standard Stay)</option>
-                                </select>
+
+                        <div class="row g-3">
+                            <div class="col-md-8 mb-2">
+                                <label class="form-label fw-semibold text-dark small">Full Address <span class="text-danger">*</span></label>
+                                <input type="text" id="newHotelAddress" class="form-control bg-light border-1 py-2 rounded-3" placeholder="e.g. 100 Galle Face Green, Colombo 03" required>
+                                <div class="invalid-feedback small">Please enter full street address.</div>
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label text-muted small fw-bold">Contact Email</label>
-                                <input type="email" id="newHotelEmail" class="form-control bg-light border-0" placeholder="info@hotel.com" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label text-muted small fw-bold">Contact Phone</label>
-                                <input type="text" id="newHotelPhone" class="form-control bg-light border-0" placeholder="+94112345678" required>
+                            <div class="col-md-4 mb-2">
+                                <label class="form-label fw-semibold text-dark small">Rating (1.0 - 5.0)</label>
+                                <input type="number" step="0.1" min="1.0" max="5.0" id="newHotelRating" class="form-control bg-light border-1 py-2 rounded-3" value="4.8" required>
+                                <div class="invalid-feedback small">Rating must be between 1.0 and 5.0.</div>
                             </div>
                         </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-semibold text-dark small">Contact Email</label>
+                                <input type="email" id="newHotelEmail" class="form-control bg-light border-1 py-2 rounded-3" placeholder="info@hotel.com">
+                                <div class="invalid-feedback small">Please enter a valid email address.</div>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-semibold text-dark small">Contact Phone</label>
+                                <input type="tel" id="newHotelPhone" class="form-control bg-light border-1 py-2 rounded-3" placeholder="+94112345678">
+                            </div>
+                        </div>
+
+                        <!-- Amenities Tag / Chip Manager -->
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold mb-2">Hotel Amenities (Select Checkboxes)</label>
-                            <div class="row g-2 bg-light p-3 rounded-3 border-0">
-                                <div class="col-6 col-md-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input hotel-amenity-cb" type="checkbox" value="WiFi" id="amWiFi" checked>
-                                        <label class="form-check-label small text-dark" for="amWiFi">📶 Free WiFi</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input hotel-amenity-cb" type="checkbox" value="Swimming Pool" id="amPool" checked>
-                                        <label class="form-check-label small text-dark" for="amPool">🏊 Pool</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input hotel-amenity-cb" type="checkbox" value="Spa" id="amSpa" checked>
-                                        <label class="form-check-label small text-dark" for="amSpa">🧖 Wellness Spa</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input hotel-amenity-cb" type="checkbox" value="Fitness Center" id="amGym">
-                                        <label class="form-check-label small text-dark" for="amGym">🏋️ Gym</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input hotel-amenity-cb" type="checkbox" value="Ocean View" id="amOcean" checked>
-                                        <label class="form-check-label small text-dark" for="amOcean">🌊 Ocean View</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input hotel-amenity-cb" type="checkbox" value="Breakfast Included" id="amBfst" checked>
-                                        <label class="form-check-label small text-dark" for="amBfst">🍳 Breakfast</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input hotel-amenity-cb" type="checkbox" value="Bar" id="amBar">
-                                        <label class="form-check-label small text-dark" for="amBar">🍸 Lounge Bar</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-3">
-                                    <div class="form-check">
-                                        <input class="form-check-input hotel-amenity-cb" type="checkbox" value="Airport Shuttle" id="amShuttle">
-                                        <label class="form-check-label small text-dark" for="amShuttle">🚐 Shuttle</label>
-                                    </div>
-                                </div>
+                            <label class="form-label fw-semibold text-dark small mb-1">Amenities</label>
+                            <div id="hotelAmenitiesChipContainer" class="d-flex flex-wrap gap-2 mb-2 p-2 bg-light rounded-3 border">
+                                <!-- Chips dynamically rendered -->
+                            </div>
+                            <div class="input-group">
+                                <input type="text" id="hotelAmenityInput" class="form-control bg-light border-1" placeholder="Type an amenity and click Add (e.g. Swimming Pool)..." onkeypress="handleAmenityKeyPress(event)">
+                                <button class="btn btn-outline-secondary" type="button" onclick="addAmenityFromInput()"><i class="fa-solid fa-plus me-1"></i> Add</button>
+                            </div>
+                            <div class="mt-2 small text-muted">
+                                Quick suggestions:
+                                <span class="badge bg-light text-secondary border me-1 cursor-pointer" onclick="addAmenityTag('WiFi')">+ WiFi</span>
+                                <span class="badge bg-light text-secondary border me-1 cursor-pointer" onclick="addAmenityTag('Swimming Pool')">+ Swimming Pool</span>
+                                <span class="badge bg-light text-secondary border me-1 cursor-pointer" onclick="addAmenityTag('Spa')">+ Spa</span>
+                                <span class="badge bg-light text-secondary border me-1 cursor-pointer" onclick="addAmenityTag('Restaurant')">+ Restaurant</span>
+                                <span class="badge bg-light text-secondary border me-1 cursor-pointer" onclick="addAmenityTag('Gym')">+ Gym</span>
+                                <span class="badge bg-light text-secondary border cursor-pointer" onclick="addAmenityTag('Ocean View')">+ Ocean View</span>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Description</label>
-                            <textarea id="newHotelDescription" class="form-control bg-light border-0" rows="3" placeholder="Brief hotel description..." required></textarea>
+
+                        <!-- Hotel Image URL with Preview -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark small">Hotel Image URL</label>
+                            <input type="url" id="newHotelImage" class="form-control bg-light border-1 py-2 rounded-3" placeholder="https://images.unsplash.com/..." oninput="updateHotelImagePreview()">
+                            <div id="hotelImagePreviewBox" class="mt-2 text-center d-none">
+                                <img id="hotelImagePreview" src="" alt="Hotel Preview" class="rounded-3 shadow-sm border" style="max-height: 140px; width: 100%; object-fit: cover;">
+                            </div>
                         </div>
-                        <button type="submit" class="btn btn-accent w-100 py-2"><i class="fa-solid fa-cloud-arrow-up me-2"></i> Save Hotel to MongoDB</button>
+
+                        <!-- Form Footer Buttons -->
+                        <div class="d-flex justify-content-end gap-2 border-top pt-3">
+                            <button type="button" class="btn btn-outline-secondary px-4 rounded-3" data-bs-dismiss="modal" onclick="hideModalById('addHotelModal')">Cancel</button>
+                            <button type="submit" id="btnSubmitHotel" class="btn btn-accent px-4 rounded-3">
+                                <span id="btnSubmitHotelText"><i class="fa-solid fa-plus me-1"></i> + Add Hotel</span>
+                            </button>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- MODAL: ADD NEW ROOM (STUDENT 2 - ADMIN) -->
-    <div class="modal fade" id="addRoomModal" tabindex="-1">
+    <!-- MODAL 2: ADD NEW ROOM (ADMIN - AURA HOTELS THEME) -->
+    <div class="modal fade" id="addRoomModal" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header bg-dark text-white rounded-top-4">
-                    <h5 class="modal-title font-serif"><i class="fa-solid fa-bed text-warning me-2"></i>Add New Room to Hotel (Student 2 Admin)</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+                <!-- Modal Header -->
+                <div class="modal-header bg-dark text-white p-4 border-0 position-relative">
+                    <div>
+                        <h4 class="modal-title font-serif fw-bold mb-1"><i class="fa-solid fa-bed text-warning me-2"></i>Add New Room</h4>
+                        <p class="small text-white-50 mb-0">Add a room and manage its availability and pricing.</p>
+                    </div>
+                    <button type="button" class="btn-close btn-close-white position-absolute top-0 end-0 m-4" data-bs-dismiss="modal" onclick="hideModalById('addRoomModal')"></button>
                 </div>
-                <div class="modal-body p-4">
-                    <form onsubmit="submitNewRoom(event)">
+                <!-- Modal Body -->
+                <div class="modal-body p-4 p-md-5 bg-white">
+                    <form id="addRoomForm" onsubmit="submitNewRoom(event)" novalidate>
+                        <!-- Select Hotel Dropdown -->
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Select Hotel (Dropdown from MongoDB)</label>
-                            <select id="addRoomHotelSelect" class="form-select bg-light border-0" required>
-                                <option value="">-- Loading Hotels from DB... --</option>
+                            <label class="form-label fw-semibold text-dark small">Select Hotel <span class="text-danger">*</span></label>
+                            <select id="addRoomHotelSelect" class="form-select bg-light border-1 py-2 rounded-3" required>
+                                <option value="">-- Select Target Hotel Property --</option>
                             </select>
+                            <div class="invalid-feedback small">Please select a target hotel property.</div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label text-muted small fw-bold">Room Number / Code</label>
-                                <input type="text" id="addRoomNumber" class="form-control bg-light border-0" placeholder="e.g. 101, 202, Suite-A" required>
+
+                        <!-- 2-Column Grid -->
+                        <div class="row g-3">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-semibold text-dark small">Room Number <span class="text-danger">*</span></label>
+                                <input type="text" id="addRoomNumber" class="form-control bg-light border-1 py-2 rounded-3" placeholder="e.g. 101, 202, Suite-A" required>
+                                <div class="invalid-feedback small">Please enter a room number or code.</div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label text-muted small fw-bold">Room Category (Dropdown)</label>
-                                <select id="addRoomType" class="form-select bg-light border-0" required>
-                                    <option value="DELUXE" selected>DELUXE (Deluxe Room)</option>
-                                    <option value="SUITE">SUITE (Executive Suite)</option>
-                                    <option value="DOUBLE">DOUBLE (Double Room)</option>
-                                    <option value="SINGLE">SINGLE (Single Traveller)</option>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-semibold text-dark small">Room Type <span class="text-danger">*</span></label>
+                                <select id="addRoomType" class="form-select bg-light border-1 py-2 rounded-3" required>
+                                    <option value="Standard Room (SINGLE)">Standard Room</option>
+                                    <option value="Deluxe Room (DELUXE)" selected>Deluxe Room</option>
+                                    <option value="Luxury Suite (SUITE)">Luxury Suite</option>
+                                    <option value="Family Room (DOUBLE)">Family Room</option>
+                                    <option value="Presidential Suite (SUITE)">Presidential Suite</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label text-muted small fw-bold">Price Per Night ($ USD)</label>
-                                <input type="number" step="1" id="addRoomPrice" class="form-control bg-light border-0" value="160" required>
+
+                        <div class="row g-3">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-semibold text-dark small">Price Per Night ($ USD) <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">$</span>
+                                    <input type="number" step="1" id="addRoomPrice" class="form-control bg-light border-1 py-2" value="150" required>
+                                </div>
+                                <div class="invalid-feedback small">Please enter a valid nightly rate.</div>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label text-muted small fw-bold">Guest Capacity (Persons)</label>
-                                <input type="number" min="1" max="10" id="addRoomCapacity" class="form-control bg-light border-0" value="2" required>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label fw-semibold text-dark small">Maximum Guests / Capacity</label>
+                                <input type="number" min="1" max="10" id="addRoomCapacity" class="form-control bg-light border-1 py-2 rounded-3" value="2" required>
                             </div>
                         </div>
+
                         <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold mb-2">Room Features (Select Checkboxes)</label>
-                            <div class="row g-2 bg-light p-3 rounded-3 border-0">
-                                <div class="col-6 col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input room-feature-cb" type="checkbox" value="King Bed" id="rfKing" checked>
-                                        <label class="form-check-label small text-dark" for="rfKing">🛏️ King Bed</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input room-feature-cb" type="checkbox" value="Air Conditioning" id="rfAC" checked>
-                                        <label class="form-check-label small text-dark" for="rfAC">❄️ Air Conditioning</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input room-feature-cb" type="checkbox" value="Sea View" id="rfSea" checked>
-                                        <label class="form-check-label small text-dark" for="rfSea">🌅 Sea View</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input room-feature-cb" type="checkbox" value="Balcony" id="rfBalcony" checked>
-                                        <label class="form-check-label small text-dark" for="rfBalcony">🏖️ Balcony</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input room-feature-cb" type="checkbox" value="Jacuzzi" id="rfJacuzzi">
-                                        <label class="form-check-label small text-dark" for="rfJacuzzi">🛁 Jacuzzi</label>
-                                    </div>
-                                </div>
-                                <div class="col-6 col-md-4">
-                                    <div class="form-check">
-                                        <input class="form-check-input room-feature-cb" type="checkbox" value="Minibar" id="rfMinibar" checked>
-                                        <label class="form-check-label small text-dark" for="rfMinibar">🍷 Minibar</label>
-                                    </div>
-                                </div>
+                            <label class="form-label fw-semibold text-dark small">Description</label>
+                            <textarea id="addRoomDescription" class="form-control bg-light border-1 py-2 rounded-3" rows="2" placeholder="Describe room layout, bed setup, view, and features..."></textarea>
+                        </div>
+
+                        <!-- Room Features / Amenities Tag Manager -->
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-dark small mb-1">Amenities</label>
+                            <div id="roomFeaturesChipContainer" class="d-flex flex-wrap gap-2 mb-2 p-2 bg-light rounded-3 border">
+                                <!-- Chips dynamically rendered -->
+                            </div>
+                            <div class="input-group">
+                                <input type="text" id="roomFeatureInput" class="form-control bg-light border-1" placeholder="Type feature and click Add (e.g. Mini Bar)..." onkeypress="handleRoomFeatureKeyPress(event)">
+                                <button class="btn btn-outline-secondary" type="button" onclick="addRoomFeatureFromInput()"><i class="fa-solid fa-plus me-1"></i> Add</button>
+                            </div>
+                            <div class="mt-2 small text-muted">
+                                Quick suggestions:
+                                <span class="badge bg-light text-secondary border me-1 cursor-pointer" onclick="addRoomFeatureTag('WiFi')">+ WiFi</span>
+                                <span class="badge bg-light text-secondary border me-1 cursor-pointer" onclick="addRoomFeatureTag('Air Conditioning')">+ Air Conditioning</span>
+                                <span class="badge bg-light text-secondary border me-1 cursor-pointer" onclick="addRoomFeatureTag('TV')">+ TV</span>
+                                <span class="badge bg-light text-secondary border me-1 cursor-pointer" onclick="addRoomFeatureTag('Mini Bar')">+ Mini Bar</span>
+                                <span class="badge bg-light text-secondary border me-1 cursor-pointer" onclick="addRoomFeatureTag('Sea View')">+ Sea View</span>
+                                <span class="badge bg-light text-secondary border cursor-pointer" onclick="addRoomFeatureTag('Jacuzzi')">+ Jacuzzi</span>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <div class="form-check form-switch bg-light p-3 rounded-3">
-                                <input class="form-check-input ms-0 me-2" type="checkbox" id="addRoomAvailable" checked>
-                                <label class="form-check-label fw-bold text-dark" for="addRoomAvailable">Initial Status: Available for Instant Booking</label>
+
+                        <!-- Availability Switch -->
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-dark small mb-1">Availability</label>
+                            <div class="form-check form-switch bg-light p-3 rounded-3 border">
+                                <input class="form-check-input ms-0 me-3" type="checkbox" id="addRoomAvailable" checked style="width: 2.5em; height: 1.3em;">
+                                <label class="form-check-label fw-semibold text-dark" for="addRoomAvailable">Available for instant booking [ ON ]</label>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Description</label>
-                            <textarea id="addRoomDescription" class="form-control bg-light border-0" rows="2" placeholder="Describe room view, bed setup, and luxury features..." required></textarea>
+
+                        <!-- Form Footer Buttons -->
+                        <div class="d-flex justify-content-end gap-2 border-top pt-3">
+                            <button type="button" class="btn btn-outline-secondary px-4 rounded-3" data-bs-dismiss="modal" onclick="hideModalById('addRoomModal')">Cancel</button>
+                            <button type="submit" id="btnSubmitRoom" class="btn btn-accent px-4 rounded-3">
+                                <span id="btnSubmitRoomText"><i class="fa-solid fa-plus me-1"></i> + Add Room</span>
+                            </button>
                         </div>
-                        <button type="submit" class="btn btn-accent w-100 py-2"><i class="fa-solid fa-cloud-arrow-up me-2"></i> Save Room to MongoDB</button>
                     </form>
                 </div>
             </div>
@@ -1057,38 +1048,205 @@
         }
 
         // -------------------------------------------------------------
+        // TAG / CHIP MANAGERS FOR AMENITIES & FEATURES
+        // -------------------------------------------------------------
+        let hotelAmenitiesList = ['WiFi', 'Swimming Pool', 'Spa', 'Restaurant'];
+        let roomFeaturesList = ['WiFi', 'Air Conditioning', 'TV', 'Mini Bar'];
+
+        function renderHotelAmenityChips() {
+            const container = document.getElementById('hotelAmenitiesChipContainer');
+            if (!container) return;
+            if (hotelAmenitiesList.length === 0) {
+                container.innerHTML = '<span class="text-muted small italic">No amenities added yet. Click suggestions below or add custom amenities.</span>';
+                return;
+            }
+            container.innerHTML = hotelAmenitiesList.map(item => `
+                <span class="badge bg-white text-dark border px-3 py-2 rounded-pill shadow-sm d-inline-flex align-items-center me-1 mb-1 fw-medium">
+                    <i class="fa-solid fa-check text-warning me-2 small"></i> ${item}
+                    <i class="fa-solid fa-xmark ms-2 text-danger cursor-pointer" onclick="removeHotelAmenityTag('${item.replace(/'/g, "\\'")}')" title="Remove amenity"></i>
+                </span>
+            `).join('');
+        }
+
+        function addAmenityTag(item) {
+            const trimmed = item.trim();
+            if (trimmed && !hotelAmenitiesList.includes(trimmed)) {
+                hotelAmenitiesList.push(trimmed);
+                renderHotelAmenityChips();
+            }
+        }
+
+        function removeHotelAmenityTag(item) {
+            hotelAmenitiesList = hotelAmenitiesList.filter(i => i !== item);
+            renderHotelAmenityChips();
+        }
+
+        function addAmenityFromInput() {
+            const input = document.getElementById('hotelAmenityInput');
+            if (input && input.value) {
+                addAmenityTag(input.value);
+                input.value = '';
+            }
+        }
+
+        function handleAmenityKeyPress(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addAmenityFromInput();
+            }
+        }
+
+        function renderRoomFeatureChips() {
+            const container = document.getElementById('roomFeaturesChipContainer');
+            if (!container) return;
+            if (roomFeaturesList.length === 0) {
+                container.innerHTML = '<span class="text-muted small italic">No features added yet. Click suggestions below or add custom features.</span>';
+                return;
+            }
+            container.innerHTML = roomFeaturesList.map(item => `
+                <span class="badge bg-white text-dark border px-3 py-2 rounded-pill shadow-sm d-inline-flex align-items-center me-1 mb-1 fw-medium">
+                    <i class="fa-solid fa-check text-warning me-2 small"></i> ${item}
+                    <i class="fa-solid fa-xmark ms-2 text-danger cursor-pointer" onclick="removeRoomFeatureTag('${item.replace(/'/g, "\\'")}')" title="Remove feature"></i>
+                </span>
+            `).join('');
+        }
+
+        function addRoomFeatureTag(item) {
+            const trimmed = item.trim();
+            if (trimmed && !roomFeaturesList.includes(trimmed)) {
+                roomFeaturesList.push(trimmed);
+                renderRoomFeatureChips();
+            }
+        }
+
+        function removeRoomFeatureTag(item) {
+            roomFeaturesList = roomFeaturesList.filter(i => i !== item);
+            renderRoomFeatureChips();
+        }
+
+        function addRoomFeatureFromInput() {
+            const input = document.getElementById('roomFeatureInput');
+            if (input && input.value) {
+                addRoomFeatureTag(input.value);
+                input.value = '';
+            }
+        }
+
+        function handleRoomFeatureKeyPress(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addRoomFeatureFromInput();
+            }
+        }
+
+        // Image Preview Handler
+        function updateHotelImagePreview() {
+            const urlInput = document.getElementById('newHotelImage');
+            const previewBox = document.getElementById('hotelImagePreviewBox');
+            const previewImg = document.getElementById('hotelImagePreview');
+            if (urlInput && urlInput.value && urlInput.value.startsWith('http')) {
+                previewImg.src = urlInput.value;
+                previewBox.classList.remove('d-none');
+            } else {
+                previewBox.classList.add('d-none');
+            }
+        }
+
+        // Modern Toast Notification Helper (No disruptive alert popups)
+        function showAuraToast(message, type = 'success') {
+            let container = document.getElementById('auraToastContainer');
+            if (!container) {
+                container = document.createElement('div');
+                container.id = 'auraToastContainer';
+                container.className = 'toast-container position-fixed top-0 end-0 p-3';
+                container.style.zIndex = '1090';
+                document.body.appendChild(container);
+            }
+            const toastId = 'toast-' + Date.now();
+            const icon = type === 'success' ? 'fa-circle-check text-success' : 'fa-triangle-exclamation text-danger';
+            const bgClass = type === 'success' ? 'bg-white border-success' : 'bg-white border-danger';
+            const toastHtml = `
+                <div id="${toastId}" class="toast align-items-center ${bgClass} border-2 shadow-lg rounded-3 show mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="d-flex">
+                        <div class="toast-body d-flex align-items-center py-3">
+                            <i class="fa-solid ${icon} fs-4 me-3"></i>
+                            <div>
+                                <strong class="text-dark d-block">${type === 'success' ? 'Success' : 'Notice'}</strong>
+                                <span class="text-muted small">${message}</span>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-close me-2 m-auto" onclick="document.getElementById('${toastId}').remove()"></button>
+                    </div>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', toastHtml);
+            setTimeout(() => {
+                const el = document.getElementById(toastId);
+                if (el) el.remove();
+            }, 4000);
+        }
+
+        // Listen for ESC key to close modals
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                hideModalById('addHotelModal');
+                hideModalById('addRoomModal');
+                hideModalById('viewRoomsModal');
+                hideModalById('bookingModal');
+            }
+        });
+
+        // -------------------------------------------------------------
         // STUDENT 2 (SERVICE 2): HOTEL & ROOM SERVICE FUNCTIONS
         // -------------------------------------------------------------
 
         // Open Add New Hotel Modal (Admin)
         function openAddHotelModal() {
+            renderHotelAmenityChips();
             showModalById('addHotelModal');
         }
 
         // Submit New Hotel to MongoDB (POST /api/v1/hotels)
         async function submitNewHotel(e) {
             e.preventDefault();
-            const name = getInputValue('newHotelName', 'Luxury Resort');
-            const location = getInputValue('newHotelLocation', 'Colombo');
-            const address = getInputValue('newHotelAddress', '100 Galle Road');
-            const rating = parseFloat(getInputValue('newHotelRating', '4.8')) || 4.8;
-            const contactEmail = getInputValue('newHotelEmail', 'info@resort.com');
-            const contactPhone = getInputValue('newHotelPhone', '+94112345678');
-            const description = getInputValue('newHotelDescription', 'Luxury boutique hotel stay.');
+            const form = document.getElementById('addHotelForm');
+            if (!form.checkValidity()) {
+                e.stopPropagation();
+                form.classList.add('was-validated');
+                return;
+            }
 
-            // Get selected Amenities Checkboxes
-            const amenities = Array.from(document.querySelectorAll('.hotel-amenity-cb:checked')).map(cb => cb.value);
+            const name = getInputValue('newHotelName');
+            const location = getInputValue('newHotelLocation');
+            const address = getInputValue('newHotelAddress');
+            const rating = parseFloat(getInputValue('newHotelRating', '4.8')) || 4.8;
+            const contactEmail = getInputValue('newHotelEmail');
+            const contactPhone = getInputValue('newHotelPhone');
+            const description = getInputValue('newHotelDescription');
+            const imageUrl = getInputValue('newHotelImage');
+
+            if (rating < 1.0 || rating > 5.0) {
+                showAuraToast('Rating must be between 1.0 and 5.0', 'danger');
+                return;
+            }
+
+            const amenities = [...hotelAmenitiesList];
 
             const payload = {
                 name, location, address, rating, contactEmail, contactPhone, amenities, description
             };
 
+            // Loading state
+            const btn = document.getElementById('btnSubmitHotel');
+            const btnText = document.getElementById('btnSubmitHotelText');
+            btn.disabled = true;
+            btnText.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Adding Hotel...';
+
             const newHotelId = 'H' + Math.floor(100 + Math.random() * 900);
             const sampleImages = [
                 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
                 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80',
-                'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=600&q=80',
-                'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80'
+                'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=600&q=80'
             ];
             const newHotelItem = {
                 id: newHotelId,
@@ -1096,7 +1254,7 @@
                 location: location,
                 rating: rating,
                 price: 180,
-                image: sampleImages[hotelsData.length % sampleImages.length]
+                image: imageUrl || sampleImages[hotelsData.length % sampleImages.length]
             };
 
             try {
@@ -1127,54 +1285,69 @@
                     if (resData.data && resData.data.id) {
                         newHotelItem.id = resData.data.id;
                     }
-                    alert('🎉 New Hotel Saved Successfully into MongoDB Database!');
-                } else {
-                    alert('🎉 New Hotel Added Successfully to Catalog!');
                 }
             } catch (err) {
-                console.log('Saved to UI catalog:', err);
-                alert('🎉 New Hotel Added Successfully to Catalog!');
+                console.log('Saved to local UI list:', err);
             }
 
-            // Always update UI catalog immediately
             hotelsData.unshift(newHotelItem);
             renderHotels();
+            showAuraToast('Hotel added successfully!', 'success');
             hideModalById('addHotelModal');
+
+            btn.disabled = false;
+            btnText.innerHTML = '<i class="fa-solid fa-plus me-1"></i> + Add Hotel';
+            form.reset();
+            form.classList.remove('was-validated');
         }
 
         // Open Add New Room Modal (Admin) and populate Hotel Dropdown
         function openAddRoomModal() {
             const selectEl = document.getElementById('addRoomHotelSelect');
             if (hotelsData && hotelsData.length > 0) {
-                selectEl.innerHTML = hotelsData.map(h => `<option value="${h.id}">${h.name} (${h.location})</option>`).join('');
+                selectEl.innerHTML = '<option value="">-- Select Target Hotel Property --</option>' +
+                    hotelsData.map(h => `<option value="${h.id}">${h.name} (${h.location})</option>`).join('');
             } else {
                 selectEl.innerHTML = '<option value="">-- No Hotels Available in DB --</option>';
             }
+            renderRoomFeatureChips();
             showModalById('addRoomModal');
         }
 
         // Submit New Room to MongoDB (POST /api/v1/hotels/{hotelId}/rooms)
         async function submitNewRoom(e) {
             e.preventDefault();
-            const hotelId = getInputValue('addRoomHotelSelect', '');
-            const roomNumber = getInputValue('addRoomNumber', '101');
-            const roomType = getInputValue('addRoomType', 'DELUXE');
-            const pricePerNight = parseFloat(getInputValue('addRoomPrice', '160')) || 160;
+            const form = document.getElementById('addRoomForm');
+            if (!form.checkValidity()) {
+                e.stopPropagation();
+                form.classList.add('was-validated');
+                return;
+            }
+
+            const hotelId = getInputValue('addRoomHotelSelect');
+            const roomNumber = getInputValue('addRoomNumber');
+            const roomType = getInputValue('addRoomType');
+            const pricePerNight = parseFloat(getInputValue('addRoomPrice', '150')) || 150;
             const capacity = parseInt(getInputValue('addRoomCapacity', '2')) || 2;
             const available = document.getElementById('addRoomAvailable') ? document.getElementById('addRoomAvailable').checked : true;
-            const description = getInputValue('addRoomDescription', 'Luxury room with modern amenities.');
+            const description = getInputValue('addRoomDescription');
 
-            // Get selected Room Features Checkboxes
-            const features = Array.from(document.querySelectorAll('.room-feature-cb:checked')).map(cb => cb.value);
+            const features = [...roomFeaturesList];
 
             if (!hotelId) {
-                alert('⚠️ Please select a valid Hotel from the dropdown list!');
+                showAuraToast('Please select a target hotel property', 'danger');
                 return;
             }
 
             const payload = {
                 roomNumber, roomType, pricePerNight, capacity, available, description, features
             };
+
+            // Loading state
+            const btn = document.getElementById('btnSubmitRoom');
+            const btnText = document.getElementById('btnSubmitRoomText');
+            btn.disabled = true;
+            btnText.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Adding Room...';
 
             try {
                 let response;
@@ -1198,18 +1371,17 @@
                         body: JSON.stringify(payload)
                     });
                 }
-
-                if (response && response.ok) {
-                    alert(`🎉 Room #${roomNumber} Saved Successfully into MongoDB under Hotel!`);
-                } else {
-                    alert(`🎉 Room #${roomNumber} Added Successfully!`);
-                }
             } catch (err) {
-                console.log('Room added to catalog:', err);
-                alert(`🎉 Room #${roomNumber} Added Successfully!`);
+                console.log('Room added to list:', err);
             }
 
+            showAuraToast('Room added successfully!', 'success');
             hideModalById('addRoomModal');
+
+            btn.disabled = false;
+            btnText.innerHTML = '<i class="fa-solid fa-plus me-1"></i> + Add Room';
+            form.reset();
+            form.classList.remove('was-validated');
         }
 
         // Open Rooms Modal & Load Rooms from MongoDB (GET /api/v1/hotels/{id}/rooms)
