@@ -337,7 +337,8 @@
                     <p class="text-muted mb-0">Select a property to view availability and book your luxury stay.</p>
                 </div>
                 <div>
-                    <button class="btn btn-outline-dark btn-sm" onclick="renderHotels()"><i class="fa-solid fa-rotate me-1"></i> Refresh Catalog</button>
+                    <button class="btn btn-dark btn-sm me-2" onclick="openAddHotelModal()"><i class="fa-solid fa-plus me-1"></i> Add New Hotel (Admin)</button>
+                    <button class="btn btn-outline-dark btn-sm" onclick="fetchLiveHotels()"><i class="fa-solid fa-rotate me-1"></i> Refresh Catalog</button>
                 </div>
             </div>
 
@@ -496,6 +497,74 @@
                         </div>
                         <button type="submit" class="btn btn-accent w-100 py-2"><i class="fa-solid fa-lock me-2"></i> Confirm & Secure Booking</button>
                     </form>
+                </div>
+            </div>
+        </div>
+    <!-- MODAL: ADD NEW HOTEL (STUDENT 2 - ADMIN) -->
+    <div class="modal fade" id="addHotelModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-dark text-white rounded-top-4">
+                    <h5 class="modal-title font-serif"><i class="fa-solid fa-hotel text-warning me-2"></i>Add New Hotel Listing (Student 2 Admin)</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form onsubmit="submitNewHotel(event)">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label text-muted small fw-bold">Hotel Name</label>
+                                <input type="text" id="newHotelName" class="form-control bg-light border-0" placeholder="e.g. Shangri-La Resort" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label text-muted small fw-bold">Location / City</label>
+                                <input type="text" id="newHotelLocation" class="form-control bg-light border-0" placeholder="e.g. Colombo" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Street Address</label>
+                            <input type="text" id="newHotelAddress" class="form-control bg-light border-0" placeholder="e.g. 1 Lotus Road, Colombo 01" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label text-muted small fw-bold">Rating (1.0 - 5.0)</label>
+                                <input type="number" step="0.1" min="1" max="5" id="newHotelRating" class="form-control bg-light border-0" value="4.8" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label text-muted small fw-bold">Contact Email</label>
+                                <input type="email" id="newHotelEmail" class="form-control bg-light border-0" placeholder="info@hotel.com" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label text-muted small fw-bold">Contact Phone</label>
+                                <input type="text" id="newHotelPhone" class="form-control bg-light border-0" placeholder="+94112345678" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Amenities (comma separated)</label>
+                            <input type="text" id="newHotelAmenities" class="form-control bg-light border-0" placeholder="WiFi, Swimming Pool, Spa, Fitness Center" value="WiFi, Pool, Spa">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Description</label>
+                            <textarea id="newHotelDescription" class="form-control bg-light border-0" rows="3" placeholder="Brief hotel description..." required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-accent w-100 py-2"><i class="fa-solid fa-cloud-arrow-up me-2"></i> Save Hotel to MongoDB</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: VIEW ROOMS & ROOM AVAILABILITY (STUDENT 2) -->
+    <div class="modal fade" id="viewRoomsModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-dark text-white rounded-top-4">
+                    <h5 class="modal-title font-serif" id="viewRoomsTitle"><i class="fa-solid fa-bed text-warning me-2"></i>Rooms & Real-time Availability</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <div id="roomsContainer">
+                        <!-- Dynamic Rooms List -->
+                    </div>
                 </div>
             </div>
         </div>
@@ -772,14 +841,185 @@
                                     <span class="text-muted small">Starting from</span>
                                     <div class="fw-bold text-dark fs-5">$${h.price} <span class="fs-6 text-muted font-sans font-normal">/ night</span></div>
                                 </div>
-                                <button class="btn btn-accent btn-sm" onclick="openBookingModal('${h.id}', '${h.name}')">
-                                    <i class="fa-solid fa-calendar-plus me-1"></i> Reserve Suite
-                                </button>
+                                <div class="d-flex gap-1">
+                                    <button class="btn btn-outline-dark btn-sm" onclick="openRoomsModal('${h.id}', '${h.name}')" title="View Rooms & Status">
+                                        <i class="fa-solid fa-bed"></i> Rooms
+                                    </button>
+                                    <button class="btn btn-accent btn-sm" onclick="openBookingModal('${h.id}', '${h.name}')">
+                                        <i class="fa-solid fa-calendar-plus me-1"></i> Reserve
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             `).join('');
+        }
+
+        // -------------------------------------------------------------
+        // STUDENT 2 (SERVICE 2): HOTEL & ROOM SERVICE FUNCTIONS
+        // -------------------------------------------------------------
+
+        // Open Add New Hotel Modal (Admin)
+        function openAddHotelModal() {
+            const modal = new bootstrap.Modal(document.getElementById('addHotelModal'));
+            modal.show();
+        }
+
+        // Submit New Hotel to MongoDB (POST /api/v1/hotels)
+        async function submitNewHotel(e) {
+            e.preventDefault();
+            const name = document.getElementById('newHotelName').value;
+            const location = document.getElementById('newHotelLocation').value;
+            const address = document.getElementById('newHotelAddress').value;
+            const rating = parseFloat(document.getElementById('newHotelRating').value) || 4.8;
+            const contactEmail = document.getElementById('newHotelEmail').value;
+            const contactPhone = document.getElementById('newHotelPhone').value;
+            const amenitiesStr = document.getElementById('newHotelAmenities').value;
+            const description = document.getElementById('newHotelDescription').value;
+
+            const amenities = amenitiesStr.split(',').map(s => s.trim()).filter(Boolean);
+
+            const payload = {
+                name, location, address, rating, contactEmail, contactPhone, amenities, description
+            };
+
+            try {
+                let response;
+                try {
+                    response = await fetch('http://localhost:8080/api/v1/hotels', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-API-KEY': 'hotel-service-secret-key-123'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error('Gateway fallback');
+                } catch (err) {
+                    response = await fetch('http://localhost:8082/api/v1/hotels', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-API-KEY': 'hotel-service-secret-key-123'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                if (response && response.ok) {
+                    alert('✅ New Hotel Saved Successfully into MongoDB Database!');
+                    const modalEl = document.getElementById('addHotelModal');
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    if (modal) modal.hide();
+                    fetchLiveHotels();
+                } else {
+                    alert('⚠️ Failed to save hotel into MongoDB. Please check service connection.');
+                }
+            } catch (err) {
+                console.error('Error adding hotel:', err);
+                alert('⚠️ Error connecting to Hotel Service MongoDB backend.');
+            }
+        }
+
+        // Open Rooms Modal & Load Rooms from MongoDB (GET /api/v1/hotels/{id}/rooms)
+        async function openRoomsModal(hotelId, hotelName) {
+            document.getElementById('viewRoomsTitle').innerHTML = `<i class="fa-solid fa-bed text-warning me-2"></i>Rooms & Availability - ${hotelName}`;
+            const container = document.getElementById('roomsContainer');
+            container.innerHTML = '<div class="text-center py-4"><i class="fa-solid fa-spinner fa-spin fa-2x text-muted"></i><p class="mt-2 text-muted">Loading rooms from MongoDB...</p></div>';
+
+            const modal = new bootstrap.Modal(document.getElementById('viewRoomsModal'));
+            modal.show();
+
+            try {
+                let response;
+                try {
+                    response = await fetch(`http://localhost:8080/api/v1/hotels/${hotelId}/rooms`, {
+                        headers: { 'X-API-KEY': 'hotel-service-secret-key-123' }
+                    });
+                    if (!response.ok) throw new Error('Fallback');
+                } catch (e) {
+                    response = await fetch(`http://localhost:8082/api/v1/hotels/${hotelId}/rooms`, {
+                        headers: { 'X-API-KEY': 'hotel-service-secret-key-123' }
+                    });
+                }
+
+                if (response && response.ok) {
+                    const result = await response.json();
+                    const rooms = result.data || [];
+
+                    if (rooms.length === 0) {
+                        container.innerHTML = '<div class="alert alert-info border-0 rounded-3 text-center">No room listings configured for this hotel yet in MongoDB.</div>';
+                        return;
+                    }
+
+                    container.innerHTML = rooms.map(r => `
+                        <div class="card border-0 bg-light rounded-3 p-3 mb-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="d-flex align-items-center gap-2 mb-1">
+                                        <h5 class="fw-bold mb-0 text-dark">Room #${r.roomNumber || '101'} (${r.roomType || 'DELUXE'})</h5>
+                                        <span class="badge ${r.available ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'} fw-bold">
+                                            ${r.available ? '● Available' : '● Occupied'}
+                                        </span>
+                                    </div>
+                                    <p class="text-muted small mb-1">${r.description || 'Luxury room with modern amenities.'}</p>
+                                    <div class="fw-bold text-primary">$${r.pricePerNight || 150} / night • Capacity: ${r.capacity || 2} Persons</div>
+                                </div>
+                                <div>
+                                    <button class="btn btn-sm ${r.available ? 'btn-outline-danger' : 'btn-outline-success'}" 
+                                            onclick="toggleRoomAvailability('${r.id}', ${r.available}, '${hotelId}', '${hotelName}')">
+                                        <i class="fa-solid fa-power-off me-1"></i> Toggle Status
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    container.innerHTML = '<div class="alert alert-warning border-0 rounded-3 text-center">Could not load rooms from database.</div>';
+                }
+            } catch (err) {
+                console.error('Error fetching rooms:', err);
+                container.innerHTML = '<div class="alert alert-danger border-0 rounded-3 text-center">Error connecting to Hotel Service MongoDB.</div>';
+            }
+        }
+
+        // Toggle Room Availability Status in MongoDB (PUT /api/v1/rooms/{id}/availability)
+        async function toggleRoomAvailability(roomId, currentStatus, hotelId, hotelName) {
+            try {
+                let response;
+                const payload = { available: !currentStatus };
+                try {
+                    response = await fetch(`http://localhost:8080/api/v1/rooms/${roomId}/availability`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-API-KEY': 'hotel-service-secret-key-123'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error('Fallback');
+                } catch (e) {
+                    response = await fetch(`http://localhost:8082/api/v1/rooms/${roomId}/availability`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-API-KEY': 'hotel-service-secret-key-123'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                if (response && response.ok) {
+                    alert(`✅ Room availability status updated to [${!currentStatus ? 'AVAILABLE' : 'OCCUPIED'}] in MongoDB!`);
+                    openRoomsModal(hotelId, hotelName);
+                } else {
+                    alert('⚠️ Failed to update room availability status.');
+                }
+            } catch (err) {
+                console.error('Error updating room availability:', err);
+                alert('⚠️ Error connecting to backend service.');
+            }
         }
 
         // Render Bookings Table
