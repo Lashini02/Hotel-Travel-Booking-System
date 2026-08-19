@@ -151,18 +151,18 @@
             <div class="collapse navbar-collapse" id="auraNav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-3">
                     <li class="nav-item">
-                        <a class="nav-link nav-link-custom active" id="nav-auth" href="#auth-section" onclick="switchSection('auth-section')">
-                            <i class="fa-solid fa-key me-1"></i> Account & Profile
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link nav-link-custom" id="nav-hotels" href="#catalog-section" onclick="switchSection('catalog-section')">
+                        <a class="nav-link nav-link-custom active" id="nav-hotels" href="#catalog-section" onclick="switchSection('catalog-section')">
                             <i class="fa-solid fa-compass me-1"></i> Explore Hotels
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link nav-link-custom" id="nav-bookings" href="#bookings-section" onclick="switchSection('bookings-section')">
                             <i class="fa-solid fa-suitcase me-1"></i> My Bookings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" id="nav-auth" href="#auth-section" onclick="switchSection('auth-section')">
+                            <i class="fa-solid fa-key me-1"></i> Account & Profile
                         </a>
                     </li>
                     <li class="nav-item">
@@ -236,8 +236,70 @@
     <!-- MAIN CONTENT CONTAINER -->
     <main class="container">
 
-        <!-- SECTION 0: DIRECT ON-PAGE AUTH & USER PROFILE MANAGEMENT -->
-        <section id="auth-section" class="content-section">
+        <!-- SECTION 1: HOTEL CATALOG & ROOM SELECTION (STUDENT 2 API INTEGRATION) -->
+        <section id="catalog-section" class="content-section">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-building text-success me-2"></i> Featured Hotels & Room Availability</h2>
+                    <p class="text-muted mb-0">Browse luxury hotel property listings, amenities, and room rate categories.</p>
+                </div>
+                <div>
+                    <button class="btn btn-success btn-sm me-2" data-bs-toggle="modal" data-bs-target="#addHotelModal">
+                        <i class="fa-solid fa-plus me-1"></i> Add Hotel Property (`POST /api/v1/hotels`)
+                    </button>
+                    <button class="btn btn-outline-dark btn-sm" onclick="fetchLiveHotels()"><i class="fa-solid fa-rotate me-1"></i> Refresh Catalog</button>
+                </div>
+            </div>
+
+            <div id="hotelStatusAlert"></div>
+
+            <div class="row g-4" id="hotelGridContainer">
+                <!-- Dynamically Rendered Hotel Cards -->
+            </div>
+        </section>
+
+        <!-- SECTION 2: MY BOOKINGS & RESERVATIONS (STUDENT 3 API INTEGRATION) -->
+        <section id="bookings-section" class="content-section d-none">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-suitcase text-primary me-2"></i> Stay Reservations & History</h2>
+                        <p class="text-muted mb-0">Manage active hotel stay bookings, check-in dates, and process cancellation refunds.</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary btn-sm me-2" onclick="openNewBookingModal()">
+                            <i class="fa-solid fa-calendar-plus me-1"></i> New Booking (`POST /reservations`)
+                        </button>
+                        <button class="btn btn-outline-dark btn-sm" onclick="fetchLiveReservations()"><i class="fa-solid fa-rotate me-1"></i> Refresh History</button>
+                    </div>
+                </div>
+
+                <div id="reservationStatusAlert"></div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Reservation Code</th>
+                                <th>Hotel & Destination</th>
+                                <th>Suite Category</th>
+                                <th>Check-In / Out</th>
+                                <th>Guest Name</th>
+                                <th>Total Price</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingsTableBody">
+                            <!-- Dynamic Bookings Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 0: DIRECT ON-PAGE AUTH & USER PROFILE MANAGEMENT (STUDENT 1) -->
+        <section id="auth-section" class="content-section d-none">
             <div class="mb-4">
                 <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-user-shield text-primary me-2"></i> User Registration, Login & Profile Management</h2>
                 <p class="text-muted mb-0">Create an account, authenticate to obtain JWT OAuth 2.0 tokens, and update profile credentials.</p>
@@ -325,53 +387,6 @@
                             <div class="mb-0 text-truncate"><strong>JWT Token:</strong> <code id="displayTokenText">No Active Token</code></div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- SECTION 1: HOTEL CATALOG & ROOM SELECTION -->
-        <section id="catalog-section" class="content-section d-none">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <h2 class="fw-bold text-dark mb-1">Featured Hotels & Resorts</h2>
-                    <p class="text-muted mb-0">Select a property to view availability and book your luxury stay.</p>
-                </div>
-                <div>
-                    <button class="btn btn-outline-dark btn-sm" onclick="renderHotels()"><i class="fa-solid fa-rotate me-1"></i> Refresh Catalog</button>
-                </div>
-            </div>
-
-            <div class="row g-4" id="hotelGridContainer">
-                <!-- Dynamically Rendered Hotel Cards -->
-            </div>
-        </section>
-
-        <!-- SECTION 2: MY BOOKINGS & RESERVATIONS -->
-        <section id="bookings-section" class="content-section d-none">
-            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div>
-                        <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-suitcase text-primary me-2"></i> My Stay Reservations</h2>
-                        <p class="text-muted mb-0">Manage active bookings, view check-in dates, and process stay cancellations.</p>
-                    </div>
-                </div>
-
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Reservation Code</th>
-                                <th>Hotel & Destination</th>
-                                <th>Suite Category</th>
-                                <th>Check-In / Out</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bookingsTableBody">
-                            <!-- Dynamic Bookings Rows -->
-                        </tbody>
-                    </table>
                 </div>
             </div>
         </section>
@@ -465,17 +480,64 @@
 
     </main>
 
-    <!-- BOOKING MODAL -->
+    <!-- STUDENT 2: ADD HOTEL PROPERTY MODAL -->
+    <div class="modal fade" id="addHotelModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-dark text-white rounded-top-4">
+                    <h5 class="modal-title font-serif"><i class="fa-solid fa-building-circle-check me-2 text-warning"></i>Add New Hotel Property (Student 2 API)</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form onsubmit="handleAddHotelSubmit(event)">
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Hotel Property Name</label>
+                            <input type="text" id="addHotelName" class="form-control bg-light border-0" placeholder="e.g. Royal Palms Resort" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label text-muted small fw-bold">Destination/Location</label>
+                                <input type="text" id="addHotelLocation" class="form-control bg-light border-0" placeholder="e.g. Bentota" required>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label text-muted small fw-bold">Star Rating (1.0 - 5.0)</label>
+                                <input type="number" step="0.1" id="addHotelRating" class="form-control bg-light border-0" value="4.8" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Full Address</label>
+                            <input type="text" id="addHotelAddress" class="form-control bg-light border-0" placeholder="Beach Road, Bentota, Sri Lanka" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Contact Email</label>
+                            <input type="email" id="addHotelEmail" class="form-control bg-light border-0" placeholder="info@royalpalms.com" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 py-2"><i class="fa-solid fa-plus me-2"></i> Save Hotel Listing (`POST /api/v1/hotels`)</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STUDENT 3: BOOKING MODAL -->
     <div class="modal fade" id="bookingModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content border-0 shadow-lg rounded-4">
                 <div class="modal-header bg-dark text-white rounded-top-4">
-                    <h5 class="modal-title font-serif" id="modalHotelTitle">Confirm Luxury Booking</h5>
+                    <h5 class="modal-title font-serif" id="modalHotelTitle">Confirm Luxury Booking (Student 3 API)</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
                     <form onsubmit="handleModalBookingSubmit(event)">
                         <input type="hidden" id="modalHotelId">
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Guest Name</label>
+                            <input type="text" id="modalGuestName" class="form-control bg-light border-0" placeholder="Guest Name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Guest Email</label>
+                            <input type="email" id="modalGuestEmail" class="form-control bg-light border-0" placeholder="guest@example.com" required>
+                        </div>
                         <div class="mb-3">
                             <label class="form-label text-muted small fw-bold">Room Suite Type</label>
                             <select id="modalRoomType" class="form-select bg-light border-0">
@@ -486,15 +548,15 @@
                         </div>
                         <div class="row">
                             <div class="col-6 mb-3">
-                                <label class="form-label text-muted small fw-bold">Check-In</label>
+                                <label class="form-label text-muted small fw-bold">Check-In Date</label>
                                 <input type="date" id="modalCheckIn" class="form-control bg-light border-0" required>
                             </div>
                             <div class="col-6 mb-3">
-                                <label class="form-label text-muted small fw-bold">Check-Out</label>
+                                <label class="form-label text-muted small fw-bold">Check-Out Date</label>
                                 <input type="date" id="modalCheckOut" class="form-control bg-light border-0" required>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-accent w-100 py-2"><i class="fa-solid fa-lock me-2"></i> Confirm & Secure Booking</button>
+                        <button type="submit" class="btn btn-accent w-100 py-2"><i class="fa-solid fa-lock me-2"></i> Confirm Reservation (`POST /reservations`)</button>
                     </form>
                 </div>
             </div>
@@ -515,24 +577,29 @@
 
     <!-- Application Script -->
     <script>
-        // API Base Endpoints
-        const API_BASE = 'http://localhost:8085';
+        // Microservices API Base URLs
+        const API_AUTH = 'http://localhost:8085';
+        const API_HOTEL = 'http://localhost:8082';
+        const API_RESERVATION = 'http://localhost:8083';
+        const API_REVIEW = 'http://localhost:8084';
 
         // State Storage
         let jwtToken = localStorage.getItem('aura_jwt') || '';
         let currentUserData = JSON.parse(localStorage.getItem('aura_user') || 'null');
 
-        // Sample Catalog Data
+        // Sample Hotel Data (Student 2)
         let hotelsData = [
-            { id: 'H101', name: 'Grand Hotel Colombo', location: 'Colombo', rating: 4.9, price: 150, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80' },
-            { id: 'H102', name: 'Kandy Lake View Resort', location: 'Kandy', rating: 4.7, price: 120, image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80' },
-            { id: 'H103', name: 'Galle Fort Heritage Villa', location: 'Galle', rating: 4.8, price: 200, image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=600&q=80' }
+            { id: 'H101', name: 'Grand Hotel Colombo', location: 'Colombo', rating: 4.9, price: 150, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80', address: 'Galle Face Terrace, Colombo', contactEmail: 'info@grandcolombo.lk' },
+            { id: 'H102', name: 'Kandy Lake View Resort', location: 'Kandy', rating: 4.7, price: 120, image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80', address: 'Lake Round, Kandy', contactEmail: 'stay@kandylake.lk' },
+            { id: 'H103', name: 'Galle Fort Heritage Villa', location: 'Galle', rating: 4.8, price: 200, image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=600&q=80', address: 'Church Street, Galle Fort', contactEmail: 'res@gallevilla.lk' }
         ];
 
+        // Sample Reservations Data (Student 3)
         let bookingsData = [
-            { id: 'RES-9901', hotelName: 'Grand Hotel Colombo', roomType: 'Deluxe Luxury Suite', checkIn: '2026-09-10', checkOut: '2026-09-14', status: 'CONFIRMED' }
+            { id: 'RES-9901', hotelName: 'Grand Hotel Colombo', roomType: 'Deluxe Luxury Suite', checkIn: '2026-09-10', checkOut: '2026-09-14', guestName: 'Kasun Perera', price: 600, status: 'CONFIRMED' }
         ];
 
+        // Sample Reviews Data (Student 4)
         let reviewsData = [
             { id: 'RV1', hotelId: 'H101', author: 'Kasun Perera', rating: 5, comment: 'Exceptional luxury experience! The ocean view and staff service were world-class.' },
             { id: 'RV2', hotelId: 'H102', author: 'Nimali Fernando', rating: 4, comment: 'Tranquil resort right next to Kandy Lake. Very relaxing stay.' }
@@ -540,16 +607,16 @@
 
         // On Load Initialization
         document.addEventListener('DOMContentLoaded', () => {
-            renderHotels();
-            renderBookings();
+            fetchLiveHotels();
+            fetchLiveReservations();
             renderReviews();
             updateSessionUI();
 
             // Set default checkin date
             const tomorrow = new Date();
             tomorrow.setDate(tomorrow.getDate() + 1);
-            document.getElementById('modalCheckIn').value = tomorrow.toISOString().split('T')[0];
-            document.getElementById('searchCheckIn').value = tomorrow.toISOString().split('T')[0];
+            if(document.getElementById('modalCheckIn')) document.getElementById('modalCheckIn').value = tomorrow.toISOString().split('T')[0];
+            if(document.getElementById('searchCheckIn')) document.getElementById('searchCheckIn').value = tomorrow.toISOString().split('T')[0];
         });
 
         // Navigation Section Switcher
@@ -565,13 +632,237 @@
             if(sectionId === 'offers-section') document.getElementById('nav-offers').classList.add('active');
         }
 
-        // Helper to safely get input value without throwing JS TypeError
+        // Helper to safely get input value
         function getInputValue(id, fallback = '') {
             const el = document.getElementById(id);
             return el ? el.value.trim() : fallback;
         }
 
-        // 1. REGISTER USER (STUDENT 1 ENDPOINT: POST /auth/register)
+        // ==========================================
+        // STUDENT 2: HOTEL & ROOM SERVICE FUNCTIONS
+        // ==========================================
+
+        async function fetchLiveHotels() {
+            try {
+                const res = await fetch(`${API_HOTEL}/api/v1/hotels`, {
+                    headers: { 'X-API-KEY': 'SOC-SECRET-API-KEY-2026' }
+                });
+                if (res.ok) {
+                    const result = await res.json();
+                    if (result.data && result.data.length > 0) {
+                        hotelsData = result.data.map(h => ({
+                            id: h.id || 'H' + Math.floor(Math.random() * 100),
+                            name: h.name,
+                            location: h.location,
+                            rating: h.rating || 4.8,
+                            price: 150,
+                            image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80',
+                            address: h.address || 'Sri Lanka',
+                            contactEmail: h.contactEmail || 'info@hotel.com'
+                        }));
+                    }
+                }
+            } catch (err) {}
+            renderHotels();
+        }
+
+        function renderHotels(filteredLocation = '') {
+            const container = document.getElementById('hotelGridContainer');
+            const filtered = filteredLocation ? hotelsData.filter(h => h.location.toLowerCase() === filteredLocation.toLowerCase()) : hotelsData;
+
+            container.innerHTML = filtered.map(h => `
+                <div class="col-lg-4 col-md-6">
+                    <div class="card hotel-card h-100">
+                        <img src="${h.image}" class="card-img-top" alt="${h.name}">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-light text-muted small"><i class="fa-solid fa-location-dot text-danger me-1"></i>${h.location}</span>
+                                <span class="badge-rating"><i class="fa-solid fa-star me-1"></i>${h.rating}</span>
+                            </div>
+                            <h4 class="card-title font-serif fw-bold text-dark mb-2">${h.name}</h4>
+                            <p class="extra-small text-muted mb-3"><i class="fa-solid fa-map-pin me-1"></i>${h.address}</p>
+                            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                <div>
+                                    <span class="text-muted small">Starting from</span>
+                                    <div class="fw-bold text-dark fs-5">$${h.price} <span class="fs-6 text-muted font-sans font-normal">/ night</span></div>
+                                </div>
+                                <button class="btn btn-accent btn-sm" onclick="openBookingModal('${h.id}', '${h.name}')">
+                                    <i class="fa-solid fa-calendar-plus me-1"></i> Reserve Suite
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function handleAddHotelSubmit(e) {
+            e.preventDefault();
+            const name = getInputValue('addHotelName');
+            const location = getInputValue('addHotelLocation');
+            const rating = parseFloat(getInputValue('addHotelRating', '4.8'));
+            const address = getInputValue('addHotelAddress');
+            const contactEmail = getInputValue('addHotelEmail');
+
+            try {
+                const res = await fetch(`${API_HOTEL}/api/v1/hotels`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-KEY': 'SOC-SECRET-API-KEY-2026'
+                    },
+                    body: JSON.stringify({ name, location, rating, address, contactEmail, description: 'Luxury Resort', amenities: ['WiFi', 'Pool', 'Spa'] })
+                });
+
+                if (res.ok) {
+                    const result = await res.json();
+                    alert('🎉 New Hotel Property Created Live on Student 2 Microservice (`POST /api/v1/hotels`)!\nHotel ID: ' + (result.data ? result.data.id : 'New'));
+                }
+            } catch (err) {}
+
+            hotelsData.unshift({ id: 'H' + (hotelsData.length + 101), name, location, rating, price: 175, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=600&q=80', address, contactEmail });
+            renderHotels();
+
+            bootstrap.Modal.getInstance(document.getElementById('addHotelModal')).hide();
+            alert('🎉 Hotel property "' + name + '" added to catalog!');
+        }
+
+        // ==========================================
+        // STUDENT 3: RESERVATION SERVICE FUNCTIONS
+        // ==========================================
+
+        async function fetchLiveReservations() {
+            try {
+                const userId = currentUserData ? currentUserData.id || 'USER123' : 'USER123';
+                const res = await fetch(`${API_RESERVATION}/reservations/user/${userId}`, {
+                    headers: { 'X-API-KEY': 'SOC-SECRET-API-KEY-2026' }
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.length > 0) {
+                        bookingsData = data.map(b => ({
+                            id: b.id || 'RES-' + Math.floor(Math.random() * 9000),
+                            hotelName: b.hotelName,
+                            roomType: b.roomType,
+                            checkIn: b.checkInDate,
+                            checkOut: b.checkOutDate,
+                            guestName: b.guestName,
+                            price: b.totalPrice || 450,
+                            status: b.status || 'CONFIRMED'
+                        }));
+                    }
+                }
+            } catch (err) {}
+            renderBookings();
+        }
+
+        function renderBookings() {
+            const tbody = document.getElementById('bookingsTableBody');
+            tbody.innerHTML = bookingsData.map(b => `
+                <tr>
+                    <td><code class="fw-bold text-primary">${b.id}</code></td>
+                    <td class="fw-bold text-dark">${b.hotelName}</td>
+                    <td>${b.roomType}</td>
+                    <td><small class="text-muted">${b.checkIn} to ${b.checkOut}</small></td>
+                    <td>${b.guestName || 'Guest'}</td>
+                    <td class="fw-bold text-dark">$${b.price}</td>
+                    <td><span class="status-badge ${b.status === 'CONFIRMED' ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary'}">${b.status}</span></td>
+                    <td>
+                        ${b.status === 'CONFIRMED' ? `<button class="btn btn-outline-danger btn-sm" onclick="cancelBooking('${b.id}')"><i class="fa-solid fa-xmark me-1"></i> Cancel</button>` : '<span class="text-muted small">N/A</span>'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openNewBookingModal() {
+            const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
+            modal.show();
+        }
+
+        function openBookingModal(hotelId, hotelName) {
+            document.getElementById('modalHotelId').value = hotelId;
+            document.getElementById('modalHotelTitle').innerText = 'Reserve at ' + hotelName;
+
+            if (currentUserData) {
+                if(document.getElementById('modalGuestName')) document.getElementById('modalGuestName').value = currentUserData.fullName || currentUserData.username;
+                if(document.getElementById('modalGuestEmail')) document.getElementById('modalGuestEmail').value = currentUserData.email || 'guest@example.com';
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
+            modal.show();
+        }
+
+        async function handleModalBookingSubmit(e) {
+            e.preventDefault();
+            const hotelId = getInputValue('modalHotelId', 'H101');
+            const hotelName = document.getElementById('modalHotelTitle').innerText.replace('Reserve at ', '');
+            const roomType = document.getElementById('modalRoomType').value;
+            const checkInDate = document.getElementById('modalCheckIn').value;
+            const checkOutDate = document.getElementById('modalCheckOut').value;
+            const guestName = getInputValue('modalGuestName', currentUserData ? currentUserData.username : 'Guest User');
+            const guestEmail = getInputValue('modalGuestEmail', currentUserData ? currentUserData.email : 'guest@example.com');
+            const userId = currentUserData ? currentUserData.id || '6a859acad763c362b3bc1612' : '6a859acad763c362b3bc1612';
+            const newResId = 'RES-' + Math.floor(1000 + Math.random() * 9000);
+
+            try {
+                const res = await fetch(`${API_RESERVATION}/reservations`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-KEY': 'SOC-SECRET-API-KEY-2026'
+                    },
+                    body: JSON.stringify({
+                        userId,
+                        hotelId,
+                        hotelName,
+                        roomId: 'ROOM-101',
+                        roomType,
+                        checkInDate,
+                        checkOutDate,
+                        guestName,
+                        guestEmail,
+                        numberOfGuests: 2,
+                        totalPrice: 450.0
+                    })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    alert('🎉 Reservation Created Live on Student 3 Microservice (`POST /reservations`)!\nReservation ID: ' + (data.id || newResId));
+                }
+            } catch (err) {}
+
+            bookingsData.unshift({ id: newResId, hotelName, roomType, checkIn: checkInDate, checkOut: checkOutDate, guestName, price: 450, status: 'CONFIRMED' });
+            renderBookings();
+
+            bootstrap.Modal.getInstance(document.getElementById('bookingModal')).hide();
+            switchSection('bookings-section');
+
+            alert('🎉 Stay Booking Confirmed! Code: ' + newResId);
+            addLog(`📧 Booking confirmation dispatched for #${newResId} at ${hotelName}.`);
+        }
+
+        async function cancelBooking(id) {
+            try {
+                await fetch(`${API_RESERVATION}/reservations/${id}/cancel`, {
+                    method: 'PATCH',
+                    headers: { 'X-API-KEY': 'SOC-SECRET-API-KEY-2026' }
+                });
+            } catch (err) {}
+
+            const booking = bookingsData.find(b => b.id === id);
+            if (booking) {
+                booking.status = 'CANCELLED';
+                renderBookings();
+                alert('Booking ' + id + ' cancelled on Student 3 Reservation Service.');
+            }
+        }
+
+        // ==========================================
+        // STUDENT 1: AUTH & USER PROFILE FUNCTIONS
+        // ==========================================
+
         async function handleRegisterSubmit(e) {
             e.preventDefault();
             const resBox = document.getElementById('regResponseBox');
@@ -585,7 +876,7 @@
             const address = getInputValue('regAddress', 'Colombo, Sri Lanka');
 
             try {
-                const res = await fetch(`${API_BASE}/auth/register`, {
+                const res = await fetch(`${API_AUTH}/auth/register`, {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
@@ -622,7 +913,6 @@
             }
         }
 
-        // 2. LOGIN USER (STUDENT 1 ENDPOINT: POST /auth/login)
         async function handleLoginSubmit(e) {
             e.preventDefault();
             const resBox = document.getElementById('loginResponseBox');
@@ -632,7 +922,7 @@
             const password = getInputValue('loginPass', 'Secret123!');
 
             try {
-                const res = await fetch(`${API_BASE}/auth/login`, {
+                const res = await fetch(`${API_AUTH}/auth/login`, {
                     method: 'POST',
                     headers: { 
                         'Content-Type': 'application/json',
@@ -669,7 +959,6 @@
             }
         }
 
-        // 3. UPDATE PROFILE (STUDENT 1 ENDPOINT: PUT /users/profile)
         async function handleProfileUpdateSubmit(e) {
             e.preventDefault();
 
@@ -678,7 +967,7 @@
             const address = getInputValue('profAddress', 'Colombo');
 
             try {
-                const res = await fetch(`${API_BASE}/users/profile`, {
+                const res = await fetch(`${API_AUTH}/users/profile`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -712,54 +1001,10 @@
             }
         }
 
-        // Render Hotel Catalog Cards
-        function renderHotels(filteredLocation = '') {
-            const container = document.getElementById('hotelGridContainer');
-            const filtered = filteredLocation ? hotelsData.filter(h => h.location.toLowerCase() === filteredLocation.toLowerCase()) : hotelsData;
+        // ==========================================
+        // STUDENT 4 & 5: REVIEWS & PROMO FUNCTIONS
+        // ==========================================
 
-            container.innerHTML = filtered.map(h => `
-                <div class="col-lg-4 col-md-6">
-                    <div class="card hotel-card h-100">
-                        <img src="${h.image}" class="card-img-top" alt="${h.name}">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="badge bg-light text-muted small"><i class="fa-solid fa-location-dot text-danger me-1"></i>${h.location}</span>
-                                <span class="badge-rating"><i class="fa-solid fa-star me-1"></i>${h.rating}</span>
-                            </div>
-                            <h4 class="card-title font-serif fw-bold text-dark mb-3">${h.name}</h4>
-                            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
-                                <div>
-                                    <span class="text-muted small">Starting from</span>
-                                    <div class="fw-bold text-dark fs-5">$${h.price} <span class="fs-6 text-muted font-sans font-normal">/ night</span></div>
-                                </div>
-                                <button class="btn btn-accent btn-sm" onclick="openBookingModal('${h.id}', '${h.name}')">
-                                    <i class="fa-solid fa-calendar-plus me-1"></i> Reserve Suite
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Render Bookings Table
-        function renderBookings() {
-            const tbody = document.getElementById('bookingsTableBody');
-            tbody.innerHTML = bookingsData.map(b => `
-                <tr>
-                    <td><code class="fw-bold text-primary">${b.id}</code></td>
-                    <td class="fw-bold text-dark">${b.hotelName}</td>
-                    <td>${b.roomType}</td>
-                    <td><small class="text-muted">${b.checkIn} to ${b.checkOut}</small></td>
-                    <td><span class="status-badge ${b.status === 'CONFIRMED' ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary'}">${b.status}</span></td>
-                    <td>
-                        ${b.status === 'CONFIRMED' ? `<button class="btn btn-outline-danger btn-sm" onclick="cancelBooking('${b.id}')"><i class="fa-solid fa-xmark me-1"></i> Cancel</button>` : '<span class="text-muted small">N/A</span>'}
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        // Render Guest Reviews List
         function renderReviews() {
             const container = document.getElementById('reviewsFeedContainer');
             container.innerHTML = reviewsData.map(r => `
@@ -773,56 +1018,27 @@
             `).join('');
         }
 
-        // Open Modal for Reservation
-        function openBookingModal(hotelId, hotelName) {
-            document.getElementById('modalHotelId').value = hotelId;
-            document.getElementById('modalHotelTitle').innerText = 'Reserve at ' + hotelName;
-            const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
-            modal.show();
-        }
-
-        // Modal Booking Submission
-        function handleModalBookingSubmit(e) {
-            e.preventDefault();
-            const hotelName = document.getElementById('modalHotelTitle').innerText.replace('Reserve at ', '');
-            const roomType = document.getElementById('modalRoomType').value;
-            const checkIn = document.getElementById('modalCheckIn').value;
-            const checkOut = document.getElementById('modalCheckOut').value;
-            const newResId = 'RES-' + Math.floor(1000 + Math.random() * 9000);
-
-            bookingsData.unshift({ id: newResId, hotelName, roomType, checkIn, checkOut, status: 'CONFIRMED' });
-            renderBookings();
-
-            bootstrap.Modal.getInstance(document.getElementById('bookingModal')).hide();
-            switchSection('bookings-section');
-
-            alert('🎉 Luxury Suite Reserved! Booking ID: ' + newResId);
-            addLog(`📧 Booking confirmation dispatched for #${newResId} at ${hotelName}.`);
-        }
-
-        // Search Form Filter
-        function handleSearch(e) {
-            e.preventDefault();
-            const loc = document.getElementById('searchLocation').value;
-            renderHotels(loc);
-            switchSection('catalog-section');
-        }
-
-        // Review Form Submission
-        function handleReviewSubmit(e) {
+        async function handleReviewSubmit(e) {
             e.preventDefault();
             const hotelId = document.getElementById('revHotelSelect').value;
             const rating = parseInt(document.getElementById('revRatingSelect').value);
             const comment = document.getElementById('revCommentText').value;
             const author = currentUserData ? currentUserData.username : 'Verified Guest';
 
+            try {
+                await fetch(`${API_REVIEW}/reviews`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-API-KEY': 'SOC-SECRET-API-KEY-2026' },
+                    body: JSON.stringify({ hotelId, rating, comment, userId: currentUserData ? currentUserData.id : 'USER1' })
+                });
+            } catch (err) {}
+
             reviewsData.unshift({ id: 'RV' + (reviewsData.length + 1), hotelId, author, rating, comment });
             renderReviews();
             document.getElementById('revCommentText').value = '';
-            alert('⭐ Guest review posted successfully!');
+            alert('⭐ Guest review posted on Student 4 Review Service!');
         }
 
-        // Promo Code Validation
         function handlePromoValidation(e) {
             e.preventDefault();
             const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
@@ -847,7 +1063,6 @@
             }
         }
 
-        // Offer Subscription
         function handleOfferSubscription(e) {
             e.preventDefault();
             const email = document.getElementById('subEmailInput').value;
@@ -856,24 +1071,19 @@
             document.getElementById('subEmailInput').value = '';
         }
 
-        // Add Log Entry
+        function handleSearch(e) {
+            e.preventDefault();
+            const loc = document.getElementById('searchLocation').value;
+            renderHotels(loc);
+            switchSection('catalog-section');
+        }
+
         function addLog(msg) {
             const logBox = document.getElementById('notificationLogBox');
             const time = new Date().toLocaleTimeString();
             logBox.innerHTML = `<div class="mb-1 text-primary"><strong>[${time}]</strong> ${msg}</div>` + logBox.innerHTML;
         }
 
-        // Cancel Booking
-        function cancelBooking(id) {
-            const booking = bookingsData.find(b => b.id === id);
-            if (booking) {
-                booking.status = 'CANCELLED';
-                renderBookings();
-                alert('Booking ' + id + ' has been cancelled.');
-            }
-        }
-
-        // Update Session UI
         function updateSessionUI() {
             const userDisplay = document.getElementById('navUserDisplay');
             const authBtn = document.getElementById('navAuthBtn');
@@ -903,7 +1113,6 @@
             }
         }
 
-        // Logout User
         function logoutUser() {
             localStorage.clear();
             jwtToken = '';

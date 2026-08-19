@@ -26,6 +26,12 @@ public class ApiKeyAuthFilter implements Filter {
 
         String requestPath = httpRequest.getRequestURI();
         
+        // Allow CORS preflight OPTIONS requests to pass
+        if ("OPTIONS".equalsIgnoreCase(httpRequest.getMethod())) {
+            chain.doFilter(request, response);
+            return;
+        }
+        
         // Allow Swagger UI without API Key for testing/documentation
         if (requestPath.startsWith("/v3/api-docs") || requestPath.startsWith("/swagger-ui")) {
             chain.doFilter(request, response);
