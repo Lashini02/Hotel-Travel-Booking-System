@@ -1833,17 +1833,21 @@
                 }
             } catch (err) {
                 console.log('Reservation POST API fallback:', err);
+            } finally {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = `<i class="fa-solid fa-lock me-2"></i> Confirm Reservation (\`POST /reservations\`)`;
+                }
             }
 
             fullReservationsList.unshift(newResObj);
 
             // Close Booking Form Modal
             const bookModalEl = document.getElementById('bookingModal');
-            const bookModal = bootstrap.Modal.getInstance(bookModalEl);
-            if (bookModal) bookModal.hide();
-
-            btn.disabled = false;
-            btn.innerHTML = `<i class="fa-solid fa-lock me-2"></i> Confirm Reservation (\`POST /reservations\`)`;
+            if (bookModalEl) {
+                const bookModal = bootstrap.Modal.getInstance(bookModalEl) || new bootstrap.Modal(bookModalEl);
+                bookModal.hide();
+            }
 
             // Open Reservation Confirmed Modal (Req 6)
             document.getElementById('confModalCode').innerText = newResObj.id;
@@ -1852,8 +1856,11 @@
             document.getElementById('confModalDates').innerText = `${checkIn} to ${checkOut}`;
             document.getElementById('confModalTotal').innerText = `$${(newResObj.totalPrice || totalPrice).toFixed(2)}`;
 
-            const confModal = new bootstrap.Modal(document.getElementById('reservationConfirmedModal'));
-            confModal.show();
+            const confModalEl = document.getElementById('reservationConfirmedModal');
+            if (confModalEl) {
+                const confModal = bootstrap.Modal.getInstance(confModalEl) || new bootstrap.Modal(confModalEl);
+                confModal.show();
+            }
 
             addLog(`📧 Booking confirmation dispatched for #${newResObj.id} at ${hotelName}.`);
         }
