@@ -3,396 +3,704 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hotel & Travel Booking System - Unified Client Portal</title>
+    <title>AURA Luxury Hotels & Resorts | Unified Travel Platform</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- FontAwesome Icons -->
+    <!-- FontAwesome Pro 6 Icons -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #1e3c72;
-            --secondary-color: #2a5298;
-            --accent-color: #ff6b6b;
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #d97706;
+            --accent-hover: #b45309;
+            --bg-light: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #0f172a;
+            --text-muted: #64748b;
         }
+
         body {
-            background-color: #f4f7f6;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
         }
-        .navbar-custom {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+
+        h1, h2, h3, .font-serif {
+            font-family: 'Playfair Display', serif;
         }
-        .nav-tabs .nav-link {
-            color: #555;
-            font-weight: 600;
+
+        /* Navbar Styling */
+        .navbar-aura {
+            background-color: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 16px 0;
+        }
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #ffffff !important;
+        }
+        .navbar-brand span {
+            color: var(--accent);
+        }
+        .nav-link-custom {
+            color: #cbd5e1 !important;
+            font-weight: 500;
+            padding: 8px 18px !important;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .nav-link-custom:hover, .nav-link-custom.active {
+            color: #ffffff !important;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Hero Banner */
+        .hero-section {
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%), 
+                        url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            padding: 100px 0 120px 0;
+            color: white;
+            border-radius: 0 0 30px 30px;
+            margin-bottom: -50px;
+        }
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+
+        /* Floating Search Card */
+        .search-card-floating {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            border: 1px solid #f1f5f9;
+        }
+
+        /* Luxury Cards */
+        .hotel-card {
             border: none;
-            padding: 12px 20px;
+            border-radius: 16px;
+            overflow: hidden;
+            background: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
         }
-        .nav-tabs .nav-link.active {
-            color: var(--primary-color);
-            border-bottom: 3px solid var(--primary-color);
-            background-color: transparent;
+        .hotel-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
         }
-        .card-custom {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            transition: transform 0.2s ease-in-out;
+        .hotel-card img {
+            height: 220px;
+            object-fit: cover;
         }
-        .card-custom:hover {
-            transform: translateY(-2px);
-        }
-        .badge-student {
-            font-size: 0.75rem;
-            padding: 5px 10px;
+        .badge-rating {
+            background-color: #fef3c7;
+            color: #b45309;
+            font-weight: 700;
+            padding: 6px 12px;
             border-radius: 20px;
         }
-        .hero-banner {
-            background: linear-gradient(rgba(30,60,114,0.85), rgba(42,82,152,0.85)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80') center/cover;
+        .btn-accent {
+            background-color: var(--accent);
             color: white;
-            padding: 40px 20px;
-            border-radius: 15px;
-            margin-bottom: 25px;
+            font-weight: 600;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
         }
-        .star-rating {
-            color: #ffc107;
+        .btn-accent:hover {
+            background-color: var(--accent-hover);
+            color: white;
+        }
+
+        /* Status Pills */
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary);
+            color: #94a3b8;
+            padding: 60px 0 30px 0;
+            margin-top: 100px;
         }
     </style>
 </head>
 <body>
 
-    <!-- Header / Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm mb-4">
+    <!-- Professional Luxury Navigation -->
+    <nav class="navbar navbar-expand-lg sticky-top navbar-aura shadow">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#">
-                <i class="fa-solid fa-hotel me-2"></i>Hotel & Travel Booking Portal
-            </a>
-            <div class="d-flex align-items-center">
-                <span id="userStatusBadge" class="badge bg-warning text-dark me-3"><i class="fa-solid fa-user-xmark me-1"></i>Guest (Not Logged In)</span>
-                <button id="logoutBtn" class="btn btn-outline-light btn-sm d-none" onclick="logout()"><i class="fa-solid fa-right-from-bracket me-1"></i>Logout</button>
+            <a class="navbar-brand" href="#"><i class="fa-solid fa-crown me-2 text-warning"></i>AURA <span>HOTELS</span></a>
+            <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#auraNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="auraNav">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-3">
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom active" id="nav-hotels" href="#catalog-section" onclick="switchSection('catalog-section')">
+                            <i class="fa-solid fa-compass me-1"></i> Explore Hotels
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" id="nav-bookings" href="#bookings-section" onclick="switchSection('bookings-section')">
+                            <i class="fa-solid fa-suitcase me-1"></i> My Bookings
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" id="nav-reviews" href="#reviews-section" onclick="switchSection('reviews-section')">
+                            <i class="fa-solid fa-star me-1"></i> Guest Reviews
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" id="nav-offers" href="#offers-section" onclick="switchSection('offers-section')">
+                            <i class="fa-solid fa-gift me-1"></i> Offers & Rewards
+                        </a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center">
+                    <div id="navUserDisplay" class="me-3 text-end d-none">
+                        <div class="text-white fw-bold small" id="navUsername">User</div>
+                        <div class="text-warning extra-small" style="font-size: 0.7rem;" id="navRole">GUEST</div>
+                    </div>
+                    <button id="navAuthBtn" class="btn btn-accent btn-sm" data-bs-toggle="modal" data-bs-target="#authModal">
+                        <i class="fa-solid fa-user me-1"></i> Sign In / Register
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
 
-    <div class="container">
-
-        <!-- Banner -->
-        <div class="hero-banner text-center shadow">
-            <h1 class="fw-bold mb-2">Unified Microservices Client Platform</h1>
-            <p class="lead text-light mb-0">Single-Page Frontend integrating all 5 Microservice Backend APIs</p>
+    <!-- Hero Header -->
+    <header class="hero-section text-center">
+        <div class="container">
+            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-bold text-uppercase mb-3"><i class="fa-solid fa-sparkles me-1"></i> Luxury Escapes & World-Class Hospitality</span>
+            <h1 class="hero-title mb-3">Experience Unrivaled Elegance</h1>
+            <p class="lead text-light mb-0" style="max-width: 650px; margin: 0 auto;">Discover handpicked luxury hotels, seamless room reservations, and personalized hospitality across Sri Lanka.</p>
         </div>
+    </header>
 
-        <!-- Navigation Tabs for the 5 Microservices -->
-        <ul class="nav nav-tabs mb-4 bg-white rounded shadow-sm p-2" id="microserviceTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="auth-tab" data-bs-toggle="tab" data-bs-target="#auth-panel" type="button" role="tab">
-                    <i class="fa-solid fa-shield-halved me-2 text-primary"></i>1. Auth & Users <span class="badge bg-primary badge-student ms-1">Student 1</span>
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="hotel-tab" data-bs-toggle="tab" data-bs-target="#hotel-panel" type="button" role="tab">
-                    <i class="fa-solid fa-building-user me-2 text-success"></i>2. Hotels & Rooms <span class="badge bg-success badge-student ms-1">Student 2</span>
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="reservation-tab" data-bs-toggle="tab" data-bs-target="#reservation-panel" type="button" role="tab">
-                    <i class="fa-solid fa-calendar-check me-2 text-info"></i>3. Reservations <span class="badge bg-info text-dark badge-student ms-1">Student 3</span>
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#review-panel" type="button" role="tab">
-                    <i class="fa-solid fa-star me-2 text-warning"></i>4. Reviews & Ratings <span class="badge bg-warning text-dark badge-student ms-1">Student 4</span>
-                </button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="offer-tab" data-bs-toggle="tab" data-bs-target="#offer-panel" type="button" role="tab">
-                    <i class="fa-solid fa-bullhorn me-2 text-danger"></i>5. Offers & Alerts <span class="badge bg-danger badge-student ms-1">Student 5</span>
-                </button>
-            </li>
-        </ul>
-
-        <!-- Tab Content Panels -->
-        <div class="tab-content" id="microserviceTabContent">
-
-            <!-- PANEL 1: AUTH & USER PROFILE (STUDENT 1) -->
-            <div class="tab-pane fade show active" id="auth-panel" role="tabpanel">
-                <div class="row">
-                    <!-- Login & Register Forms -->
-                    <div class="col-md-6 mb-4">
-                        <div class="card card-custom p-4">
-                            <h4 class="fw-bold text-primary mb-3"><i class="fa-solid fa-user-plus me-2"></i>Register New Account</h4>
-                            <form id="registerForm" onsubmit="handleRegister(event)">
-                                <div class="row">
-                                    <div class="col-6 mb-3">
-                                        <label class="form-label small fw-bold">Username</label>
-                                        <input type="text" id="regUsername" class="form-control" placeholder="john_doe" required>
-                                    </div>
-                                    <div class="col-6 mb-3">
-                                        <label class="form-label small fw-bold">Email</label>
-                                        <input type="email" id="regEmail" class="form-control" placeholder="john@example.com" required>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Password</label>
-                                    <input type="password" id="regPassword" class="form-control" placeholder="Secret123!" required>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6 mb-3">
-                                        <label class="form-label small fw-bold">Full Name</label>
-                                        <input type="text" id="regFullName" class="form-control" placeholder="John Doe">
-                                    </div>
-                                    <div class="col-6 mb-3">
-                                        <label class="form-label small fw-bold">Phone</label>
-                                        <input type="text" id="regPhone" class="form-control" placeholder="+94771234567">
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-primary w-100 fw-bold"><i class="fa-solid fa-user-check me-2"></i>Register Customer</button>
-                            </form>
-                        </div>
+    <!-- Floating Search & Reservation Bar -->
+    <div class="container" style="position: relative; z-index: 10;">
+        <div class="search-card-floating mb-5">
+            <form onsubmit="handleSearch(event)">
+                <div class="row g-3 align-items-end">
+                    <div class="col-lg-3 col-md-6">
+                        <label class="form-label text-muted small fw-bold"><i class="fa-solid fa-location-dot me-1 text-danger"></i> Destination</label>
+                        <select id="searchLocation" class="form-select border-0 bg-light py-2">
+                            <option value="">All Destinations</option>
+                            <option value="Colombo">Colombo</option>
+                            <option value="Kandy">Kandy</option>
+                            <option value="Galle">Galle</option>
+                        </select>
                     </div>
-
-                    <div class="col-md-6 mb-4">
-                        <div class="card card-custom p-4">
-                            <h4 class="fw-bold text-primary mb-3"><i class="fa-solid fa-key me-2"></i>Login (OAuth 2.0 / JWT)</h4>
-                            <form id="loginForm" onsubmit="handleLogin(event)">
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Username or Email</label>
-                                    <input type="text" id="loginEmail" class="form-control" value="student1_user" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Password</label>
-                                    <input type="password" id="loginPassword" class="form-control" value="Secret123!" required>
-                                </div>
-                                <button type="submit" class="btn btn-success w-100 fw-bold"><i class="fa-solid fa-right-to-bracket me-2"></i>Log In & Issue JWT</button>
-                            </form>
-
-                            <hr class="my-4">
-
-                            <!-- Logged In User Info -->
-                            <h5 class="fw-bold text-secondary mb-3"><i class="fa-solid fa-id-card me-2"></i>Active Profile Details</h5>
-                            <div id="profileContainer" class="p-3 bg-light rounded border">
-                                <p class="text-muted mb-0 small">Please log in to view active JWT profile & API Key credentials.</p>
-                            </div>
-                        </div>
+                    <div class="col-lg-3 col-md-6">
+                        <label class="form-label text-muted small fw-bold"><i class="fa-solid fa-calendar me-1 text-primary"></i> Check-In Date</label>
+                        <input type="date" id="searchCheckIn" class="form-control border-0 bg-light py-2">
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <label class="form-label text-muted small fw-bold"><i class="fa-solid fa-user-group me-1 text-success"></i> Guests & Suite</label>
+                        <select id="searchCategory" class="form-select border-0 bg-light py-2">
+                            <option value="Deluxe Suite">Deluxe Luxury Suite</option>
+                            <option value="Ocean View">Ocean View Room</option>
+                            <option value="Executive">Executive Presidential Suite</option>
+                        </select>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <button type="submit" class="btn btn-accent w-100 py-2"><i class="fa-solid fa-magnifying-glass me-2"></i> Find Available Stay</button>
                     </div>
                 </div>
-            </div>
-
-            <!-- PANEL 2: HOTELS & ROOMS (STUDENT 2) -->
-            <div class="tab-pane fade" id="hotel-panel" role="tabpanel">
-                <div class="row mb-4">
-                    <div class="col-md-8">
-                        <h4 class="fw-bold text-success"><i class="fa-solid fa-hotel me-2"></i>Hotel Listings & Room Availability</h4>
-                    </div>
-                    <div class="col-md-4 text-end">
-                        <button class="btn btn-outline-success btn-sm" onclick="fetchHotels()"><i class="fa-solid fa-rotate me-1"></i>Refresh Catalog</button>
-                    </div>
-                </div>
-
-                <div class="row" id="hotelCatalog">
-                    <!-- Hotel Cards inserted dynamically -->
-                </div>
-            </div>
-
-            <!-- PANEL 3: RESERVATIONS (STUDENT 3) -->
-            <div class="tab-pane fade" id="reservation-panel" role="tabpanel">
-                <div class="row">
-                    <div class="col-md-5 mb-4">
-                        <div class="card card-custom p-4">
-                            <h4 class="fw-bold text-info"><i class="fa-solid fa-calendar-plus me-2"></i>Book Hotel Stay</h4>
-                            <form id="bookingForm" onsubmit="handleCreateReservation(event)">
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Select Hotel</label>
-                                    <select id="bookHotelSelect" class="form-select">
-                                        <option value="H101">Grand Hotel Colombo</option>
-                                        <option value="H102">Kandy Lake View Resort</option>
-                                        <option value="H103">Galle Fort Heritage Villa</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Room Category</label>
-                                    <select id="bookRoomType" class="form-select">
-                                        <option value="Deluxe Suite">Deluxe Suite ($150/night)</option>
-                                        <option value="Ocean View Double">Ocean View Double ($120/night)</option>
-                                        <option value="Executive Room">Executive Room ($200/night)</option>
-                                    </select>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6 mb-3">
-                                        <label class="form-label small fw-bold">Check-In</label>
-                                        <input type="date" id="bookCheckIn" class="form-control" required>
-                                    </div>
-                                    <div class="col-6 mb-3">
-                                        <label class="form-label small fw-bold">Check-Out</label>
-                                        <input type="date" id="bookCheckOut" class="form-control" required>
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-info text-dark w-100 fw-bold"><i class="fa-solid fa-check-circle me-2"></i>Confirm Booking</button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="col-md-7 mb-4">
-                        <div class="card card-custom p-4">
-                            <h4 class="fw-bold text-secondary"><i class="fa-solid fa-clock-rotate-left me-2"></i>Reservation History</h4>
-                            <div class="table-responsive">
-                                <table class="table table-hover align-middle">
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Booking ID</th>
-                                            <th>Hotel</th>
-                                            <th>Room</th>
-                                            <th>Dates</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="reservationTableBody">
-                                        <!-- Dynamic Reservation rows -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PANEL 4: REVIEWS & RATINGS (STUDENT 4) -->
-            <div class="tab-pane fade" id="review-panel" role="tabpanel">
-                <div class="row">
-                    <div class="col-md-5 mb-4">
-                        <div class="card card-custom p-4">
-                            <h4 class="fw-bold text-warning"><i class="fa-solid fa-comment-dots me-2"></i>Submit Guest Review</h4>
-                            <form id="reviewForm" onsubmit="handleSubmitReview(event)">
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Hotel ID / Name</label>
-                                    <input type="text" id="revHotelId" class="form-control" value="H101" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Star Rating (1 - 5 Stars)</label>
-                                    <select id="revRating" class="form-select">
-                                        <option value="5">⭐⭐⭐⭐⭐ (5 - Exceptional)</option>
-                                        <option value="4">⭐⭐⭐⭐ (4 - Very Good)</option>
-                                        <option value="3">⭐⭐⭐ (3 - Average)</option>
-                                        <option value="2">⭐⭐ (2 - Poor)</option>
-                                        <option value="1">⭐ (1 - Terrible)</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Review Comment</label>
-                                    <textarea id="revComment" class="form-control" rows="3" placeholder="Share details of your stay..." required></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-warning w-100 fw-bold"><i class="fa-solid fa-paper-plane me-2"></i>Submit Review</button>
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="col-md-7 mb-4">
-                        <div class="card card-custom p-4">
-                            <h4 class="fw-bold text-secondary"><i class="fa-solid fa-comments me-2"></i>Guest Feedback List</h4>
-                            <div id="reviewsContainer">
-                                <!-- Dynamic Reviews List -->
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PANEL 5: NOTIFICATIONS & OFFERS (STUDENT 5) -->
-            <div class="tab-pane fade" id="offer-panel" role="tabpanel">
-                <div class="row">
-                    <div class="col-md-6 mb-4">
-                        <div class="card card-custom p-4">
-                            <h4 class="fw-bold text-danger"><i class="fa-solid fa-tags me-2"></i>Promo Code Validator</h4>
-                            <form id="promoForm" onsubmit="handleValidatePromo(event)">
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Promo Code</label>
-                                    <input type="text" id="promoCode" class="form-control" value="SUMMER2026" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">Original Amount ($)</label>
-                                    <input type="number" id="promoAmount" class="form-control" value="250" required>
-                                </div>
-                                <button type="submit" class="btn btn-danger w-100 fw-bold"><i class="fa-solid fa-calculator me-2"></i>Apply Discount Code</button>
-                            </form>
-                            <div id="promoResultContainer" class="mt-3"></div>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6 mb-4">
-                        <div class="card card-custom p-4">
-                            <h4 class="fw-bold text-secondary"><i class="fa-solid fa-envelope-open-text me-2"></i>Email / SMS Confirmations</h4>
-                            <form id="subscribeForm" onsubmit="handleSubscribe(event)" class="mb-3">
-                                <label class="form-label small fw-bold">Subscribe to Promo Alerts</label>
-                                <div class="input-group">
-                                    <input type="email" id="subEmail" class="form-control" placeholder="guest@example.com" required>
-                                    <button class="btn btn-outline-danger" type="submit">Subscribe</button>
-                                </div>
-                            </form>
-
-                            <h6 class="fw-bold text-muted mt-3 mb-2">Recent Confirmation Log:</h6>
-                            <div id="notificationLog" class="p-3 bg-light rounded border small" style="max-height: 200px; overflow-y: auto;">
-                                <p class="text-muted mb-0">No alerts sent yet in this session.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+            </form>
         </div>
-
     </div>
 
-    <!-- Bootstrap 5 JS Bundle -->
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="container">
+
+        <!-- SECTION 1: HOTEL CATALOG & ROOM SELECTION -->
+        <section id="catalog-section" class="content-section">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h2 class="fw-bold text-dark mb-1">Featured Hotels & Resorts</h2>
+                    <p class="text-muted mb-0">Select a property to view availability and book your luxury stay.</p>
+                </div>
+                <div>
+                    <button class="btn btn-outline-dark btn-sm" onclick="renderHotels()"><i class="fa-solid fa-rotate me-1"></i> Refresh Catalog</button>
+                </div>
+            </div>
+
+            <div class="row g-4" id="hotelGridContainer">
+                <!-- Dynamically Rendered Hotel Cards -->
+            </div>
+        </section>
+
+        <!-- SECTION 2: MY BOOKINGS & RESERVATIONS -->
+        <section id="bookings-section" class="content-section d-none">
+            <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-suitcase text-primary me-2"></i> My Stay Reservations</h2>
+                        <p class="text-muted mb-0">Manage active bookings, view check-in dates, and process stay cancellations.</p>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Reservation Code</th>
+                                <th>Hotel & Destination</th>
+                                <th>Suite Category</th>
+                                <th>Check-In / Out</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingsTableBody">
+                            <!-- Dynamic Bookings Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 3: GUEST REVIEWS & FEEDBACK -->
+        <section id="reviews-section" class="content-section d-none">
+            <div class="row">
+                <div class="col-lg-5 mb-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <h3 class="fw-bold text-dark mb-3"><i class="fa-solid fa-pen-to-square text-warning me-2"></i> Share Your Experience</h3>
+                        <form onsubmit="handleReviewSubmit(event)">
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Select Hotel</label>
+                                <select id="revHotelSelect" class="form-select bg-light border-0">
+                                    <option value="H101">Grand Hotel Colombo</option>
+                                    <option value="H102">Kandy Lake View Resort</option>
+                                    <option value="H103">Galle Fort Heritage Villa</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Overall Rating</label>
+                                <select id="revRatingSelect" class="form-select bg-light border-0">
+                                    <option value="5">⭐⭐⭐⭐⭐ 5.0 - Exceptional</option>
+                                    <option value="4">⭐⭐⭐⭐ 4.0 - Excellent</option>
+                                    <option value="3">⭐⭐⭐ 3.0 - Good</option>
+                                    <option value="2">⭐⭐ 2.0 - Fair</option>
+                                    <option value="1">⭐ 1.0 - Poor</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Review Description</label>
+                                <textarea id="revCommentText" class="form-control bg-light border-0" rows="4" placeholder="Tell us about the room, dining, and staff service..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-accent w-100"><i class="fa-solid fa-paper-plane me-2"></i> Post Guest Review</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="col-lg-7 mb-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <h3 class="fw-bold text-dark mb-4"><i class="fa-solid fa-comments text-primary me-2"></i> Verified Guest Feedback</h3>
+                        <div id="reviewsFeedContainer">
+                            <!-- Dynamic Reviews -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SECTION 4: OFFERS & PROMO REWARDS -->
+        <section id="offers-section" class="content-section d-none">
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <h3 class="fw-bold text-dark mb-3"><i class="fa-solid fa-tags text-danger me-2"></i> Redeem Promo Code</h3>
+                        <p class="text-muted small">Apply active promotional coupons to calculate instant discount savings.</p>
+                        <form onsubmit="handlePromoValidation(event)">
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Promotional Voucher Code</label>
+                                <input type="text" id="promoCodeInput" class="form-control bg-light border-0" value="SUMMER2026" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Original Booking Subtotal ($)</label>
+                                <input type="number" id="promoAmountInput" class="form-control bg-light border-0" value="300" required>
+                            </div>
+                            <button type="submit" class="btn btn-dark w-100"><i class="fa-solid fa-percent me-2"></i> Apply Promo Discount</button>
+                        </form>
+                        <div id="promoFeedbackBox" class="mt-3"></div>
+                    </div>
+                </div>
+
+                <div class="col-lg-6 mb-4">
+                    <div class="card border-0 shadow-sm rounded-4 p-4">
+                        <h3 class="fw-bold text-dark mb-3"><i class="fa-solid fa-bell text-warning me-2"></i> Notification Alerts</h3>
+                        <form onsubmit="handleOfferSubscription(event)" class="mb-4">
+                            <label class="form-label text-muted small fw-bold">Subscribe to VIP Discount Alerts</label>
+                            <div class="input-group">
+                                <input type="email" id="subEmailInput" class="form-control bg-light border-0" placeholder="vip.guest@example.com" required>
+                                <button class="btn btn-accent" type="submit">Subscribe</button>
+                            </div>
+                        </form>
+
+                        <h6 class="fw-bold text-muted mb-2">Automated Email / SMS Confirmation Log:</h6>
+                        <div id="notificationLogBox" class="p-3 bg-light rounded-3 border small" style="max-height: 180px; overflow-y: auto;">
+                            <p class="text-muted mb-0">System ready. Booking receipts will be logged here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- BOOKING MODAL -->
+    <div class="modal fade" id="bookingModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-dark text-white rounded-top-4">
+                    <h5 class="modal-title font-serif" id="modalHotelTitle">Confirm Luxury Booking</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form onsubmit="handleModalBookingSubmit(event)">
+                        <input type="hidden" id="modalHotelId">
+                        <div class="mb-3">
+                            <label class="form-label text-muted small fw-bold">Room Suite Type</label>
+                            <select id="modalRoomType" class="form-select bg-light border-0">
+                                <option value="Deluxe Suite">Deluxe Luxury Suite ($150/night)</option>
+                                <option value="Ocean View Room">Ocean View Executive ($180/night)</option>
+                                <option value="Presidential Suite">Presidential Suite ($250/night)</option>
+                            </select>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 mb-3">
+                                <label class="form-label text-muted small fw-bold">Check-In</label>
+                                <input type="date" id="modalCheckIn" class="form-control bg-light border-0" required>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <label class="form-label text-muted small fw-bold">Check-Out</label>
+                                <input type="date" id="modalCheckOut" class="form-control bg-light border-0" required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-accent w-100 py-2"><i class="fa-solid fa-lock me-2"></i> Confirm & Secure Booking</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AUTHENTICATION MODAL (SIGN IN / REGISTER) -->
+    <div class="modal fade" id="authModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header border-0 pb-0">
+                    <ul class="nav nav-pills w-100" id="authTab" role="tablist">
+                        <li class="nav-item w-50" role="presentation">
+                            <button class="nav-link active w-100 fw-bold" id="login-tab" data-bs-toggle="pill" data-bs-target="#login-panel" type="button">Sign In</button>
+                        </li>
+                        <li class="nav-item w-50" role="presentation">
+                            <button class="nav-link w-100 fw-bold" id="register-tab" data-bs-toggle="pill" data-bs-target="#register-panel" type="button">Create Account</button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="modal-body p-4">
+                    <div class="tab-content" id="authTabContent">
+
+                        <!-- LOGIN TAB -->
+                        <div class="tab-pane fade show active" id="login-panel">
+                            <form onsubmit="handleLoginSubmit(event)">
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Username or Email</label>
+                                    <input type="text" id="loginUser" class="form-control bg-light border-0" value="student1_user" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Password</label>
+                                    <input type="password" id="loginPass" class="form-control bg-light border-0" value="Secret123!" required>
+                                </div>
+                                <button type="submit" class="btn btn-accent w-100 mb-3"><i class="fa-solid fa-key me-2"></i> Sign In & Issue JWT</button>
+                            </form>
+                        </div>
+
+                        <!-- REGISTER TAB -->
+                        <div class="tab-pane fade" id="register-panel">
+                            <form onsubmit="handleRegisterSubmit(event)">
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Username</label>
+                                    <input type="text" id="regUser" class="form-control bg-light border-0" placeholder="johndoe" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Email Address</label>
+                                    <input type="email" id="regEmailAddr" class="form-control bg-light border-0" placeholder="john@example.com" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Password</label>
+                                    <input type="password" id="regPass" class="form-control bg-light border-0" placeholder="Secret123!" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label text-muted small fw-bold">Full Name</label>
+                                    <input type="text" id="regName" class="form-control bg-light border-0" placeholder="John Doe">
+                                </div>
+                                <button type="submit" class="btn btn-accent w-100"><i class="fa-solid fa-user-plus me-2"></i> Create Account</button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <!-- PROFILE DETAILS (IF LOGGED IN) -->
+                    <div id="activeProfileBox" class="mt-4 p-3 bg-light rounded-3 border d-none">
+                        <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-id-badge me-2 text-primary"></i>Active Session Info</h6>
+                        <div class="extra-small text-muted" id="activeProfileText"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="container text-center">
+            <h4 class="font-serif text-white mb-2"><i class="fa-solid fa-crown text-warning me-2"></i>AURA Luxury Hotels & Resorts</h4>
+            <p class="small text-muted mb-3">Unified Microservices Architecture Platform — Service-Oriented Computing</p>
+            <p class="extra-small text-muted mb-0">&copy; 2026 AURA Travel Ecosystem. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
 
-    <!-- Custom Frontend API Integration JS -->
+    <!-- Application Script -->
     <script>
         // API Base Endpoints
-        const AUTH_BASE_URL = 'http://localhost:8085';
-        const HOTEL_BASE_URL = 'http://localhost:8082';
-        const RESERVATION_BASE_URL = 'http://localhost:8083';
-        const REVIEW_BASE_URL = 'http://localhost:8084';
-        const NOTIFICATION_BASE_URL = 'http://localhost:8085';
+        const API_BASE = 'http://localhost:8085';
 
-        // Local Storage for Token & Credentials
-        let currentToken = localStorage.getItem('jwt_token') || '';
-        let currentUser = JSON.parse(localStorage.getItem('current_user') || 'null');
+        // State Storage
+        let jwtToken = localStorage.getItem('aura_jwt') || '';
+        let currentUserData = JSON.parse(localStorage.getItem('aura_user') || 'null');
 
-        // Sample In-Memory Data for Seamless Demo
-        let sampleHotels = [
-            { id: 'H101', name: 'Grand Hotel Colombo', location: 'Colombo', rating: 4.8, price: 150, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=400&q=80' },
-            { id: 'H102', name: 'Kandy Lake View Resort', location: 'Kandy', rating: 4.6, price: 120, image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=400&q=80' },
-            { id: 'H103', name: 'Galle Fort Heritage Villa', location: 'Galle', rating: 4.9, price: 200, image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=400&q=80' }
+        // Sample Catalog Data
+        let hotelsData = [
+            { id: 'H101', name: 'Grand Hotel Colombo', location: 'Colombo', rating: 4.9, price: 150, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=600&q=80' },
+            { id: 'H102', name: 'Kandy Lake View Resort', location: 'Kandy', rating: 4.7, price: 120, image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=600&q=80' },
+            { id: 'H103', name: 'Galle Fort Heritage Villa', location: 'Galle', rating: 4.8, price: 200, image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=600&q=80' }
         ];
 
-        let sampleReservations = [
-            { id: 'RES-8841', hotel: 'Grand Hotel Colombo', room: 'Deluxe Suite', checkIn: '2026-09-01', checkOut: '2026-09-05', status: 'CONFIRMED' }
+        let bookingsData = [
+            { id: 'RES-9901', hotelName: 'Grand Hotel Colombo', roomType: 'Deluxe Luxury Suite', checkIn: '2026-09-10', checkOut: '2026-09-14', status: 'CONFIRMED' }
         ];
 
-        let sampleReviews = [
-            { id: 'R1', hotelId: 'H101', author: 'Kasun Perera', rating: 5, comment: 'Outstanding hospitality, breathtaking views, and exceptional service!' },
-            { id: 'R2', hotelId: 'H102', author: 'Nimali Fernando', rating: 4, comment: 'Very pleasant stay near Kandy lake. Highly recommended.' }
+        let reviewsData = [
+            { id: 'RV1', hotelId: 'H101', author: 'Kasun Perera', rating: 5, comment: 'Exceptional luxury experience! The ocean view and staff service were world-class.' },
+            { id: 'RV2', hotelId: 'H102', author: 'Nimali Fernando', rating: 4, comment: 'Tranquil resort right next to Kandy Lake. Very relaxing stay.' }
         ];
 
-        // Initialize UI
+        // On Load Initialization
         document.addEventListener('DOMContentLoaded', () => {
-            updateUserUI();
             renderHotels();
-            renderReservations();
+            renderBookings();
             renderReviews();
-            // Set default dates
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('bookCheckIn').value = today;
+            updateSessionUI();
+
+            // Set default checkin date
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('modalCheckIn').value = tomorrow.toISOString().split('T')[0];
+            document.getElementById('searchCheckIn').value = tomorrow.toISOString().split('T')[0];
         });
 
-        // 1. Auth Handlers (Student 1)
-        async function handleLogin(e) {
+        // Navigation Section Switcher
+        function switchSection(sectionId) {
+            document.querySelectorAll('.content-section').forEach(el => el.classList.add('d-none'));
+            document.getElementById(sectionId).classList.remove('d-none');
+
+            document.querySelectorAll('.nav-link-custom').forEach(el => el.classList.remove('active'));
+            if(sectionId === 'catalog-section') document.getElementById('nav-hotels').classList.add('active');
+            if(sectionId === 'bookings-section') document.getElementById('nav-bookings').classList.add('active');
+            if(sectionId === 'reviews-section') document.getElementById('nav-reviews').classList.add('active');
+            if(sectionId === 'offers-section') document.getElementById('nav-offers').classList.add('active');
+        }
+
+        // Render Hotel Catalog Cards
+        function renderHotels(filteredLocation = '') {
+            const container = document.getElementById('hotelGridContainer');
+            const filtered = filteredLocation ? hotelsData.filter(h => h.location.toLowerCase() === filteredLocation.toLowerCase()) : hotelsData;
+
+            container.innerHTML = filtered.map(h => `
+                <div class="col-lg-4 col-md-6">
+                    <div class="card hotel-card h-100">
+                        <img src="${h.image}" class="card-img-top" alt="${h.name}">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-light text-muted small"><i class="fa-solid fa-location-dot text-danger me-1"></i>${h.location}</span>
+                                <span class="badge-rating"><i class="fa-solid fa-star me-1"></i>${h.rating}</span>
+                            </div>
+                            <h4 class="card-title font-serif fw-bold text-dark mb-3">${h.name}</h4>
+                            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                <div>
+                                    <span class="text-muted small">Starting from</span>
+                                    <div class="fw-bold text-dark fs-5">$${h.price} <span class="fs-6 text-muted font-sans font-normal">/ night</span></div>
+                                </div>
+                                <button class="btn btn-accent btn-sm" onclick="openBookingModal('${h.id}', '${h.name}')">
+                                    <i class="fa-solid fa-calendar-plus me-1"></i> Reserve Suite
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Render Bookings Table
+        function renderBookings() {
+            const tbody = document.getElementById('bookingsTableBody');
+            tbody.innerHTML = bookingsData.map(b => `
+                <tr>
+                    <td><code class="fw-bold text-primary">${b.id}</code></td>
+                    <td class="fw-bold text-dark">${b.hotelName}</td>
+                    <td>${b.roomType}</td>
+                    <td><small class="text-muted">${b.checkIn} to ${b.checkOut}</small></td>
+                    <td><span class="status-badge ${b.status === 'CONFIRMED' ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary'}">${b.status}</span></td>
+                    <td>
+                        ${b.status === 'CONFIRMED' ? `<button class="btn btn-outline-danger btn-sm" onclick="cancelBooking('${b.id}')"><i class="fa-solid fa-xmark me-1"></i> Cancel</button>` : '<span class="text-muted small">N/A</span>'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Render Guest Reviews List
+        function renderReviews() {
+            const container = document.getElementById('reviewsFeedContainer');
+            container.innerHTML = reviewsData.map(r => `
+                <div class="p-3 mb-3 bg-light rounded-3 border-0">
+                    <div class="d-flex justify-content-between align-items-center mb-1">
+                        <h6 class="fw-bold mb-0 text-dark">${r.author}</h6>
+                        <span class="text-warning small">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+                    </div>
+                    <p class="small text-muted mb-0">"${r.comment}"</p>
+                </div>
+            `).join('');
+        }
+
+        // Open Modal for Reservation
+        function openBookingModal(hotelId, hotelName) {
+            document.getElementById('modalHotelId').value = hotelId;
+            document.getElementById('modalHotelTitle').innerText = 'Reserve at ' + hotelName;
+            const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
+            modal.show();
+        }
+
+        // Modal Booking Submission
+        function handleModalBookingSubmit(e) {
             e.preventDefault();
-            const emailOrUsername = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
+            const hotelName = document.getElementById('modalHotelTitle').innerText.replace('Reserve at ', '');
+            const roomType = document.getElementById('modalRoomType').value;
+            const checkIn = document.getElementById('modalCheckIn').value;
+            const checkOut = document.getElementById('modalCheckOut').value;
+            const newResId = 'RES-' + Math.floor(1000 + Math.random() * 9000);
+
+            bookingsData.unshift({ id: newResId, hotelName, roomType, checkIn, checkOut, status: 'CONFIRMED' });
+            renderBookings();
+
+            bootstrap.Modal.getInstance(document.getElementById('bookingModal')).hide();
+            switchSection('bookings-section');
+
+            alert('🎉 Luxury Suite Reserved! Booking ID: ' + newResId);
+            addLog(`📧 Booking confirmation dispatched for #${newResId} at ${hotelName}.`);
+        }
+
+        // Search Form Filter
+        function handleSearch(e) {
+            e.preventDefault();
+            const loc = document.getElementById('searchLocation').value;
+            renderHotels(loc);
+            switchSection('catalog-section');
+        }
+
+        // Review Form Submission
+        function handleReviewSubmit(e) {
+            e.preventDefault();
+            const hotelId = document.getElementById('revHotelSelect').value;
+            const rating = parseInt(document.getElementById('revRatingSelect').value);
+            const comment = document.getElementById('revCommentText').value;
+            const author = currentUserData ? currentUserData.username : 'Verified Guest';
+
+            reviewsData.unshift({ id: 'RV' + (reviewsData.length + 1), hotelId, author, rating, comment });
+            renderReviews();
+            document.getElementById('revCommentText').value = '';
+            alert('⭐ Guest review posted successfully!');
+        }
+
+        // Promo Code Validation
+        function handlePromoValidation(e) {
+            e.preventDefault();
+            const code = document.getElementById('promoCodeInput').value.trim().toUpperCase();
+            const amount = parseFloat(document.getElementById('promoAmountInput').value);
+            const feedback = document.getElementById('promoFeedbackBox');
+
+            if (code === 'SUMMER2026') {
+                const discount = amount * 0.20;
+                const finalAmount = amount - discount;
+                feedback.innerHTML = `
+                    <div class="alert alert-success border-0 rounded-3 mb-0">
+                        <h6 class="fw-bold mb-1"><i class="fa-solid fa-circle-check me-2"></i>20% Discount Voucher Applied!</h6>
+                        <small>Savings: <strong>$${discount.toFixed(2)}</strong> | Total Due: <strong>$${finalAmount.toFixed(2)}</strong></small>
+                    </div>
+                `;
+            } else {
+                feedback.innerHTML = `
+                    <div class="alert alert-warning border-0 rounded-3 mb-0">
+                        <small><i class="fa-solid fa-circle-exclamation me-2"></i>Invalid Code. Try <strong>SUMMER2026</strong> for 20% off.</small>
+                    </div>
+                `;
+            }
+        }
+
+        // Offer Subscription
+        function handleOfferSubscription(e) {
+            e.preventDefault();
+            const email = document.getElementById('subEmailInput').value;
+            alert('📩 VIP Discount subscription activated for ' + email);
+            addLog(`🔔 Promotional alert subscription registered for ${email}.`);
+            document.getElementById('subEmailInput').value = '';
+        }
+
+        // Add Log Entry
+        function addLog(msg) {
+            const logBox = document.getElementById('notificationLogBox');
+            const time = new Date().toLocaleTimeString();
+            logBox.innerHTML = `<div class="mb-1 text-primary"><strong>[${time}]</strong> ${msg}</div>` + logBox.innerHTML;
+        }
+
+        // Cancel Booking
+        function cancelBooking(id) {
+            const booking = bookingsData.find(b => b.id === id);
+            if (booking) {
+                booking.status = 'CANCELLED';
+                renderBookings();
+                alert('Booking ' + id + ' has been cancelled.');
+            }
+        }
+
+        // Login Handler
+        async function handleLoginSubmit(e) {
+            e.preventDefault();
+            const emailOrUsername = document.getElementById('loginUser').value;
+            const password = document.getElementById('loginPass').value;
 
             try {
-                const res = await fetch(`${AUTH_BASE_URL}/auth/login`, {
+                const res = await fetch(`${API_BASE}/auth/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-API-KEY': 'SOC-SECRET-API-KEY-2026' },
                     body: JSON.stringify({ emailOrUsername, password })
@@ -400,227 +708,85 @@
 
                 if (res.ok) {
                     const data = await res.json();
-                    currentToken = data.token;
-                    currentUser = data;
-                    localStorage.setItem('jwt_token', data.token);
-                    localStorage.setItem('current_user', JSON.stringify(data));
-                    updateUserUI();
-                    alert('✅ Login successful! JWT Token & API Key retrieved.');
+                    jwtToken = data.token;
+                    currentUserData = data;
                 } else {
-                    // Fallback Demo Login if backend server isn't hit
-                    currentToken = 'eyJhbGciOiJIUzI1NiJ9.demo_token_2026';
-                    currentUser = { username: emailOrUsername, email: `${emailOrUsername}@example.com`, role: 'USER', apiKey: 'KEY-5258569A24374064' };
-                    localStorage.setItem('jwt_token', currentToken);
-                    localStorage.setItem('current_user', JSON.stringify(currentUser));
-                    updateUserUI();
-                    alert('✅ Login successful (Demo Mode)!');
+                    jwtToken = 'eyJhbGciOiJIUzI1NiJ9.demo_token_2026';
+                    currentUserData = { username: emailOrUsername, email: `${emailOrUsername}@example.com`, role: 'USER', apiKey: 'KEY-5258569A24374064' };
                 }
             } catch (err) {
-                console.log('Using local auth state');
-                currentToken = 'eyJhbGciOiJIUzI1NiJ9.demo_token_2026';
-                currentUser = { username: emailOrUsername, email: `${emailOrUsername}@example.com`, role: 'USER', apiKey: 'KEY-5258569A24374064' };
-                updateUserUI();
-                alert('✅ Login successful!');
+                jwtToken = 'eyJhbGciOiJIUzI1NiJ9.demo_token_2026';
+                currentUserData = { username: emailOrUsername, email: `${emailOrUsername}@example.com`, role: 'USER', apiKey: 'KEY-5258569A24374064' };
             }
+
+            localStorage.setItem('aura_jwt', jwtToken);
+            localStorage.setItem('aura_user', JSON.stringify(currentUserData));
+            updateSessionUI();
+
+            bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
+            alert('✅ Welcome back, ' + currentUserData.username + '! OAuth 2.0 JWT Session active.');
         }
 
-        async function handleRegister(e) {
+        // Register Handler
+        async function handleRegisterSubmit(e) {
             e.preventDefault();
-            const username = document.getElementById('regUsername').value;
-            const email = document.getElementById('regEmail').value;
-            const password = document.getElementById('regPassword').value;
-            const fullName = document.getElementById('regFullName').value;
-            const phone = document.getElementById('regPhone').value;
-            const address = document.getElementById('regAddress') ? document.getElementById('regAddress').value : 'Colombo';
+            const username = document.getElementById('regUser').value;
+            const email = document.getElementById('regEmailAddr').value;
+            const password = document.getElementById('regPass').value;
+            const fullName = document.getElementById('regName').value;
 
             try {
-                const res = await fetch(`${AUTH_BASE_URL}/auth/register`, {
+                await fetch(`${API_BASE}/auth/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json', 'X-API-KEY': 'SOC-SECRET-API-KEY-2026' },
-                    body: JSON.stringify({ username, email, password, fullName, phone, address })
+                    body: JSON.stringify({ username, email, password, fullName })
                 });
+            } catch (err) {}
 
-                if (res.ok) {
-                    const data = await res.json();
-                    alert('🎉 Registration successful! Account created with API Key: ' + data.apiKey);
-                } else {
-                    alert('🎉 Customer registered successfully!');
-                }
-            } catch (err) {
-                alert('🎉 Customer registered successfully!');
-            }
+            alert('🎉 Account created successfully! Please Sign In.');
+            bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
         }
 
-        function updateUserUI() {
-            const badge = document.getElementById('userStatusBadge');
-            const logoutBtn = document.getElementById('logoutBtn');
-            const profileBox = document.getElementById('profileContainer');
+        // Update Session UI
+        function updateSessionUI() {
+            const userDisplay = document.getElementById('navUserDisplay');
+            const authBtn = document.getElementById('navAuthBtn');
+            const activeProfileBox = document.getElementById('activeProfileBox');
+            const activeProfileText = document.getElementById('activeProfileText');
 
-            if (currentUser && currentToken) {
-                badge.className = 'badge bg-success me-3';
-                badge.innerHTML = `<i class="fa-solid fa-user-check me-1"></i>Logged In: ${currentUser.username}`;
-                logoutBtn.classList.remove('d-none');
-                profileBox.innerHTML = `
-                    <p class="mb-1"><strong>Username:</strong> ${currentUser.username}</p>
-                    <p class="mb-1"><strong>Email:</strong> ${currentUser.email}</p>
-                    <p class="mb-1"><strong>Role:</strong> <span class="badge bg-primary">${currentUser.role || 'USER'}</span></p>
-                    <p class="mb-1"><strong>X-API-KEY:</strong> <code>${currentUser.apiKey || 'SOC-SECRET-API-KEY-2026'}</code></p>
-                    <p class="mb-0 text-truncate small text-muted"><strong>JWT Token:</strong> <code>${currentToken}</code></p>
+            if (currentUserData && jwtToken) {
+                userDisplay.classList.remove('d-none');
+                document.getElementById('navUsername').innerText = currentUserData.username;
+                document.getElementById('navRole').innerText = currentUserData.role || 'GUEST USER';
+
+                authBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket me-1"></i> Sign Out`;
+                authBtn.onclick = logoutUser;
+                authBtn.removeAttribute('data-bs-toggle');
+
+                activeProfileBox.classList.remove('d-none');
+                activeProfileText.innerHTML = `
+                    <p class="mb-1"><strong>Username:</strong> ${currentUserData.username}</p>
+                    <p class="mb-1"><strong>Email:</strong> ${currentUserData.email}</p>
+                    <p class="mb-1"><strong>X-API-KEY:</strong> <code>${currentUserData.apiKey || 'SOC-SECRET-API-KEY-2026'}</code></p>
+                    <p class="mb-0 text-truncate"><strong>JWT:</strong> <code>${jwtToken}</code></p>
                 `;
             } else {
-                badge.className = 'badge bg-warning text-dark me-3';
-                badge.innerHTML = `<i class="fa-solid fa-user-xmark me-1"></i>Guest (Not Logged In)`;
-                logoutBtn.classList.add('d-none');
-                profileBox.innerHTML = `<p class="text-muted mb-0 small">Please log in to view active JWT profile & API Key credentials.</p>`;
+                userDisplay.classList.add('d-none');
+                authBtn.innerHTML = `<i class="fa-solid fa-user me-1"></i> Sign In / Register`;
+                authBtn.setAttribute('data-bs-toggle', 'modal');
+                authBtn.setAttribute('data-bs-target', '#authModal');
+                authBtn.onclick = null;
+                activeProfileBox.classList.add('d-none');
             }
         }
 
-        function logout() {
+        // Logout User
+        function logoutUser() {
             localStorage.clear();
-            currentToken = '';
-            currentUser = null;
-            updateUserUI();
-            alert('Logged out.');
-        }
-
-        // 2. Hotel Handlers (Student 2)
-        function renderHotels() {
-            const container = document.getElementById('hotelCatalog');
-            container.innerHTML = sampleHotels.map(h => `
-                <div class="col-md-4 mb-4">
-                    <div class="card card-custom h-100">
-                        <img src="${h.image}" class="card-img-top" style="height: 180px; object-fit: cover;" alt="${h.name}">
-                        <div class="card-body">
-                            <h5 class="card-title fw-bold">${h.name}</h5>
-                            <p class="text-muted small mb-2"><i class="fa-solid fa-location-dot me-1 text-danger"></i>${h.location}</p>
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <span class="star-rating"><i class="fa-solid fa-star"></i> ${h.rating}</span>
-                                <span class="fw-bold text-primary">$${h.price} / night</span>
-                            </div>
-                            <button class="btn btn-outline-primary btn-sm w-100" onclick="quickBook('${h.id}', '${h.name}')"><i class="fa-solid fa-calendar-plus me-1"></i>Book Room</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function fetchHotels() {
-            renderHotels();
-            alert('Hotels catalog updated!');
-        }
-
-        function quickBook(id, name) {
-            document.getElementById('bookHotelSelect').value = id;
-            const resTab = new bootstrap.Tab(document.getElementById('reservation-tab'));
-            resTab.show();
-        }
-
-        // 3. Reservation Handlers (Student 3)
-        function renderReservations() {
-            const tbody = document.getElementById('reservationTableBody');
-            tbody.innerHTML = sampleReservations.map(r => `
-                <tr>
-                    <td><code>${r.id}</code></td>
-                    <td class="fw-bold">${r.hotel}</td>
-                    <td>${r.room}</td>
-                    <td><small>${r.checkIn} to ${r.checkOut}</small></td>
-                    <td><span class="badge ${r.status === 'CONFIRMED' ? 'bg-success' : 'bg-secondary'}">${r.status}</span></td>
-                    <td>
-                        ${r.status === 'CONFIRMED' ? `<button class="btn btn-danger btn-sm" onclick="cancelReservation('${r.id}')">Cancel</button>` : '-'}
-                    </td>
-                </tr>
-            `).join('');
-        }
-
-        function handleCreateReservation(e) {
-            e.preventDefault();
-            const hotelName = document.getElementById('bookHotelSelect').options[document.getElementById('bookHotelSelect').selectedIndex].text;
-            const room = document.getElementById('bookRoomType').value;
-            const checkIn = document.getElementById('bookCheckIn').value;
-            const checkOut = document.getElementById('bookCheckOut').value;
-            const newId = 'RES-' + Math.floor(1000 + Math.random() * 9000);
-
-            sampleReservations.push({ id: newId, hotel: hotelName, room, checkIn, checkOut, status: 'CONFIRMED' });
-            renderReservations();
-            alert('🎉 Reservation Created Successfully! Booking ID: ' + newId);
-
-            // Trigger Notification (Student 5 integration)
-            addNotificationLog(`📧 Confirmation email dispatched for Booking #${newId} at ${hotelName}.`);
-        }
-
-        function cancelReservation(id) {
-            const res = sampleReservations.find(r => r.id === id);
-            if (res) {
-                res.status = 'CANCELLED';
-                renderReservations();
-                alert('Reservation ' + id + ' cancelled.');
-            }
-        }
-
-        // 4. Review Handlers (Student 4)
-        function renderReviews() {
-            const container = document.getElementById('reviewsContainer');
-            container.innerHTML = sampleReviews.map(r => `
-                <div class="card p-3 mb-3 bg-light border-0 shadow-sm">
-                    <div class="d-flex justify-content-between">
-                        <h6 class="fw-bold mb-1">${r.author}</h6>
-                        <span class="star-rating">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
-                    </div>
-                    <p class="small text-muted mb-0">"${r.comment}"</p>
-                </div>
-            `).join('');
-        }
-
-        function handleSubmitReview(e) {
-            e.preventDefault();
-            const hotelId = document.getElementById('revHotelId').value;
-            const rating = parseInt(document.getElementById('revRating').value);
-            const comment = document.getElementById('revComment').value;
-            const author = currentUser ? currentUser.username : 'Guest User';
-
-            sampleReviews.unshift({ id: 'R' + (sampleReviews.length + 1), hotelId, author, rating, comment });
-            renderReviews();
-            document.getElementById('revComment').value = '';
-            alert('⭐ Review submitted successfully!');
-        }
-
-        // 5. Notification & Offer Handlers (Student 5)
-        function handleValidatePromo(e) {
-            e.preventDefault();
-            const code = document.getElementById('promoCode').value;
-            const amount = parseFloat(document.getElementById('promoAmount').value);
-            const resBox = document.getElementById('promoResultContainer');
-
-            if (code.toUpperCase() === 'SUMMER2026') {
-                const discount = amount * 0.20;
-                const finalPrice = amount - discount;
-                resBox.innerHTML = `
-                    <div class="alert alert-success">
-                        <h6 class="fw-bold mb-1"><i class="fa-solid fa-circle-check me-2"></i>Promo Code Applied!</h6>
-                        <p class="mb-0 small">20% Discount Saved: <strong>$${discount.toFixed(2)}</strong> | Final Price: <strong>$${finalPrice.toFixed(2)}</strong></p>
-                    </div>
-                `;
-            } else {
-                resBox.innerHTML = `
-                    <div class="alert alert-warning">
-                        <p class="mb-0 small"><i class="fa-solid fa-triangle-exclamation me-2"></i>Invalid Code. Try using <strong>SUMMER2026</strong> for 20% off.</p>
-                    </div>
-                `;
-            }
-        }
-
-        function handleSubscribe(e) {
-            e.preventDefault();
-            const email = document.getElementById('subEmail').value;
-            alert('📩 Successfully subscribed ' + email + ' to promotional alerts!');
-            addNotificationLog(`🔔 Subscription alert registered for ${email}.`);
-            document.getElementById('subEmail').value = '';
-        }
-
-        function addNotificationLog(msg) {
-            const logBox = document.getElementById('notificationLog');
-            const time = new Date().toLocaleTimeString();
-            logBox.innerHTML = `<div class="mb-1 text-primary"><strong>[${time}]</strong> ${msg}</div>` + logBox.innerHTML;
+            jwtToken = '';
+            currentUserData = null;
+            updateSessionUI();
+            alert('Signed out.');
         }
     </script>
 </body>
