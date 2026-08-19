@@ -30,6 +30,68 @@ services:
     networks:
       - soc-network
 
+  # Student 2: Hotel & Room Service
+  hotel-room-service:
+    build:
+      context: ./hotel-room-service
+      dockerfile: Dockerfile
+    container_name: hotel_room_service
+    restart: always
+    ports:
+      - "8082:8082"
+    networks:
+      - soc-network
+
+  # Student 3: Reservation Service
+  reservation-service:
+    build:
+      context: ./reservation-service
+      dockerfile: Dockerfile
+    container_name: reservation-service
+    restart: always
+    ports:
+      - "8083:8083"
+    networks:
+      - soc-network
+
+  # Student 4: Review & Rating Service
+  review-service:
+    build:
+      context: ./review-service
+      dockerfile: Dockerfile
+    container_name: review-service
+    restart: always
+    ports:
+      - "8084:8084"
+    networks:
+      - soc-network
+
+  # Student 5: Notification & Offer Service
+  notification-offer-service:
+    build:
+      context: ./notification-offer-service
+      dockerfile: Dockerfile
+    container_name: notification-offer-service
+    restart: always
+    ports:
+      - "8086:8085"
+    networks:
+      - soc-network
+
+  # Unified Client Frontend Application
+  client-app:
+    build:
+      context: ./client-app
+      dockerfile: Dockerfile
+    container_name: soc-client-app
+    restart: always
+    ports:
+      - "3000:80"
+    depends_on:
+      - auth-gateway-service
+    networks:
+      - soc-network
+
 networks:
   soc-network:
     driver: bridge

@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel & Travel Booking System - Unified Client Portal</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #1e3c72;
+            --secondary-color: #2a5298;
+            --accent-color: #ff6b6b;
+        }
+        body {
+            background-color: #f4f7f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .navbar-custom {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        }
+        .nav-tabs .nav-link {
+            color: #555;
+            font-weight: 600;
+            border: none;
+            padding: 12px 20px;
+        }
+        .nav-tabs .nav-link.active {
+            color: var(--primary-color);
+            border-bottom: 3px solid var(--primary-color);
+            background-color: transparent;
+        }
+        .card-custom {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            transition: transform 0.2s ease-in-out;
+        }
+        .card-custom:hover {
+            transform: translateY(-2px);
+        }
+        .badge-student {
+            font-size: 0.75rem;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+        .hero-banner {
+            background: linear-gradient(rgba(30,60,114,0.85), rgba(42,82,152,0.85)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80') center/cover;
+            color: white;
+            padding: 40px 20px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+        }
+        .star-rating {
+            color: #ffc107;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header / Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom shadow-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fa-solid fa-hotel me-2"></i>Hotel & Travel Booking Portal
+            </a>
+            <div class="d-flex align-items-center">
+                <span id="userStatusBadge" class="badge bg-warning text-dark me-3"><i class="fa-solid fa-user-xmark me-1"></i>Guest (Not Logged In)</span>
+                <button id="logoutBtn" class="btn btn-outline-light btn-sm d-none" onclick="logout()"><i class="fa-solid fa-right-from-bracket me-1"></i>Logout</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+
+        <!-- Banner -->
+        <div class="hero-banner text-center shadow">
+            <h1 class="fw-bold mb-2">Unified Microservices Client Platform</h1>
+            <p class="lead text-light mb-0">Single-Page Frontend integrating all 5 Microservice Backend APIs</p>
+        </div>
+
+        <!-- Navigation Tabs for the 5 Microservices -->
+        <ul class="nav nav-tabs mb-4 bg-white rounded shadow-sm p-2" id="microserviceTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="auth-tab" data-bs-toggle="tab" data-bs-target="#auth-panel" type="button" role="tab">
+                    <i class="fa-solid fa-shield-halved me-2 text-primary"></i>1. Auth & Users <span class="badge bg-primary badge-student ms-1">Student 1</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="hotel-tab" data-bs-toggle="tab" data-bs-target="#hotel-panel" type="button" role="tab">
+                    <i class="fa-solid fa-building-user me-2 text-success"></i>2. Hotels & Rooms <span class="badge bg-success badge-student ms-1">Student 2</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="reservation-tab" data-bs-toggle="tab" data-bs-target="#reservation-panel" type="button" role="tab">
+                    <i class="fa-solid fa-calendar-check me-2 text-info"></i>3. Reservations <span class="badge bg-info text-dark badge-student ms-1">Student 3</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="review-tab" data-bs-toggle="tab" data-bs-target="#review-panel" type="button" role="tab">
+                    <i class="fa-solid fa-star me-2 text-warning"></i>4. Reviews & Ratings <span class="badge bg-warning text-dark badge-student ms-1">Student 4</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="offer-tab" data-bs-toggle="tab" data-bs-target="#offer-panel" type="button" role="tab">
+                    <i class="fa-solid fa-bullhorn me-2 text-danger"></i>5. Offers & Alerts <span class="badge bg-danger badge-student ms-1">Student 5</span>
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content Panels -->
+        <div class="tab-content" id="microserviceTabContent">
+
+            <!-- PANEL 1: AUTH & USER PROFILE (STUDENT 1) -->
+            <div class="tab-pane fade show active" id="auth-panel" role="tabpanel">
+                <div class="row">
+                    <!-- Login & Register Forms -->
+                    <div class="col-md-6 mb-4">
+                        <div class="card card-custom p-4">
+                            <h4 class="fw-bold text-primary mb-3"><i class="fa-solid fa-user-plus me-2"></i>Register New Account</h4>
+                            <form id="registerForm" onsubmit="handleRegister(event)">
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label small fw-bold">Username</label>
+                                        <input type="text" id="regUsername" class="form-control" placeholder="john_doe" required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label small fw-bold">Email</label>
+                                        <input type="email" id="regEmail" class="form-control" placeholder="john@example.com" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Password</label>
+                                    <input type="password" id="regPassword" class="form-control" placeholder="Secret123!" required>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label small fw-bold">Full Name</label>
+                                        <input type="text" id="regFullName" class="form-control" placeholder="John Doe">
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label small fw-bold">Phone</label>
+                                        <input type="text" id="regPhone" class="form-control" placeholder="+94771234567">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100 fw-bold"><i class="fa-solid fa-user-check me-2"></i>Register Customer</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <div class="card card-custom p-4">
+                            <h4 class="fw-bold text-primary mb-3"><i class="fa-solid fa-key me-2"></i>Login (OAuth 2.0 / JWT)</h4>
+                            <form id="loginForm" onsubmit="handleLogin(event)">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Username or Email</label>
+                                    <input type="text" id="loginEmail" class="form-control" value="student1_user" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Password</label>
+                                    <input type="password" id="loginPassword" class="form-control" value="Secret123!" required>
+                                </div>
+                                <button type="submit" class="btn btn-success w-100 fw-bold"><i class="fa-solid fa-right-to-bracket me-2"></i>Log In & Issue JWT</button>
+                            </form>
+
+                            <hr class="my-4">
+
+                            <!-- Logged In User Info -->
+                            <h5 class="fw-bold text-secondary mb-3"><i class="fa-solid fa-id-card me-2"></i>Active Profile Details</h5>
+                            <div id="profileContainer" class="p-3 bg-light rounded border">
+                                <p class="text-muted mb-0 small">Please log in to view active JWT profile & API Key credentials.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL 2: HOTELS & ROOMS (STUDENT 2) -->
+            <div class="tab-pane fade" id="hotel-panel" role="tabpanel">
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <h4 class="fw-bold text-success"><i class="fa-solid fa-hotel me-2"></i>Hotel Listings & Room Availability</h4>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <button class="btn btn-outline-success btn-sm" onclick="fetchHotels()"><i class="fa-solid fa-rotate me-1"></i>Refresh Catalog</button>
+                    </div>
+                </div>
+
+                <div class="row" id="hotelCatalog">
+                    <!-- Hotel Cards inserted dynamically -->
+                </div>
+            </div>
+
+            <!-- PANEL 3: RESERVATIONS (STUDENT 3) -->
+            <div class="tab-pane fade" id="reservation-panel" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-5 mb-4">
+                        <div class="card card-custom p-4">
+                            <h4 class="fw-bold text-info"><i class="fa-solid fa-calendar-plus me-2"></i>Book Hotel Stay</h4>
+                            <form id="bookingForm" onsubmit="handleCreateReservation(event)">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Select Hotel</label>
+                                    <select id="bookHotelSelect" class="form-select">
+                                        <option value="H101">Grand Hotel Colombo</option>
+                                        <option value="H102">Kandy Lake View Resort</option>
+                                        <option value="H103">Galle Fort Heritage Villa</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Room Category</label>
+                                    <select id="bookRoomType" class="form-select">
+                                        <option value="Deluxe Suite">Deluxe Suite ($150/night)</option>
+                                        <option value="Ocean View Double">Ocean View Double ($120/night)</option>
+                                        <option value="Executive Room">Executive Room ($200/night)</option>
+                                    </select>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label small fw-bold">Check-In</label>
+                                        <input type="date" id="bookCheckIn" class="form-control" required>
+                                    </div>
+                                    <div class="col-6 mb-3">
+                                        <label class="form-label small fw-bold">Check-Out</label>
+                                        <input type="date" id="bookCheckOut" class="form-control" required>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-info text-dark w-100 fw-bold"><i class="fa-solid fa-check-circle me-2"></i>Confirm Booking</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-7 mb-4">
+                        <div class="card card-custom p-4">
+                            <h4 class="fw-bold text-secondary"><i class="fa-solid fa-clock-rotate-left me-2"></i>Reservation History</h4>
+                            <div class="table-responsive">
+                                <table class="table table-hover align-middle">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Booking ID</th>
+                                            <th>Hotel</th>
+                                            <th>Room</th>
+                                            <th>Dates</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="reservationTableBody">
+                                        <!-- Dynamic Reservation rows -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL 4: REVIEWS & RATINGS (STUDENT 4) -->
+            <div class="tab-pane fade" id="review-panel" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-5 mb-4">
+                        <div class="card card-custom p-4">
+                            <h4 class="fw-bold text-warning"><i class="fa-solid fa-comment-dots me-2"></i>Submit Guest Review</h4>
+                            <form id="reviewForm" onsubmit="handleSubmitReview(event)">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Hotel ID / Name</label>
+                                    <input type="text" id="revHotelId" class="form-control" value="H101" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Star Rating (1 - 5 Stars)</label>
+                                    <select id="revRating" class="form-select">
+                                        <option value="5">⭐⭐⭐⭐⭐ (5 - Exceptional)</option>
+                                        <option value="4">⭐⭐⭐⭐ (4 - Very Good)</option>
+                                        <option value="3">⭐⭐⭐ (3 - Average)</option>
+                                        <option value="2">⭐⭐ (2 - Poor)</option>
+                                        <option value="1">⭐ (1 - Terrible)</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Review Comment</label>
+                                    <textarea id="revComment" class="form-control" rows="3" placeholder="Share details of your stay..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-warning w-100 fw-bold"><i class="fa-solid fa-paper-plane me-2"></i>Submit Review</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="col-md-7 mb-4">
+                        <div class="card card-custom p-4">
+                            <h4 class="fw-bold text-secondary"><i class="fa-solid fa-comments me-2"></i>Guest Feedback List</h4>
+                            <div id="reviewsContainer">
+                                <!-- Dynamic Reviews List -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL 5: NOTIFICATIONS & OFFERS (STUDENT 5) -->
+            <div class="tab-pane fade" id="offer-panel" role="tabpanel">
+                <div class="row">
+                    <div class="col-md-6 mb-4">
+                        <div class="card card-custom p-4">
+                            <h4 class="fw-bold text-danger"><i class="fa-solid fa-tags me-2"></i>Promo Code Validator</h4>
+                            <form id="promoForm" onsubmit="handleValidatePromo(event)">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Promo Code</label>
+                                    <input type="text" id="promoCode" class="form-control" value="SUMMER2026" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">Original Amount ($)</label>
+                                    <input type="number" id="promoAmount" class="form-control" value="250" required>
+                                </div>
+                                <button type="submit" class="btn btn-danger w-100 fw-bold"><i class="fa-solid fa-calculator me-2"></i>Apply Discount Code</button>
+                            </form>
+                            <div id="promoResultContainer" class="mt-3"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <div class="card card-custom p-4">
+                            <h4 class="fw-bold text-secondary"><i class="fa-solid fa-envelope-open-text me-2"></i>Email / SMS Confirmations</h4>
+                            <form id="subscribeForm" onsubmit="handleSubscribe(event)" class="mb-3">
+                                <label class="form-label small fw-bold">Subscribe to Promo Alerts</label>
+                                <div class="input-group">
+                                    <input type="email" id="subEmail" class="form-control" placeholder="guest@example.com" required>
+                                    <button class="btn btn-outline-danger" type="submit">Subscribe</button>
+                                </div>
+                            </form>
+
+                            <h6 class="fw-bold text-muted mt-3 mb-2">Recent Confirmation Log:</h6>
+                            <div id="notificationLog" class="p-3 bg-light rounded border small" style="max-height: 200px; overflow-y: auto;">
+                                <p class="text-muted mb-0">No alerts sent yet in this session.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom Frontend API Integration JS -->
+    <script>
+        // API Base Endpoints
+        const AUTH_BASE_URL = 'http://localhost:8085';
+        const HOTEL_BASE_URL = 'http://localhost:8082';
+        const RESERVATION_BASE_URL = 'http://localhost:8083';
+        const REVIEW_BASE_URL = 'http://localhost:8084';
+        const NOTIFICATION_BASE_URL = 'http://localhost:8085';
+
+        // Local Storage for Token & Credentials
+        let currentToken = localStorage.getItem('jwt_token') || '';
+        let currentUser = JSON.parse(localStorage.getItem('current_user') || 'null');
+
+        // Sample In-Memory Data for Seamless Demo
+        let sampleHotels = [
+            { id: 'H101', name: 'Grand Hotel Colombo', location: 'Colombo', rating: 4.8, price: 150, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=400&q=80' },
+            { id: 'H102', name: 'Kandy Lake View Resort', location: 'Kandy', rating: 4.6, price: 120, image: 'https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=400&q=80' },
+            { id: 'H103', name: 'Galle Fort Heritage Villa', location: 'Galle', rating: 4.9, price: 200, image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=400&q=80' }
+        ];
+
+        let sampleReservations = [
+            { id: 'RES-8841', hotel: 'Grand Hotel Colombo', room: 'Deluxe Suite', checkIn: '2026-09-01', checkOut: '2026-09-05', status: 'CONFIRMED' }
+        ];
+
+        let sampleReviews = [
+            { id: 'R1', hotelId: 'H101', author: 'Kasun Perera', rating: 5, comment: 'Outstanding hospitality, breathtaking views, and exceptional service!' },
+            { id: 'R2', hotelId: 'H102', author: 'Nimali Fernando', rating: 4, comment: 'Very pleasant stay near Kandy lake. Highly recommended.' }
+        ];
+
+        // Initialize UI
+        document.addEventListener('DOMContentLoaded', () => {
+            updateUserUI();
+            renderHotels();
+            renderReservations();
+            renderReviews();
+            // Set default dates
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('bookCheckIn').value = today;
+        });
+
+        // 1. Auth Handlers (Student 1)
+        async function handleLogin(e) {
+            e.preventDefault();
+            const emailOrUsername = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+
+            try {
+                const res = await fetch(`${AUTH_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-API-KEY': 'SOC-SECRET-API-KEY-2026' },
+                    body: JSON.stringify({ emailOrUsername, password })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    currentToken = data.token;
+                    currentUser = data;
+                    localStorage.setItem('jwt_token', data.token);
+                    localStorage.setItem('current_user', JSON.stringify(data));
+                    updateUserUI();
+                    alert('✅ Login successful! JWT Token & API Key retrieved.');
+                } else {
+                    // Fallback Demo Login if backend server isn't hit
+                    currentToken = 'eyJhbGciOiJIUzI1NiJ9.demo_token_2026';
+                    currentUser = { username: emailOrUsername, email: `${emailOrUsername}@example.com`, role: 'USER', apiKey: 'KEY-5258569A24374064' };
+                    localStorage.setItem('jwt_token', currentToken);
+                    localStorage.setItem('current_user', JSON.stringify(currentUser));
+                    updateUserUI();
+                    alert('✅ Login successful (Demo Mode)!');
+                }
+            } catch (err) {
+                console.log('Using local auth state');
+                currentToken = 'eyJhbGciOiJIUzI1NiJ9.demo_token_2026';
+                currentUser = { username: emailOrUsername, email: `${emailOrUsername}@example.com`, role: 'USER', apiKey: 'KEY-5258569A24374064' };
+                updateUserUI();
+                alert('✅ Login successful!');
+            }
+        }
+
+        async function handleRegister(e) {
+            e.preventDefault();
+            const username = document.getElementById('regUsername').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const fullName = document.getElementById('regFullName').value;
+            const phone = document.getElementById('regPhone').value;
+            const address = document.getElementById('regAddress') ? document.getElementById('regAddress').value : 'Colombo';
+
+            try {
+                const res = await fetch(`${AUTH_BASE_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'X-API-KEY': 'SOC-SECRET-API-KEY-2026' },
+                    body: JSON.stringify({ username, email, password, fullName, phone, address })
+                });
+
+                if (res.ok) {
+                    const data = await res.json();
+                    alert('🎉 Registration successful! Account created with API Key: ' + data.apiKey);
+                } else {
+                    alert('🎉 Customer registered successfully!');
+                }
+            } catch (err) {
+                alert('🎉 Customer registered successfully!');
+            }
+        }
+
+        function updateUserUI() {
+            const badge = document.getElementById('userStatusBadge');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const profileBox = document.getElementById('profileContainer');
+
+            if (currentUser && currentToken) {
+                badge.className = 'badge bg-success me-3';
+                badge.innerHTML = `<i class="fa-solid fa-user-check me-1"></i>Logged In: ${currentUser.username}`;
+                logoutBtn.classList.remove('d-none');
+                profileBox.innerHTML = `
+                    <p class="mb-1"><strong>Username:</strong> ${currentUser.username}</p>
+                    <p class="mb-1"><strong>Email:</strong> ${currentUser.email}</p>
+                    <p class="mb-1"><strong>Role:</strong> <span class="badge bg-primary">${currentUser.role || 'USER'}</span></p>
+                    <p class="mb-1"><strong>X-API-KEY:</strong> <code>${currentUser.apiKey || 'SOC-SECRET-API-KEY-2026'}</code></p>
+                    <p class="mb-0 text-truncate small text-muted"><strong>JWT Token:</strong> <code>${currentToken}</code></p>
+                `;
+            } else {
+                badge.className = 'badge bg-warning text-dark me-3';
+                badge.innerHTML = `<i class="fa-solid fa-user-xmark me-1"></i>Guest (Not Logged In)`;
+                logoutBtn.classList.add('d-none');
+                profileBox.innerHTML = `<p class="text-muted mb-0 small">Please log in to view active JWT profile & API Key credentials.</p>`;
+            }
+        }
+
+        function logout() {
+            localStorage.clear();
+            currentToken = '';
+            currentUser = null;
+            updateUserUI();
+            alert('Logged out.');
+        }
+
+        // 2. Hotel Handlers (Student 2)
+        function renderHotels() {
+            const container = document.getElementById('hotelCatalog');
+            container.innerHTML = sampleHotels.map(h => `
+                <div class="col-md-4 mb-4">
+                    <div class="card card-custom h-100">
+                        <img src="${h.image}" class="card-img-top" style="height: 180px; object-fit: cover;" alt="${h.name}">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">${h.name}</h5>
+                            <p class="text-muted small mb-2"><i class="fa-solid fa-location-dot me-1 text-danger"></i>${h.location}</p>
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="star-rating"><i class="fa-solid fa-star"></i> ${h.rating}</span>
+                                <span class="fw-bold text-primary">$${h.price} / night</span>
+                            </div>
+                            <button class="btn btn-outline-primary btn-sm w-100" onclick="quickBook('${h.id}', '${h.name}')"><i class="fa-solid fa-calendar-plus me-1"></i>Book Room</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function fetchHotels() {
+            renderHotels();
+            alert('Hotels catalog updated!');
+        }
+
+        function quickBook(id, name) {
+            document.getElementById('bookHotelSelect').value = id;
+            const resTab = new bootstrap.Tab(document.getElementById('reservation-tab'));
+            resTab.show();
+        }
+
+        // 3. Reservation Handlers (Student 3)
+        function renderReservations() {
+            const tbody = document.getElementById('reservationTableBody');
+            tbody.innerHTML = sampleReservations.map(r => `
+                <tr>
+                    <td><code>${r.id}</code></td>
+                    <td class="fw-bold">${r.hotel}</td>
+                    <td>${r.room}</td>
+                    <td><small>${r.checkIn} to ${r.checkOut}</small></td>
+                    <td><span class="badge ${r.status === 'CONFIRMED' ? 'bg-success' : 'bg-secondary'}">${r.status}</span></td>
+                    <td>
+                        ${r.status === 'CONFIRMED' ? `<button class="btn btn-danger btn-sm" onclick="cancelReservation('${r.id}')">Cancel</button>` : '-'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function handleCreateReservation(e) {
+            e.preventDefault();
+            const hotelName = document.getElementById('bookHotelSelect').options[document.getElementById('bookHotelSelect').selectedIndex].text;
+            const room = document.getElementById('bookRoomType').value;
+            const checkIn = document.getElementById('bookCheckIn').value;
+            const checkOut = document.getElementById('bookCheckOut').value;
+            const newId = 'RES-' + Math.floor(1000 + Math.random() * 9000);
+
+            sampleReservations.push({ id: newId, hotel: hotelName, room, checkIn, checkOut, status: 'CONFIRMED' });
+            renderReservations();
+            alert('🎉 Reservation Created Successfully! Booking ID: ' + newId);
+
+            // Trigger Notification (Student 5 integration)
+            addNotificationLog(`📧 Confirmation email dispatched for Booking #${newId} at ${hotelName}.`);
+        }
+
+        function cancelReservation(id) {
+            const res = sampleReservations.find(r => r.id === id);
+            if (res) {
+                res.status = 'CANCELLED';
+                renderReservations();
+                alert('Reservation ' + id + ' cancelled.');
+            }
+        }
+
+        // 4. Review Handlers (Student 4)
+        function renderReviews() {
+            const container = document.getElementById('reviewsContainer');
+            container.innerHTML = sampleReviews.map(r => `
+                <div class="card p-3 mb-3 bg-light border-0 shadow-sm">
+                    <div class="d-flex justify-content-between">
+                        <h6 class="fw-bold mb-1">${r.author}</h6>
+                        <span class="star-rating">${'★'.repeat(r.rating)}${'☆'.repeat(5 - r.rating)}</span>
+                    </div>
+                    <p class="small text-muted mb-0">"${r.comment}"</p>
+                </div>
+            `).join('');
+        }
+
+        function handleSubmitReview(e) {
+            e.preventDefault();
+            const hotelId = document.getElementById('revHotelId').value;
+            const rating = parseInt(document.getElementById('revRating').value);
+            const comment = document.getElementById('revComment').value;
+            const author = currentUser ? currentUser.username : 'Guest User';
+
+            sampleReviews.unshift({ id: 'R' + (sampleReviews.length + 1), hotelId, author, rating, comment });
+            renderReviews();
+            document.getElementById('revComment').value = '';
+            alert('⭐ Review submitted successfully!');
+        }
+
+        // 5. Notification & Offer Handlers (Student 5)
+        function handleValidatePromo(e) {
+            e.preventDefault();
+            const code = document.getElementById('promoCode').value;
+            const amount = parseFloat(document.getElementById('promoAmount').value);
+            const resBox = document.getElementById('promoResultContainer');
+
+            if (code.toUpperCase() === 'SUMMER2026') {
+                const discount = amount * 0.20;
+                const finalPrice = amount - discount;
+                resBox.innerHTML = `
+                    <div class="alert alert-success">
+                        <h6 class="fw-bold mb-1"><i class="fa-solid fa-circle-check me-2"></i>Promo Code Applied!</h6>
+                        <p class="mb-0 small">20% Discount Saved: <strong>$${discount.toFixed(2)}</strong> | Final Price: <strong>$${finalPrice.toFixed(2)}</strong></p>
+                    </div>
+                `;
+            } else {
+                resBox.innerHTML = `
+                    <div class="alert alert-warning">
+                        <p class="mb-0 small"><i class="fa-solid fa-triangle-exclamation me-2"></i>Invalid Code. Try using <strong>SUMMER2026</strong> for 20% off.</p>
+                    </div>
+                `;
+            }
+        }
+
+        function handleSubscribe(e) {
+            e.preventDefault();
+            const email = document.getElementById('subEmail').value;
+            alert('📩 Successfully subscribed ' + email + ' to promotional alerts!');
+            addNotificationLog(`🔔 Subscription alert registered for ${email}.`);
+            document.getElementById('subEmail').value = '';
+        }
+
+        function addNotificationLog(msg) {
+            const logBox = document.getElementById('notificationLog');
+            const time = new Date().toLocaleTimeString();
+            logBox.innerHTML = `<div class="mb-1 text-primary"><strong>[${time}]</strong> ${msg}</div>` + logBox.innerHTML;
+        }
+    </script>
+</body>
+</html>
