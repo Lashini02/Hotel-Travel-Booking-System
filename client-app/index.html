@@ -581,6 +581,15 @@
             if(sectionId === 'offers-section') document.getElementById('nav-offers').classList.add('active');
         }
 
+        // Helper to safely hide Bootstrap Modals
+        function hideModal(modalId) {
+            try {
+                const el = document.getElementById(modalId);
+                const modal = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
+                if (modal) modal.hide();
+            } catch (err) {}
+        }
+
         // 1. REGISTER USER (STUDENT 1 ENDPOINT: POST /auth/register)
         async function handleRegisterSubmit(e) {
             e.preventDefault();
@@ -613,13 +622,10 @@
                     localStorage.setItem('aura_user', JSON.stringify(currentUserData));
                     updateSessionUI();
 
-                    alertBox.innerHTML = `<div class="alert alert-success"><i class="fa-solid fa-circle-check me-2"></i>Account Registered & Logged In! API Key: <code>${data.apiKey}</code></div>`;
-                    setTimeout(() => {
-                        bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
-                        alertBox.innerHTML = '';
-                    }, 1500);
+                    alert('🎉 Account Registered & Logged In Successfully!\nUsername: ' + username + '\nAPI Key: ' + data.apiKey);
+                    hideModal('authModal');
                 } else {
-                    alertBox.innerHTML = `<div class="alert alert-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>${data.message || 'Registration failed'}</div>`;
+                    alert('⚠️ ' + (data.message || 'Registration failed'));
                 }
             } catch (err) {
                 // Fallback local registration if backend offline
@@ -629,11 +635,8 @@
                 localStorage.setItem('aura_user', JSON.stringify(currentUserData));
                 updateSessionUI();
 
-                alertBox.innerHTML = `<div class="alert alert-success"><i class="fa-solid fa-circle-check me-2"></i>Account Registered Successfully!</div>`;
-                setTimeout(() => {
-                    bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
-                    alertBox.innerHTML = '';
-                }, 1500);
+                alert('🎉 Account Registered Successfully! Welcome, ' + username);
+                hideModal('authModal');
             }
         }
 
@@ -665,13 +668,10 @@
                     localStorage.setItem('aura_user', JSON.stringify(currentUserData));
                     updateSessionUI();
 
-                    alertBox.innerHTML = `<div class="alert alert-success"><i class="fa-solid fa-circle-check me-2"></i>Login Successful! OAuth 2.0 JWT Token issued.</div>`;
-                    setTimeout(() => {
-                        bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
-                        alertBox.innerHTML = '';
-                    }, 1200);
+                    alert('✅ Login Successful! Welcome back, ' + currentUserData.username);
+                    hideModal('authModal');
                 } else {
-                    alertBox.innerHTML = `<div class="alert alert-danger"><i class="fa-solid fa-triangle-exclamation me-2"></i>${data.message || 'Invalid credentials'}</div>`;
+                    alert('⚠️ ' + (data.message || 'Invalid username/email or password'));
                 }
             } catch (err) {
                 // Fallback login
@@ -681,11 +681,8 @@
                 localStorage.setItem('aura_user', JSON.stringify(currentUserData));
                 updateSessionUI();
 
-                alertBox.innerHTML = `<div class="alert alert-success"><i class="fa-solid fa-circle-check me-2"></i>Login Successful!</div>`;
-                setTimeout(() => {
-                    bootstrap.Modal.getInstance(document.getElementById('authModal')).hide();
-                    alertBox.innerHTML = '';
-                }, 1200);
+                alert('✅ Login Successful! Welcome back, ' + currentUserData.username);
+                hideModal('authModal');
             }
         }
 
@@ -748,20 +745,23 @@
                     currentUserData.address = data.address;
                     localStorage.setItem('aura_user', JSON.stringify(currentUserData));
 
-                    alertBox.innerHTML = `<div class="alert alert-success"><i class="fa-solid fa-circle-check me-2"></i>Profile updated successfully via <code>PUT /users/profile</code>!</div>`;
+                    alert('✅ Profile Updated Successfully via PUT /users/profile!');
+                    hideModal('profileModal');
                 } else {
                     currentUserData.fullName = fullName;
                     currentUserData.phone = phone;
                     currentUserData.address = address;
                     localStorage.setItem('aura_user', JSON.stringify(currentUserData));
-                    alertBox.innerHTML = `<div class="alert alert-success"><i class="fa-solid fa-circle-check me-2"></i>Profile details saved!</div>`;
+                    alert('✅ Profile details saved!');
+                    hideModal('profileModal');
                 }
             } catch (err) {
                 currentUserData.fullName = fullName;
                 currentUserData.phone = phone;
                 currentUserData.address = address;
                 localStorage.setItem('aura_user', JSON.stringify(currentUserData));
-                alertBox.innerHTML = `<div class="alert alert-success"><i class="fa-solid fa-circle-check me-2"></i>Profile details saved!</div>`;
+                alert('✅ Profile details saved!');
+                hideModal('profileModal');
             }
         }
 
@@ -846,7 +846,7 @@
             bookingsData.unshift({ id: newResId, hotelName, roomType, checkIn, checkOut, status: 'CONFIRMED' });
             renderBookings();
 
-            bootstrap.Modal.getInstance(document.getElementById('bookingModal')).hide();
+            hideModal('bookingModal');
             switchSection('bookings-section');
 
             alert('🎉 Luxury Suite Reserved! Booking ID: ' + newResId);
