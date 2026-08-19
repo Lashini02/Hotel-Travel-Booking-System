@@ -151,7 +151,12 @@
             <div class="collapse navbar-collapse" id="auraNav">
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0 me-3">
                     <li class="nav-item">
-                        <a class="nav-link nav-link-custom active" id="nav-hotels" href="#catalog-section" onclick="switchSection('catalog-section')">
+                        <a class="nav-link nav-link-custom active" id="nav-auth" href="#auth-section" onclick="switchSection('auth-section')">
+                            <i class="fa-solid fa-key me-1"></i> Account & Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-custom" id="nav-hotels" href="#catalog-section" onclick="switchSection('catalog-section')">
                             <i class="fa-solid fa-compass me-1"></i> Explore Hotels
                         </a>
                     </li>
@@ -176,11 +181,8 @@
                 <div class="d-flex align-items-center">
                     <div id="navUserDisplay" class="me-3 text-end d-none">
                         <div class="text-white fw-bold small" id="navUsername">User</div>
-                        <button class="btn btn-link text-warning p-0 extra-small text-decoration-none" data-bs-toggle="modal" data-bs-target="#profileModal" onclick="loadUserProfile()">
-                            <i class="fa-solid fa-user-pen me-1"></i>Edit Profile
-                        </button>
                     </div>
-                    <button id="navAuthBtn" class="btn btn-accent btn-sm" data-bs-toggle="modal" data-bs-target="#authModal">
+                    <button id="navAuthBtn" class="btn btn-accent btn-sm" onclick="switchSection('auth-section')">
                         <i class="fa-solid fa-user me-1"></i> Sign In / Register
                     </button>
                 </div>
@@ -234,8 +236,97 @@
     <!-- MAIN CONTENT CONTAINER -->
     <main class="container">
 
+        <!-- SECTION 0: DIRECT ON-PAGE AUTH & USER PROFILE MANAGEMENT -->
+        <section id="auth-section" class="content-section">
+            <div class="mb-4">
+                <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-user-shield text-primary me-2"></i> User Registration, Login & Profile Management</h2>
+                <p class="text-muted mb-0">Create an account, authenticate to obtain JWT OAuth 2.0 tokens, and update profile credentials.</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- 1. REGISTER CARD -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                        <h4 class="fw-bold text-primary mb-3"><i class="fa-solid fa-user-plus me-2"></i>1. Register Account</h4>
+                        <form onsubmit="handleRegisterSubmit(event)">
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Username</label>
+                                <input type="text" id="regUser" class="form-control bg-light border-0" placeholder="e.g. kasun_p" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Email Address</label>
+                                <input type="email" id="regEmailAddr" class="form-control bg-light border-0" placeholder="kasun@example.com" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Password</label>
+                                <input type="password" id="regPass" class="form-control bg-light border-0" placeholder="Secret123!" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Full Name</label>
+                                <input type="text" id="regName" class="form-control bg-light border-0" placeholder="Kasun Perera">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Phone Number</label>
+                                <input type="text" id="regPhone" class="form-control bg-light border-0" placeholder="+94771234567">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold"><i class="fa-solid fa-user-check me-2"></i>Register Customer (`POST /auth/register`)</button>
+                        </form>
+                        <div id="regResponseBox" class="mt-3"></div>
+                    </div>
+                </div>
+
+                <!-- 2. LOGIN CARD -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                        <h4 class="fw-bold text-success mb-3"><i class="fa-solid fa-key me-2"></i>2. User Login (JWT)</h4>
+                        <form onsubmit="handleLoginSubmit(event)">
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Username or Email</label>
+                                <input type="text" id="loginUser" class="form-control bg-light border-0" value="student1_user" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Password</label>
+                                <input type="password" id="loginPass" class="form-control bg-light border-0" value="Secret123!" required>
+                            </div>
+                            <button type="submit" class="btn btn-success w-100 py-2 fw-bold"><i class="fa-solid fa-right-to-bracket me-2"></i>Sign In & Issue Token (`POST /auth/login`)</button>
+                        </form>
+                        <div id="loginResponseBox" class="mt-3"></div>
+                    </div>
+                </div>
+
+                <!-- 3. PROFILE & EDIT CARD -->
+                <div class="col-lg-4 col-md-12">
+                    <div class="card border-0 shadow-sm rounded-4 p-4 h-100">
+                        <h4 class="fw-bold text-dark mb-3"><i class="fa-solid fa-id-card text-warning me-2"></i>3. Edit Profile (`PUT /users/profile`)</h4>
+                        <form onsubmit="handleProfileUpdateSubmit(event)">
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Full Name</label>
+                                <input type="text" id="profFullName" class="form-control bg-light border-0" placeholder="Kasun Perera" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Phone Number</label>
+                                <input type="text" id="profPhone" class="form-control bg-light border-0" placeholder="+94779998888" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted small fw-bold">Address</label>
+                                <input type="text" id="profAddress" class="form-control bg-light border-0" placeholder="Colombo, Sri Lanka" required>
+                            </div>
+                            <button type="submit" class="btn btn-accent w-100 py-2 fw-bold mb-3"><i class="fa-solid fa-floppy-disk me-2"></i>Save Profile Updates</button>
+                        </form>
+
+                        <div class="p-3 bg-light rounded-3 border small">
+                            <h6 class="fw-bold mb-2">Active Credentials:</h6>
+                            <div class="mb-1"><strong>User:</strong> <span id="displayUsernameText">Not Logged In</span></div>
+                            <div class="mb-1"><strong>API Key:</strong> <code id="displayApiKeyText">SOC-SECRET-API-KEY-2026</code></div>
+                            <div class="mb-0 text-truncate"><strong>JWT Token:</strong> <code id="displayTokenText">No Active Token</code></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- SECTION 1: HOTEL CATALOG & ROOM SELECTION -->
-        <section id="catalog-section" class="content-section">
+        <section id="catalog-section" class="content-section d-none">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h2 class="fw-bold text-dark mb-1">Featured Hotels & Resorts</h2>
@@ -406,118 +497,6 @@
         </div>
     </div>
 
-    <!-- AUTHENTICATION MODAL (SIGN IN / REGISTER) -->
-    <div class="modal fade" id="authModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header border-0 pb-0">
-                    <ul class="nav nav-pills w-100" id="authTab" role="tablist">
-                        <li class="nav-item w-50" role="presentation">
-                            <button class="nav-link active w-100 fw-bold" id="login-tab" data-bs-toggle="pill" data-bs-target="#login-panel" type="button">Sign In</button>
-                        </li>
-                        <li class="nav-item w-50" role="presentation">
-                            <button class="nav-link w-100 fw-bold" id="register-tab" data-bs-toggle="pill" data-bs-target="#register-panel" type="button">Create Account</button>
-                        </li>
-                    </ul>
-                </div>
-                <div class="modal-body p-4">
-                    <div id="authStatusAlert"></div>
-                    <div class="tab-content" id="authTabContent">
-
-                        <!-- LOGIN TAB -->
-                        <div class="tab-pane fade show active" id="login-panel">
-                            <form onsubmit="handleLoginSubmit(event)">
-                                <div class="mb-3">
-                                    <label class="form-label text-muted small fw-bold">Username or Email</label>
-                                    <input type="text" id="loginUser" class="form-control bg-light border-0" value="student1_user" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label text-muted small fw-bold">Password</label>
-                                    <input type="password" id="loginPass" class="form-control bg-light border-0" value="Secret123!" required>
-                                </div>
-                                <button type="submit" class="btn btn-accent w-100 mb-3"><i class="fa-solid fa-key me-2"></i> Sign In & Issue JWT Token</button>
-                            </form>
-                        </div>
-
-                        <!-- REGISTER TAB (STUDENT 1 REGISTER ENDPOINT) -->
-                        <div class="tab-pane fade" id="register-panel">
-                            <form onsubmit="handleRegisterSubmit(event)">
-                                <div class="row">
-                                    <div class="col-6 mb-3">
-                                        <label class="form-label text-muted small fw-bold">Username</label>
-                                        <input type="text" id="regUser" class="form-control bg-light border-0" placeholder="e.g. kasun_p" required>
-                                    </div>
-                                    <div class="col-6 mb-3">
-                                        <label class="form-label text-muted small fw-bold">Email</label>
-                                        <input type="email" id="regEmailAddr" class="form-control bg-light border-0" placeholder="kasun@example.com" required>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label text-muted small fw-bold">Password</label>
-                                    <input type="password" id="regPass" class="form-control bg-light border-0" placeholder="Secret123!" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label text-muted small fw-bold">Full Name</label>
-                                    <input type="text" id="regName" class="form-control bg-light border-0" placeholder="Kasun Perera">
-                                </div>
-                                <div class="row">
-                                    <div class="col-6 mb-3">
-                                        <label class="form-label text-muted small fw-bold">Phone</label>
-                                        <input type="text" id="regPhone" class="form-control bg-light border-0" placeholder="+94771234567">
-                                    </div>
-                                    <div class="col-6 mb-3">
-                                        <label class="form-label text-muted small fw-bold">Address</label>
-                                        <input type="text" id="regAddress" class="form-control bg-light border-0" placeholder="Colombo, Sri Lanka">
-                                    </div>
-                                </div>
-                                <button type="submit" class="btn btn-accent w-100"><i class="fa-solid fa-user-plus me-2"></i> Register Account</button>
-                            </form>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- PROFILE EDIT MODAL (STUDENT 1 USER PROFILE GET & PUT ENDPOINTS) -->
-    <div class="modal fade" id="profileModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header bg-dark text-white rounded-top-4">
-                    <h5 class="modal-title font-serif"><i class="fa-solid fa-id-card me-2 text-warning"></i>My User Profile</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <div id="profileStatusAlert"></div>
-                    <form onsubmit="handleProfileUpdateSubmit(event)">
-                        <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Full Name</label>
-                            <input type="text" id="profFullName" class="form-control bg-light border-0" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Phone Number</label>
-                            <input type="text" id="profPhone" class="form-control bg-light border-0" required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Address</label>
-                            <input type="text" id="profAddress" class="form-control bg-light border-0" required>
-                        </div>
-
-                        <div class="p-3 bg-light rounded-3 border mb-3 small">
-                            <div class="mb-1"><strong>Username:</strong> <span id="profUsernameText">-</span></div>
-                            <div class="mb-1"><strong>Email:</strong> <span id="profEmailText">-</span></div>
-                            <div class="mb-1"><strong>API Key (X-API-KEY):</strong> <code id="profApiKeyText">SOC-SECRET-API-KEY-2026</code></div>
-                            <div class="mb-0 text-truncate"><strong>JWT Token:</strong> <code id="profTokenText">-</code></div>
-                        </div>
-
-                        <button type="submit" class="btn btn-accent w-100 py-2"><i class="fa-solid fa-floppy-disk me-2"></i> Save & Update Profile (`PUT /users/profile`)</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- FOOTER -->
     <footer>
         <div class="container text-center">
@@ -575,26 +554,18 @@
             document.getElementById(sectionId).classList.remove('d-none');
 
             document.querySelectorAll('.nav-link-custom').forEach(el => el.classList.remove('active'));
+            if(sectionId === 'auth-section') document.getElementById('nav-auth').classList.add('active');
             if(sectionId === 'catalog-section') document.getElementById('nav-hotels').classList.add('active');
             if(sectionId === 'bookings-section') document.getElementById('nav-bookings').classList.add('active');
             if(sectionId === 'reviews-section') document.getElementById('nav-reviews').classList.add('active');
             if(sectionId === 'offers-section') document.getElementById('nav-offers').classList.add('active');
         }
 
-        // Helper to safely hide Bootstrap Modals
-        function hideModal(modalId) {
-            try {
-                const el = document.getElementById(modalId);
-                const modal = bootstrap.Modal.getInstance(el) || new bootstrap.Modal(el);
-                if (modal) modal.hide();
-            } catch (err) {}
-        }
-
         // 1. REGISTER USER (STUDENT 1 ENDPOINT: POST /auth/register)
         async function handleRegisterSubmit(e) {
             e.preventDefault();
-            const alertBox = document.getElementById('authStatusAlert');
-            alertBox.innerHTML = '';
+            const resBox = document.getElementById('regResponseBox');
+            resBox.innerHTML = '<div class="alert alert-info py-2 small">Processing registration...</div>';
 
             const username = document.getElementById('regUser').value.trim();
             const email = document.getElementById('regEmailAddr').value.trim();
@@ -622,29 +593,29 @@
                     localStorage.setItem('aura_user', JSON.stringify(currentUserData));
                     updateSessionUI();
 
+                    resBox.innerHTML = `<div class="alert alert-success border-0 rounded-3 small"><strong>🎉 Registered!</strong><br>Token: <code>${data.token.substring(0, 25)}...</code><br>API Key: <code>${data.apiKey}</code></div>`;
                     alert('🎉 Account Registered & Logged In Successfully!\nUsername: ' + username + '\nAPI Key: ' + data.apiKey);
-                    hideModal('authModal');
                 } else {
-                    alert('⚠️ ' + (data.message || 'Registration failed'));
+                    resBox.innerHTML = `<div class="alert alert-danger border-0 rounded-3 small">⚠️ ${data.message || 'Registration failed'}</div>`;
                 }
             } catch (err) {
-                // Fallback local registration if backend offline
+                // Fallback local registration
                 jwtToken = 'eyJhbGciOiJIUzI1NiJ9.demo_registered_token';
                 currentUserData = { username, email, fullName, phone, address, role: 'USER', apiKey: 'KEY-' + Math.random().toString(36).substring(2, 10).toUpperCase() };
                 localStorage.setItem('aura_jwt', jwtToken);
                 localStorage.setItem('aura_user', JSON.stringify(currentUserData));
                 updateSessionUI();
 
+                resBox.innerHTML = `<div class="alert alert-success border-0 rounded-3 small"><strong>🎉 Account Registered!</strong><br>Welcome, ${username}</div>`;
                 alert('🎉 Account Registered Successfully! Welcome, ' + username);
-                hideModal('authModal');
             }
         }
 
         // 2. LOGIN USER (STUDENT 1 ENDPOINT: POST /auth/login)
         async function handleLoginSubmit(e) {
             e.preventDefault();
-            const alertBox = document.getElementById('authStatusAlert');
-            alertBox.innerHTML = '';
+            const resBox = document.getElementById('loginResponseBox');
+            resBox.innerHTML = '<div class="alert alert-info py-2 small">Authenticating credentials...</div>';
 
             const emailOrUsername = document.getElementById('loginUser').value.trim();
             const password = document.getElementById('loginPass').value;
@@ -668,10 +639,10 @@
                     localStorage.setItem('aura_user', JSON.stringify(currentUserData));
                     updateSessionUI();
 
+                    resBox.innerHTML = `<div class="alert alert-success border-0 rounded-3 small"><strong>✅ Login Successful!</strong><br>User: ${data.username}<br>Role: ${data.role}</div>`;
                     alert('✅ Login Successful! Welcome back, ' + currentUserData.username);
-                    hideModal('authModal');
                 } else {
-                    alert('⚠️ ' + (data.message || 'Invalid username/email or password'));
+                    resBox.innerHTML = `<div class="alert alert-danger border-0 rounded-3 small">⚠️ ${data.message || 'Invalid credentials'}</div>`;
                 }
             } catch (err) {
                 // Fallback login
@@ -681,47 +652,14 @@
                 localStorage.setItem('aura_user', JSON.stringify(currentUserData));
                 updateSessionUI();
 
+                resBox.innerHTML = `<div class="alert alert-success border-0 rounded-3 small"><strong>✅ Login Successful!</strong><br>User: ${emailOrUsername}</div>`;
                 alert('✅ Login Successful! Welcome back, ' + currentUserData.username);
-                hideModal('authModal');
             }
         }
 
-        // 3. LOAD PROFILE (STUDENT 1 ENDPOINT: GET /users/profile)
-        async function loadUserProfile() {
-            if (!jwtToken) return;
-
-            document.getElementById('profFullName').value = currentUserData ? (currentUserData.fullName || '') : '';
-            document.getElementById('profPhone').value = currentUserData ? (currentUserData.phone || '') : '';
-            document.getElementById('profAddress').value = currentUserData ? (currentUserData.address || '') : '';
-
-            document.getElementById('profUsernameText').innerText = currentUserData ? currentUserData.username : '-';
-            document.getElementById('profEmailText').innerText = currentUserData ? currentUserData.email : '-';
-            document.getElementById('profApiKeyText').innerText = currentUserData ? (currentUserData.apiKey || 'SOC-SECRET-API-KEY-2026') : '-';
-            document.getElementById('profTokenText').innerText = jwtToken;
-
-            try {
-                const res = await fetch(`${API_BASE}/users/profile`, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${jwtToken}`,
-                        'X-API-KEY': 'SOC-SECRET-API-KEY-2026'
-                    }
-                });
-
-                if (res.ok) {
-                    const data = await res.json();
-                    document.getElementById('profFullName').value = data.fullName || '';
-                    document.getElementById('profPhone').value = data.phone || '';
-                    document.getElementById('profAddress').value = data.address || '';
-                }
-            } catch (err) {}
-        }
-
-        // 4. UPDATE PROFILE (STUDENT 1 ENDPOINT: PUT /users/profile)
+        // 3. UPDATE PROFILE (STUDENT 1 ENDPOINT: PUT /users/profile)
         async function handleProfileUpdateSubmit(e) {
             e.preventDefault();
-            const alertBox = document.getElementById('profileStatusAlert');
-            alertBox.innerHTML = '';
 
             const fullName = document.getElementById('profFullName').value;
             const phone = document.getElementById('profPhone').value;
@@ -746,14 +684,12 @@
                     localStorage.setItem('aura_user', JSON.stringify(currentUserData));
 
                     alert('✅ Profile Updated Successfully via PUT /users/profile!');
-                    hideModal('profileModal');
                 } else {
                     currentUserData.fullName = fullName;
                     currentUserData.phone = phone;
                     currentUserData.address = address;
                     localStorage.setItem('aura_user', JSON.stringify(currentUserData));
                     alert('✅ Profile details saved!');
-                    hideModal('profileModal');
                 }
             } catch (err) {
                 currentUserData.fullName = fullName;
@@ -761,7 +697,6 @@
                 currentUserData.address = address;
                 localStorage.setItem('aura_user', JSON.stringify(currentUserData));
                 alert('✅ Profile details saved!');
-                hideModal('profileModal');
             }
         }
 
@@ -846,7 +781,7 @@
             bookingsData.unshift({ id: newResId, hotelName, roomType, checkIn, checkOut, status: 'CONFIRMED' });
             renderBookings();
 
-            hideModal('bookingModal');
+            bootstrap.Modal.getInstance(document.getElementById('bookingModal')).hide();
             switchSection('bookings-section');
 
             alert('🎉 Luxury Suite Reserved! Booking ID: ' + newResId);
@@ -935,15 +870,24 @@
                 userDisplay.classList.remove('d-none');
                 document.getElementById('navUsername').innerText = currentUserData.username;
 
+                document.getElementById('displayUsernameText').innerText = currentUserData.username;
+                document.getElementById('displayApiKeyText').innerText = currentUserData.apiKey || 'SOC-SECRET-API-KEY-2026';
+                document.getElementById('displayTokenText').innerText = jwtToken.substring(0, 30) + '...';
+
+                document.getElementById('profFullName').value = currentUserData.fullName || '';
+                document.getElementById('profPhone').value = currentUserData.phone || '';
+                document.getElementById('profAddress').value = currentUserData.address || '';
+
                 authBtn.innerHTML = `<i class="fa-solid fa-right-from-bracket me-1"></i> Sign Out`;
                 authBtn.onclick = logoutUser;
-                authBtn.removeAttribute('data-bs-toggle');
             } else {
                 userDisplay.classList.add('d-none');
+                document.getElementById('displayUsernameText').innerText = 'Not Logged In';
+                document.getElementById('displayApiKeyText').innerText = 'SOC-SECRET-API-KEY-2026';
+                document.getElementById('displayTokenText').innerText = 'No Active Token';
+
                 authBtn.innerHTML = `<i class="fa-solid fa-user me-1"></i> Sign In / Register`;
-                authBtn.setAttribute('data-bs-toggle', 'modal');
-                authBtn.setAttribute('data-bs-target', '#authModal');
-                authBtn.onclick = null;
+                authBtn.onclick = () => switchSection('auth-section');
             }
         }
 
