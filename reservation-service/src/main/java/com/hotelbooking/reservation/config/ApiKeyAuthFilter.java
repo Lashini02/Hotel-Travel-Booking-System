@@ -27,8 +27,8 @@ public class ApiKeyAuthFilter extends OncePerRequestFilter {
 
         String path = request.getRequestURI();
 
-        // Allow Swagger UI and API Docs without API key check in browser
-        if (path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.startsWith("/actuator")) {
+        // Allow GET, OPTIONS, Swagger UI and API Docs without API key check in browser
+        if ("GET".equalsIgnoreCase(request.getMethod()) || "OPTIONS".equalsIgnoreCase(request.getMethod()) || path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs") || path.startsWith("/actuator")) {
             filterChain.doFilter(request, response);
             return;
         }

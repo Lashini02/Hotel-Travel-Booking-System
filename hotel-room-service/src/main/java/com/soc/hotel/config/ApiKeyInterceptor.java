@@ -18,8 +18,10 @@ public class ApiKeyInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String path = request.getRequestURI();
 
-        // Bypass security check for Swagger UI and OpenAPI documentation
-        if (path.contains("/swagger-ui") || 
+        // Bypass security check for GET requests, OPTIONS preflight, Swagger UI and OpenAPI documentation
+        if ("GET".equalsIgnoreCase(request.getMethod()) || 
+            "OPTIONS".equalsIgnoreCase(request.getMethod()) ||
+            path.contains("/swagger-ui") || 
             path.contains("/v3/api-docs") || 
             path.contains("/actuator") || 
             path.equals("/") || 

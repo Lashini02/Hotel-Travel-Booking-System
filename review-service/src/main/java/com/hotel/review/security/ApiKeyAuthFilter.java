@@ -32,8 +32,8 @@ public class ApiKeyAuthFilter implements Filter {
             return;
         }
         
-        // Allow Swagger UI without API Key for testing/documentation
-        if (requestPath.startsWith("/v3/api-docs") || requestPath.startsWith("/swagger-ui")) {
+        // Allow GET, OPTIONS, Swagger UI without API Key for testing/documentation
+        if ("GET".equalsIgnoreCase(httpRequest.getMethod()) || "OPTIONS".equalsIgnoreCase(httpRequest.getMethod()) || requestPath.startsWith("/v3/api-docs") || requestPath.startsWith("/swagger-ui")) {
             chain.doFilter(request, response);
             return;
         }
