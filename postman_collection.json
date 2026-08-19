@@ -1,0 +1,308 @@
+{
+	"info": {
+		"_postman_id": "soc-hotel-system-all-students-2026",
+		"name": "SOC Hotel Travel Booking System (Students 1 to 5)",
+		"description": "Complete Postman API Collection for all 5 Microservices",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Student 1 - Gateway & Auth Service (Port 8085)",
+			"item": [
+				{
+					"name": "1. Auth - Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"kasun_perera\",\n  \"email\": \"kasun@example.com\",\n  \"password\": \"Secret123!\",\n  \"fullName\": \"Kasun Perera\",\n  \"phone\": \"+94771234567\",\n  \"address\": \"Colombo, Sri Lanka\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/auth/register",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["auth", "register"]
+						}
+					}
+				},
+				{
+					"name": "2. Auth - Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"emailOrUsername\": \"kasun_perera\",\n  \"password\": \"Secret123!\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/auth/login",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "3. User - Get Profile (Secured)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "SOC-SECRET-API-KEY-2026"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8085/users/profile",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["users", "profile"]
+						}
+					}
+				},
+				{
+					"name": "4. User - Update Profile (Secured)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "SOC-SECRET-API-KEY-2026"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fullName\": \"Kasun Perera (Updated)\",\n  \"phone\": \"+94779998888\",\n  \"address\": \"Kandy, Sri Lanka\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8085/users/profile",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8085",
+							"path": ["users", "profile"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Student 2 - Hotel & Room Service (Port 8082)",
+			"item": [
+				{
+					"name": "1. GET - Fetch All Hotels Catalog",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "SOC-SECRET-API-KEY-2026"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8082/api/v1/hotels",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "v1", "hotels"]
+						}
+					}
+				},
+				{
+					"name": "2. POST - Add New Hotel Property",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "SOC-SECRET-API-KEY-2026"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Royal Palms Luxury Resort\",\n  \"description\": \"5-Star Luxury Ocean Villa with private pool and full spa.\",\n  \"location\": \"Bentota\",\n  \"address\": \"12 Ocean Drive, Bentota\",\n  \"rating\": 4.9,\n  \"amenities\": [\"WiFi\", \"Swimming Pool\", \"Spa\", \"Beach Access\"],\n  \"contactEmail\": \"info@royalpalms.com\",\n  \"contactPhone\": \"+94342234567\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8082/api/v1/hotels",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["api", "v1", "hotels"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Student 3 - Reservation Service (Port 8083)",
+			"item": [
+				{
+					"name": "1. POST - Create New Stay Booking",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "SOC-SECRET-API-KEY-2026"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"6a859acad763c362b3bc1612\",\n  \"hotelId\": \"6a85f42a2a84254ce32ed226\",\n  \"hotelName\": \"Grand Palace Hotel & Spa\",\n  \"roomId\": \"ROOM-101\",\n  \"roomType\": \"Deluxe Sea View Suite\",\n  \"checkInDate\": \"2026-09-01\",\n  \"checkOutDate\": \"2026-09-05\",\n  \"guestName\": \"Kasun Perera\",\n  \"guestEmail\": \"kasun@example.com\",\n  \"numberOfGuests\": 2,\n  \"totalPrice\": 450.00\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8083/reservations",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8083",
+							"path": ["reservations"]
+						}
+					}
+				},
+				{
+					"name": "2. GET - Get Reservations for User",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-API-KEY",
+								"value": "SOC-SECRET-API-KEY-2026"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8083/reservations/user/6a859acad763c362b3bc1612",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8083",
+							"path": ["reservations", "user", "6a859acad763c362b3bc1612"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Student 4 - Review & Rating Service (Port 8084)",
+			"item": [
+				{
+					"name": "1. POST - Submit 5-Star Guest Review",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "SOC-SECRET-API-KEY-2026"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"hotelId\": \"6a85f42a2a84254ce32ed226\",\n  \"userId\": \"6a859acad763c362b3bc1612\",\n  \"userName\": \"Kasun Perera\",\n  \"rating\": 5,\n  \"comment\": \"Absolute luxury! The infinity pool and staff hospitality were world-class.\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8084/reviews",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8084",
+							"path": ["reviews"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Student 5 - Notification & Offer Service (Port 8086)",
+			"item": [
+				{
+					"name": "1. POST - Validate Promo Code (SUMMER2026)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "SOC-SECRET-API-KEY-2026"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"promoCode\": \"SUMMER2026\",\n  \"originalAmount\": 250.00\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8086/api/notifications/offers/validate-promo",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8086",
+							"path": ["api", "notifications", "offers", "validate-promo"]
+						}
+					}
+				},
+				{
+					"name": "2. POST - Send Booking Confirmation",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-API-KEY",
+								"value": "SOC-SECRET-API-KEY-2026"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"6a859acad763c362b3bc1612\",\n  \"userEmail\": \"kasun@example.com\",\n  \"bookingId\": \"RES-998231\",\n  \"hotelName\": \"Grand Palace Hotel & Spa\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8086/api/notifications/confirm-booking",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8086",
+							"path": ["api", "notifications", "confirm-booking"]
+						}
+					}
+				}
+			]
+		}
+	]
+}
