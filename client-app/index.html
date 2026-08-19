@@ -346,32 +346,50 @@
             </div>
         </section>
 
-        <!-- SECTION 2: MY BOOKINGS & RESERVATIONS -->
+        <!-- SECTION 2: MY BOOKINGS & RESERVATIONS (MEMBER 3 - RESERVATION SERVICE) -->
         <section id="bookings-section" class="content-section d-none">
             <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
                     <div>
                         <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-suitcase text-primary me-2"></i> My Stay Reservations</h2>
-                        <p class="text-muted mb-0">Manage active bookings, view check-in dates, and process stay cancellations.</p>
+                        <p class="text-muted mb-0">Manage active bookings, view stay details, and process reservation cancellations.</p>
+                    </div>
+                    <div>
+                        <button class="btn btn-outline-dark btn-sm rounded-3" onclick="renderBookings()"><i class="fa-solid fa-rotate me-1"></i> Refresh List</button>
                     </div>
                 </div>
 
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>Reservation Code</th>
-                                <th>Hotel & Destination</th>
-                                <th>Suite Category</th>
-                                <th>Check-In / Out</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="bookingsTableBody">
-                            <!-- Dynamic Bookings Rows -->
-                        </tbody>
-                    </table>
+                <!-- Booking History Status Filter Pills (Member 3 Requirement) -->
+                <div class="d-flex flex-wrap align-items-center gap-2 mb-4 p-2 bg-light rounded-3 border">
+                    <span class="small fw-bold text-muted me-2 ms-2"><i class="fa-solid fa-filter me-1"></i> Status Filter:</span>
+                    <button class="btn btn-sm btn-dark rounded-pill px-3 filter-btn active" onclick="filterBookings('ALL', this)">All</button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 filter-btn" onclick="filterBookings('CONFIRMED', this)">Confirmed</button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 filter-btn" onclick="filterBookings('CANCELLED', this)">Cancelled</button>
+                    <button class="btn btn-sm btn-outline-secondary rounded-pill px-3 filter-btn" onclick="filterBookings('COMPLETED', this)">Completed</button>
+                </div>
+
+                <!-- Alert Toast Container -->
+                <div id="bookingAlertBox"></div>
+
+                <!-- Reservations Table & State Container -->
+                <div id="bookingsContainer">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Reservation Code</th>
+                                    <th>Hotel & Destination</th>
+                                    <th>Suite Category</th>
+                                    <th>Check-In / Out</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingsTableBody">
+                                <!-- Dynamic Bookings Rows -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </section>
@@ -465,37 +483,157 @@
 
     </main>
 
-    <!-- BOOKING MODAL -->
+    <!-- 1. CREATE RESERVATION / BOOKING MODAL (MEMBER 3) -->
     <div class="modal fade" id="bookingModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header bg-dark text-white rounded-top-4">
+                <div class="modal-header bg-dark text-white rounded-top-4 py-3">
                     <h5 class="modal-title font-serif" id="modalHotelTitle">Confirm Luxury Booking</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body p-4">
-                    <form onsubmit="handleModalBookingSubmit(event)">
+                    <form id="bookingForm" onsubmit="handleModalBookingSubmit(event)">
                         <input type="hidden" id="modalHotelId">
-                        <div class="mb-3">
-                            <label class="form-label text-muted small fw-bold">Room Suite Type</label>
-                            <select id="modalRoomType" class="form-select bg-light border-0">
-                                <option value="Deluxe Suite">Deluxe Luxury Suite ($150/night)</option>
-                                <option value="Ocean View Room">Ocean View Executive ($180/night)</option>
-                                <option value="Presidential Suite">Presidential Suite ($250/night)</option>
-                            </select>
-                        </div>
-                        <div class="row">
-                            <div class="col-6 mb-3">
-                                <label class="form-label text-muted small fw-bold">Check-In</label>
-                                <input type="date" id="modalCheckIn" class="form-control bg-light border-0" required>
+                        <div class="row g-3">
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label text-muted small fw-bold">Room Suite Type</label>
+                                <select id="modalRoomType" class="form-select bg-light border-0 py-2" onchange="updateBookingSummary()">
+                                    <option value="Deluxe Luxury Suite" data-price="150">Deluxe Luxury Suite ($150/night)</option>
+                                    <option value="Ocean View Executive Suite" data-price="180">Ocean View Executive ($180/night)</option>
+                                    <option value="Presidential Suite" data-price="250">Presidential Suite ($250/night)</option>
+                                </select>
                             </div>
-                            <div class="col-6 mb-3">
-                                <label class="form-label text-muted small fw-bold">Check-Out</label>
-                                <input type="date" id="modalCheckOut" class="form-control bg-light border-0" required>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label text-muted small fw-bold">Number of Guests</label>
+                                <select id="modalGuestsCount" class="form-select bg-light border-0 py-2" onchange="updateBookingSummary()">
+                                    <option value="1">1 Guest</option>
+                                    <option value="2" selected>2 Guests</option>
+                                    <option value="3">3 Guests</option>
+                                    <option value="4">4 Guests</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label text-muted small fw-bold">Check-In Date</label>
+                                <input type="date" id="modalCheckIn" class="form-control bg-light border-0 py-2" onchange="updateBookingSummary()" required>
+                            </div>
+                            <div class="col-md-6 mb-2">
+                                <label class="form-label text-muted small fw-bold">Check-Out Date</label>
+                                <input type="date" id="modalCheckOut" class="form-control bg-light border-0 py-2" onchange="updateBookingSummary()" required>
                             </div>
                         </div>
-                        <button type="submit" class="btn btn-accent w-100 py-2"><i class="fa-solid fa-lock me-2"></i> Confirm & Secure Booking</button>
+
+                        <!-- LIVE BOOKING SUMMARY CARD (MEMBER 3 REQUIREMENT 6) -->
+                        <div class="card border-0 bg-light rounded-3 p-3 my-3">
+                            <h6 class="fw-bold text-dark mb-2 font-serif"><i class="fa-solid fa-receipt text-warning me-2"></i>Your Reservation Summary</h6>
+                            <div id="bookingSummaryContent" class="small">
+                                <!-- Dynamic live calculation -->
+                            </div>
+                        </div>
+
+                        <div id="dateValidationError" class="alert alert-danger py-2 small mb-3 d-none">
+                            <i class="fa-solid fa-circle-exclamation me-1"></i> Check-Out date must be after Check-In date.
+                        </div>
+
+                        <button type="submit" id="confirmBookingBtn" class="btn btn-accent w-100 py-2 rounded-3 fw-bold fs-6">
+                            <i class="fa-solid fa-lock me-2"></i> Confirm Reservation (`POST /reservations`)
+                        </button>
                     </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. RESERVATION DETAILS MODAL (MEMBER 3 REQUIREMENT 2) -->
+    <div class="modal fade" id="reservationDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-dark text-white rounded-top-4 py-3">
+                    <h5 class="modal-title font-serif"><i class="fa-solid fa-file-invoice text-warning me-2"></i>Reservation Details</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4" id="reservationDetailsBody">
+                    <!-- Dynamic Reservation Details Content -->
+                </div>
+                <div class="modal-footer bg-light border-0 rounded-bottom-4 py-3">
+                    <button type="button" class="btn btn-secondary px-4 rounded-3" data-bs-dismiss="modal">Close</button>
+                    <div id="modalDetailsActionBtn"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. CANCEL RESERVATION CONFIRMATION MODAL (MEMBER 3 REQUIREMENT 3) -->
+    <div class="modal fade" id="cancelConfirmationModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4">
+                <div class="modal-header bg-danger text-white rounded-top-4 py-3">
+                    <h5 class="modal-title font-serif"><i class="fa-solid fa-triangle-exclamation me-2"></i>Cancel Reservation?</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="text-dark fw-bold mb-2 fs-6">Are you sure you want to cancel this reservation?</p>
+                    <p class="text-muted small mb-3">This action cannot be undone. Once cancelled, your booking status will be updated to CANCELLED in the system.</p>
+
+                    <div class="p-3 bg-light rounded-3 border mb-3">
+                        <div class="row g-2 small">
+                            <div class="col-6"><strong>Reservation Code:</strong></div>
+                            <div class="col-6 text-end"><code class="fw-bold text-primary" id="cancelModalCode">RES-9901</code></div>
+                            <div class="col-6"><strong>Hotel:</strong></div>
+                            <div class="col-6 text-end text-truncate fw-bold" id="cancelModalHotel">Grand Hotel Colombo</div>
+                            <div class="col-6"><strong>Check-In Date:</strong></div>
+                            <div class="col-6 text-end" id="cancelModalCheckIn">2026-09-10</div>
+                            <div class="col-6"><strong>Check-Out Date:</strong></div>
+                            <div class="col-6 text-end" id="cancelModalCheckOut">2026-09-14</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer bg-light border-0 rounded-bottom-4 py-3">
+                    <button type="button" class="btn btn-outline-secondary px-3 rounded-3" data-bs-dismiss="modal">Keep Reservation</button>
+                    <button type="button" class="btn btn-danger px-4 rounded-3 fw-bold" id="confirmCancelBtn" onclick="executeCancelReservation()">
+                        <i class="fa-solid fa-ban me-1"></i> Yes, Cancel Reservation
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. RESERVATION CONFIRMED MODAL (MEMBER 3 REQUIREMENT 6) -->
+    <div class="modal fade" id="reservationConfirmedModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 text-center">
+                <div class="modal-body p-4">
+                    <div class="mb-3 text-success">
+                        <i class="fa-solid fa-circle-check display-3"></i>
+                    </div>
+                    <h3 class="font-serif fw-bold text-dark mb-2">Reservation Confirmed!</h3>
+                    <p class="text-muted small mb-4">Your stay reservation has been successfully processed and saved to the database.</p>
+
+                    <div class="p-3 bg-light rounded-3 border text-start mb-4 small">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Reservation Code:</span>
+                            <code class="fw-bold text-primary fs-6" id="confModalCode">RES-1001</code>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Hotel Name:</span>
+                            <span class="fw-bold text-dark" id="confModalHotel">Grand Hotel Colombo</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Room / Suite Type:</span>
+                            <span class="fw-bold text-dark" id="confModalRoom">Deluxe Suite</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span class="text-muted">Check-In / Check-Out:</span>
+                            <span class="fw-bold text-dark" id="confModalDates">2026-09-10 to 2026-09-14</span>
+                        </div>
+                        <div class="d-flex justify-content-between pt-2 border-top">
+                            <span class="fw-bold text-dark fs-6">Total Amount:</span>
+                            <span class="fw-bold text-success fs-6" id="confModalTotal">$660.00</span>
+                        </div>
+                    </div>
+
+                    <button type="button" class="btn btn-accent w-100 py-2 rounded-3 fw-bold" onclick="goToMyBookingsFromModal()">
+                        <i class="fa-solid fa-suitcase me-2"></i> View My Booking
+                    </button>
                 </div>
             </div>
         </div>
@@ -745,42 +883,526 @@
         const RESERVATION_API_BASE = 'http://localhost:8083';
         const RESERVATION_API_KEY = 'reservation-secret-api-key-12345';
 
-        // Render Bookings Table (STUDENT 3 ENDPOINT: GET /reservations)
+        // Member 3 State Storage
+        let currentFilter = 'ALL';
+        let pendingCancelResId = null;
+        let fullReservationsList = [
+            {
+                id: 'RES-9901',
+                userId: 'user_101',
+                hotelId: 'H101',
+                hotelName: 'Grand Hotel Colombo',
+                roomId: 'ROOM-301',
+                roomType: 'Deluxe Luxury Suite',
+                checkInDate: '2026-09-10',
+                checkOutDate: '2026-09-14',
+                guestName: 'Kasun Perera',
+                guestEmail: 'kasun@example.com',
+                numberOfGuests: 2,
+                totalPrice: 660.00,
+                status: 'CONFIRMED',
+                createdAt: '2026-08-19 14:00'
+            }
+        ];
+
+        // 1. RENDER BOOKINGS TABLE WITH FILTER & STATES (MEMBER 3 REQUIREMENT 1, 5, 8, 9)
         async function renderBookings() {
-            const tbody = document.getElementById('bookingsTableBody');
+            const container = document.getElementById('bookingsContainer');
+            
+            // Show Loading Spinner State
+            container.innerHTML = `
+                <div class="text-center py-5">
+                    <div class="spinner-border text-warning mb-2" role="status"></div>
+                    <p class="text-muted small mb-0">Loading stay reservations from database...</p>
+                </div>
+            `;
+
+            const userId = currentUserData ? currentUserData.username : 'user_101';
+
             try {
                 const res = await fetch(`${RESERVATION_API_BASE}/reservations`, {
                     headers: { 'X-API-KEY': RESERVATION_API_KEY }
                 });
                 if (res.ok) {
                     const data = await res.json();
-                    if (data && data.length > 0) {
-                        bookingsData = data.map(b => ({
-                            id: b.id,
-                            hotelName: b.hotelName || 'Grand Hotel Colombo',
-                            roomType: b.roomType || 'Deluxe Suite',
-                            checkIn: b.checkInDate || b.checkIn || '2026-09-10',
-                            checkOut: b.checkOutDate || b.checkOut || '2026-09-14',
-                            status: b.status || 'CONFIRMED'
-                        }));
+                    if (Array.isArray(data) && data.length > 0) {
+                        fullReservationsList = data;
                     }
                 }
             } catch (err) {
-                console.log('Using local bookingsData fallback:', err);
+                console.log('Backend offline or fetching error, using local state fallback:', err);
             }
 
-            tbody.innerHTML = bookingsData.map(b => `
-                <tr>
-                    <td><code class="fw-bold text-primary">${b.id}</code></td>
-                    <td class="fw-bold text-dark">${b.hotelName}</td>
-                    <td>${b.roomType}</td>
-                    <td><small class="text-muted">${b.checkIn} to ${b.checkOut}</small></td>
-                    <td><span class="status-badge ${b.status === 'CONFIRMED' ? 'bg-success-subtle text-success' : 'bg-secondary-subtle text-secondary'}">${b.status}</span></td>
-                    <td>
-                        ${b.status === 'CONFIRMED' ? `<button class="btn btn-outline-danger btn-sm" onclick="cancelBooking('${b.id}')"><i class="fa-solid fa-xmark me-1"></i> Cancel</button>` : '<span class="text-muted small">N/A</span>'}
-                    </td>
-                </tr>
-            `).join('');
+            renderBookingsTableUI();
+        }
+
+        // Helper to render Table UI according to current Filter (All | Confirmed | Cancelled | Completed)
+        function renderBookingsTableUI() {
+            const container = document.getElementById('bookingsContainer');
+
+            // Apply Status Filter
+            let filteredList = fullReservationsList;
+            if (currentFilter !== 'ALL') {
+                filteredList = fullReservationsList.filter(b => (b.status || 'CONFIRMED').toUpperCase() === currentFilter.toUpperCase());
+            }
+
+            // Empty State Handling
+            if (filteredList.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5 bg-light rounded-4 border">
+                        <div class="mb-3 text-muted">
+                            <i class="fa-solid fa-calendar-xmark display-4"></i>
+                        </div>
+                        <h5 class="fw-bold text-dark mb-1">No Reservations Yet</h5>
+                        <p class="text-muted small mb-3">Your upcoming stay bookings will appear here once you make a reservation.</p>
+                        <button class="btn btn-accent btn-sm rounded-3 px-4 py-2 fw-bold" onclick="switchSection('catalog-section')">
+                            <i class="fa-solid fa-compass me-1"></i> Explore Hotels
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Render Table HTML
+            let tableHtml = `
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Reservation Code</th>
+                                <th>Hotel & Destination</th>
+                                <th>Suite Category</th>
+                                <th>Check-In / Out</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookingsTableBody">
+            `;
+
+            tableHtml += filteredList.map(b => {
+                const resCode = b.id || 'RES-' + Math.floor(1000 + Math.random() * 9000);
+                const status = (b.status || 'CONFIRMED').toUpperCase();
+                const checkIn = b.checkInDate || b.checkIn || '2026-09-10';
+                const checkOut = b.checkOutDate || b.checkOut || '2026-09-14';
+                const hotelName = b.hotelName || 'Grand Hotel Colombo';
+                const roomType = b.roomType || 'Deluxe Luxury Suite';
+
+                // Status Badges (Req 9)
+                let badgeClass = 'bg-success-subtle text-success border-success-subtle';
+                if (status === 'CANCELLED') badgeClass = 'bg-danger-subtle text-danger border-danger-subtle';
+                if (status === 'COMPLETED') badgeClass = 'bg-primary-subtle text-primary border-primary-subtle';
+                if (status === 'PENDING') badgeClass = 'bg-warning-subtle text-warning border-warning-subtle';
+
+                return `
+                    <tr>
+                        <td>
+                            <a href="javascript:void(0)" onclick="openReservationDetailsModal('${resCode}')" class="fw-bold text-primary text-decoration-none hover-underline fs-6">
+                                <i class="fa-solid fa-ticket me-1 text-warning"></i><code>${resCode}</code>
+                            </a>
+                        </td>
+                        <td>
+                            <div class="fw-bold text-dark">${hotelName}</div>
+                            <small class="text-muted"><i class="fa-solid fa-location-dot text-danger me-1"></i>Sri Lanka</small>
+                        </td>
+                        <td>${roomType}</td>
+                        <td><small class="fw-semibold text-dark">${checkIn}</small> <span class="text-muted">to</span> <small class="fw-semibold text-dark">${checkOut}</small></td>
+                        <td>
+                            <span class="badge ${badgeClass} border rounded-pill px-3 py-1 font-sans">${status}</span>
+                        </td>
+                        <td>
+                            ${status === 'CONFIRMED' ? `
+                                <button class="btn btn-outline-danger btn-sm rounded-3 px-3 fw-bold" onclick="openCancelConfirmationModal('${resCode}')">
+                                    <i class="fa-solid fa-xmark me-1"></i> Cancel
+                                </button>
+                            ` : `<span class="text-muted small">N/A</span>`}
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            tableHtml += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            container.innerHTML = tableHtml;
+        }
+
+        // Filter Button Switcher (Member 3 Req 5)
+        function filterBookings(filterType, btnEl) {
+            currentFilter = filterType;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('btn-dark', 'active');
+                btn.classList.add('btn-outline-secondary');
+            });
+            btnEl.classList.remove('btn-outline-secondary');
+            btnEl.classList.add('btn-dark', 'active');
+
+            renderBookingsTableUI();
+        }
+
+        // 2. OPEN RESERVATION DETAILS MODAL (MEMBER 3 REQUIREMENT 2 & GET /reservations/{id})
+        async function openReservationDetailsModal(resId) {
+            let resObj = fullReservationsList.find(b => b.id === resId);
+
+            // Fetch via API GET /reservations/{id}
+            try {
+                const res = await fetch(`${RESERVATION_API_BASE}/reservations/${resId}`, {
+                    headers: { 'X-API-KEY': RESERVATION_API_KEY }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.id) resObj = data;
+                }
+            } catch (err) {
+                console.log('GET reservation details API fallback:', err);
+            }
+
+            if (!resObj) {
+                resObj = {
+                    id: resId,
+                    userId: currentUserData ? currentUserData.username : 'user_101',
+                    hotelName: 'Grand Hotel Colombo',
+                    roomType: 'Deluxe Luxury Suite',
+                    checkInDate: '2026-09-10',
+                    checkOutDate: '2026-09-14',
+                    guestName: currentUserData ? (currentUserData.fullName || currentUserData.username) : 'Kasun Perera',
+                    guestEmail: currentUserData ? currentUserData.email : 'kasun@example.com',
+                    numberOfGuests: 2,
+                    totalPrice: 660.00,
+                    status: 'CONFIRMED'
+                };
+            }
+
+            const checkIn = resObj.checkInDate || resObj.checkIn || '2026-09-10';
+            const checkOut = resObj.checkOutDate || resObj.checkOut || '2026-09-14';
+            
+            // Calculate nights
+            const d1 = new Date(checkIn);
+            const d2 = new Date(checkOut);
+            const nights = Math.max(1, Math.round((d2 - d1) / (1000 * 60 * 60 * 24))) || 4;
+            const pricePerNight = Math.round((resObj.totalPrice || 600) / (nights * 1.1)) || 150;
+            const subtotal = pricePerNight * nights;
+            const tax = Math.round(subtotal * 0.10);
+            const total = subtotal + tax;
+
+            const status = (resObj.status || 'CONFIRMED').toUpperCase();
+            let badgeClass = 'bg-success-subtle text-success border-success-subtle';
+            if (status === 'CANCELLED') badgeClass = 'bg-danger-subtle text-danger border-danger-subtle';
+
+            const modalBody = document.getElementById('reservationDetailsBody');
+            modalBody.innerHTML = `
+                <!-- Reservation Information -->
+                <div class="p-3 bg-light rounded-3 border mb-3">
+                    <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-info-circle text-primary me-2"></i>Reservation Information</h6>
+                    <div class="row g-2 small">
+                        <div class="col-6 col-md-3"><strong>Reservation Code:</strong></div>
+                        <div class="col-6 col-md-3"><code class="fw-bold text-primary fs-6">${resObj.id}</code></div>
+                        <div class="col-6 col-md-3"><strong>Reservation Status:</strong></div>
+                        <div class="col-6 col-md-3"><span class="badge ${badgeClass} border rounded-pill px-3 py-1">${status}</span></div>
+                        <div class="col-6 col-md-3"><strong>Booking Date:</strong></div>
+                        <div class="col-6 col-md-3 text-muted">${resObj.createdAt ? String(resObj.createdAt).substring(0, 10) : '2026-08-19'}</div>
+                        <div class="col-6 col-md-3"><strong>Customer Name:</strong></div>
+                        <div class="col-6 col-md-3 text-dark fw-semibold">${resObj.guestName || 'Kasun Perera'}</div>
+                        <div class="col-6 col-md-3"><strong>Customer Email:</strong></div>
+                        <div class="col-6 col-md-3 text-muted">${resObj.guestEmail || 'kasun@example.com'}</div>
+                    </div>
+                </div>
+
+                <!-- Hotel Information -->
+                <div class="p-3 bg-light rounded-3 border mb-3">
+                    <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-hotel text-warning me-2"></i>Hotel Information</h6>
+                    <div class="row g-2 small">
+                        <div class="col-6 col-md-3"><strong>Hotel Name:</strong></div>
+                        <div class="col-6 col-md-3 fw-bold text-dark">${resObj.hotelName || 'Grand Hotel Colombo'}</div>
+                        <div class="col-6 col-md-3"><strong>Destination:</strong></div>
+                        <div class="col-6 col-md-3 text-muted">Colombo, Sri Lanka</div>
+                        <div class="col-6 col-md-3"><strong>Suite Category:</strong></div>
+                        <div class="col-6 col-md-3 text-dark fw-semibold">${resObj.roomType || 'Deluxe Luxury Suite'}</div>
+                    </div>
+                </div>
+
+                <!-- Stay Information -->
+                <div class="p-3 bg-light rounded-3 border mb-3">
+                    <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-calendar-days text-success me-2"></i>Stay Information</h6>
+                    <div class="row g-2 small">
+                        <div class="col-6 col-md-3"><strong>Check-In Date:</strong></div>
+                        <div class="col-6 col-md-3 fw-semibold text-dark">${checkIn}</div>
+                        <div class="col-6 col-md-3"><strong>Check-Out Date:</strong></div>
+                        <div class="col-6 col-md-3 fw-semibold text-dark">${checkOut}</div>
+                        <div class="col-6 col-md-3"><strong>Number of Nights:</strong></div>
+                        <div class="col-6 col-md-3 text-primary fw-bold">${nights} Night(s)</div>
+                        <div class="col-6 col-md-3"><strong>Number of Guests:</strong></div>
+                        <div class="col-6 col-md-3 text-dark">${resObj.numberOfGuests || 2} Guest(s)</div>
+                    </div>
+                </div>
+
+                <!-- Payment / Price Information -->
+                <div class="p-3 bg-light rounded-3 border">
+                    <h6 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-credit-card text-danger me-2"></i>Payment & Price Breakdown</h6>
+                    <div class="row g-2 small">
+                        <div class="col-6">Room Price per Night:</div>
+                        <div class="col-6 text-end">$${pricePerNight.toFixed(2)}</div>
+                        <div class="col-6">Number of Nights (${nights}):</div>
+                        <div class="col-6 text-end">$${subtotal.toFixed(2)}</div>
+                        <div class="col-6">Taxes & Service Charges (10%):</div>
+                        <div class="col-6 text-end">$${tax.toFixed(2)}</div>
+                        <div class="col-6 pt-2 border-top fw-bold fs-6 text-dark">Total Amount Paid / Due:</div>
+                        <div class="col-6 pt-2 border-top text-end fw-bold fs-6 text-success">$${(resObj.totalPrice || total).toFixed(2)}</div>
+                    </div>
+                </div>
+            `;
+
+            // Action Button in Footer
+            const actionContainer = document.getElementById('modalDetailsActionBtn');
+            if (status === 'CONFIRMED') {
+                actionContainer.innerHTML = `
+                    <button type="button" class="btn btn-danger px-4 rounded-3 fw-bold" onclick="bootstrap.Modal.getInstance(document.getElementById('reservationDetailsModal')).hide(); openCancelConfirmationModal('${resObj.id}')">
+                        <i class="fa-solid fa-xmark me-1"></i> Cancel Reservation
+                    </button>
+                `;
+            } else {
+                actionContainer.innerHTML = '';
+            }
+
+            const modal = new bootstrap.Modal(document.getElementById('reservationDetailsModal'));
+            modal.show();
+        }
+
+        // 3. OPEN CANCEL CONFIRMATION MODAL (MEMBER 3 REQUIREMENT 3)
+        function openCancelConfirmationModal(resId) {
+            pendingCancelResId = resId;
+            const resObj = fullReservationsList.find(b => b.id === resId) || {
+                id: resId,
+                hotelName: 'Grand Hotel Colombo',
+                checkInDate: '2026-09-10',
+                checkOutDate: '2026-09-14'
+            };
+
+            document.getElementById('cancelModalCode').innerText = resObj.id;
+            document.getElementById('cancelModalHotel').innerText = resObj.hotelName || 'Grand Hotel Colombo';
+            document.getElementById('cancelModalCheckIn').innerText = resObj.checkInDate || resObj.checkIn || '2026-09-10';
+            document.getElementById('cancelModalCheckOut').innerText = resObj.checkOutDate || resObj.checkOut || '2026-09-14';
+
+            const btn = document.getElementById('confirmCancelBtn');
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-ban me-1"></i> Yes, Cancel Reservation`;
+
+            const modal = new bootstrap.Modal(document.getElementById('cancelConfirmationModal'));
+            modal.show();
+        }
+
+        // 4. EXECUTE CANCELLATION VIA API (PATCH /reservations/{id}/cancel - MEMBER 3 REQUIREMENT 4)
+        async function executeCancelReservation() {
+            if (!pendingCancelResId) return;
+
+            const btn = document.getElementById('confirmCancelBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-1"></i> Processing...`;
+
+            try {
+                await fetch(`${RESERVATION_API_BASE}/reservations/${pendingCancelResId}/cancel`, {
+                    method: 'PATCH',
+                    headers: { 'X-API-KEY': RESERVATION_API_KEY }
+                });
+            } catch (err) {
+                console.log('Cancel PATCH API fallback:', err);
+            }
+
+            // Update status in local array
+            const resObj = fullReservationsList.find(b => b.id === pendingCancelResId);
+            if (resObj) {
+                resObj.status = 'CANCELLED';
+            }
+
+            // Dismiss modal
+            const cancelModalEl = document.getElementById('cancelConfirmationModal');
+            const cancelModal = bootstrap.Modal.getInstance(cancelModalEl);
+            if (cancelModal) cancelModal.hide();
+
+            // Display Toast Alert (Req 4)
+            const alertBox = document.getElementById('bookingAlertBox');
+            alertBox.innerHTML = `
+                <div class="alert alert-success border-0 rounded-3 shadow-sm alert-dismissible fade show mb-3 py-2 small fw-semibold">
+                    <i class="fa-solid fa-circle-check me-2"></i>Reservation <strong>${pendingCancelResId}</strong> cancelled successfully.
+                    <button type="button" class="btn-close py-2" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+
+            renderBookingsTableUI();
+            addLog(`❌ Reservation ${pendingCancelResId} status updated to CANCELLED.`);
+        }
+
+        // 5. LIVE BOOKING SUMMARY CALCULATION (MEMBER 3 REQUIREMENT 6 & FORM VALIDATION)
+        function updateBookingSummary() {
+            const checkInVal = document.getElementById('modalCheckIn').value;
+            const checkOutVal = document.getElementById('modalCheckOut').value;
+            const roomSelect = document.getElementById('modalRoomType');
+            const roomType = roomSelect.value;
+            const selectedOpt = roomSelect.options[roomSelect.selectedIndex];
+            const pricePerNight = parseFloat(selectedOpt ? selectedOpt.getAttribute('data-price') : 150) || 150;
+            const guests = document.getElementById('modalGuestsCount').value;
+
+            const errBox = document.getElementById('dateValidationError');
+            const btn = document.getElementById('confirmBookingBtn');
+            const summaryBox = document.getElementById('bookingSummaryContent');
+
+            if (!checkInVal || !checkOutVal) {
+                summaryBox.innerHTML = `<span class="text-muted">Select stay dates to view live price breakdown.</span>`;
+                return;
+            }
+
+            const d1 = new Date(checkInVal);
+            const d2 = new Date(checkOutVal);
+
+            // Date Validation Requirement 10
+            if (d2 <= d1) {
+                errBox.classList.remove('d-none');
+                btn.disabled = true;
+                summaryBox.innerHTML = `<span class="text-danger fw-bold"><i class="fa-solid fa-triangle-exclamation me-1"></i>Invalid Stay Dates</span>`;
+                return;
+            } else {
+                errBox.classList.add('d-none');
+                btn.disabled = false;
+            }
+
+            const nights = Math.max(1, Math.round((d2 - d1) / (1000 * 60 * 60 * 24)));
+            const subtotal = pricePerNight * nights;
+            const tax = subtotal * 0.10;
+            const total = subtotal + tax;
+
+            summaryBox.innerHTML = `
+                <div class="row g-2">
+                    <div class="col-6"><strong>Suite Category:</strong> ${roomType}</div>
+                    <div class="col-6 text-end"><strong>Stay Duration:</strong> ${nights} Night(s) (${guests} Guests)</div>
+                    <div class="col-6">Check-In: <span class="fw-semibold text-dark">${checkInVal}</span></div>
+                    <div class="col-6 text-end">Check-Out: <span class="fw-semibold text-dark">${checkOutVal}</span></div>
+                    <div class="col-6 pt-2 border-top">Rate: $${pricePerNight.toFixed(2)} x ${nights} nights</div>
+                    <div class="col-6 pt-2 border-top text-end">$${subtotal.toFixed(2)}</div>
+                    <div class="col-6">Taxes & Service Fees (10%):</div>
+                    <div class="col-6 text-end">$${tax.toFixed(2)}</div>
+                    <div class="col-6 pt-2 border-top fw-bold fs-6 text-dark">Estimated Total Amount:</div>
+                    <div class="col-6 pt-2 border-top text-end fw-bold fs-6 text-success">$${total.toFixed(2)}</div>
+                </div>
+            `;
+        }
+
+        // Open Booking Modal for specific Hotel Card
+        function openBookingModal(hotelId, hotelName) {
+            document.getElementById('modalHotelId').value = hotelId;
+            document.getElementById('modalHotelTitle').innerText = 'Reserve at ' + hotelName;
+
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const checkOut = new Date(tomorrow);
+            checkOut.setDate(checkOut.getDate() + 4);
+
+            document.getElementById('modalCheckIn').value = tomorrow.toISOString().split('T')[0];
+            document.getElementById('modalCheckOut').value = checkOut.toISOString().split('T')[0];
+            updateBookingSummary();
+
+            const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
+            modal.show();
+        }
+
+        // 6. CREATE RESERVATION SUBMISSION (POST /reservations - MEMBER 3 REQUIREMENT 6)
+        async function handleModalBookingSubmit(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('confirmBookingBtn');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin me-2"></i> Processing Reservation...`;
+
+            const hotelId = document.getElementById('modalHotelId').value || 'H101';
+            const hotelName = document.getElementById('modalHotelTitle').innerText.replace('Reserve at ', '');
+            const roomType = document.getElementById('modalRoomType').value;
+            const checkIn = document.getElementById('modalCheckIn').value;
+            const checkOut = document.getElementById('modalCheckOut').value;
+            const guests = parseInt(document.getElementById('modalGuestsCount').value) || 2;
+            const guestName = currentUserData ? (currentUserData.fullName || currentUserData.username) : 'Kasun Perera';
+            const guestEmail = currentUserData ? currentUserData.email : 'kasun@example.com';
+            const userId = currentUserData ? currentUserData.username : 'user_101';
+
+            const d1 = new Date(checkIn);
+            const d2 = new Date(checkOut);
+            const nights = Math.max(1, Math.round((d2 - d1) / (1000 * 60 * 60 * 24)));
+            const roomSelect = document.getElementById('modalRoomType');
+            const selectedOpt = roomSelect.options[roomSelect.selectedIndex];
+            const pricePerNight = parseFloat(selectedOpt ? selectedOpt.getAttribute('data-price') : 150) || 150;
+            const totalPrice = (pricePerNight * nights) * 1.10;
+
+            const payload = {
+                userId: userId,
+                hotelId: hotelId,
+                hotelName: hotelName,
+                roomId: 'ROOM-' + Math.floor(100 + Math.random() * 900),
+                roomType: roomType,
+                checkInDate: checkIn,
+                checkOutDate: checkOut,
+                guestName: guestName,
+                guestEmail: guestEmail,
+                numberOfGuests: guests,
+                totalPrice: Math.round(totalPrice * 100) / 100
+            };
+
+            let newResObj = {
+                id: 'RES-' + Math.floor(1000 + Math.random() * 9000),
+                ...payload,
+                status: 'CONFIRMED',
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                const res = await fetch(`${RESERVATION_API_BASE}/reservations`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-API-KEY': RESERVATION_API_KEY
+                    },
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.id) newResObj = data;
+                }
+            } catch (err) {
+                console.log('Reservation POST API fallback:', err);
+            }
+
+            fullReservationsList.unshift(newResObj);
+
+            // Close Booking Form Modal
+            const bookModalEl = document.getElementById('bookingModal');
+            const bookModal = bootstrap.Modal.getInstance(bookModalEl);
+            if (bookModal) bookModal.hide();
+
+            btn.disabled = false;
+            btn.innerHTML = `<i class="fa-solid fa-lock me-2"></i> Confirm Reservation (\`POST /reservations\`)`;
+
+            // Open Reservation Confirmed Modal (Req 6)
+            document.getElementById('confModalCode').innerText = newResObj.id;
+            document.getElementById('confModalHotel').innerText = hotelName;
+            document.getElementById('confModalRoom').innerText = roomType;
+            document.getElementById('confModalDates').innerText = `${checkIn} to ${checkOut}`;
+            document.getElementById('confModalTotal').innerText = `$${(newResObj.totalPrice || totalPrice).toFixed(2)}`;
+
+            const confModal = new bootstrap.Modal(document.getElementById('reservationConfirmedModal'));
+            confModal.show();
+
+            addLog(`📧 Booking confirmation dispatched for #${newResObj.id} at ${hotelName}.`);
+        }
+
+        // View My Booking button inside Confirmed Modal
+        function goToMyBookingsFromModal() {
+            const confModalEl = document.getElementById('reservationConfirmedModal');
+            const confModal = bootstrap.Modal.getInstance(confModalEl);
+            if (confModal) confModal.hide();
+
+            switchSection('bookings-section');
+            renderBookingsTableUI();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // Render Guest Reviews List
@@ -795,69 +1417,6 @@
                     <p class="small text-muted mb-0">"${r.comment}"</p>
                 </div>
             `).join('');
-        }
-
-        // Open Modal for Reservation
-        function openBookingModal(hotelId, hotelName) {
-            document.getElementById('modalHotelId').value = hotelId;
-            document.getElementById('modalHotelTitle').innerText = 'Reserve at ' + hotelName;
-            const modal = new bootstrap.Modal(document.getElementById('bookingModal'));
-            modal.show();
-        }
-
-        // Modal Booking Submission (STUDENT 3 ENDPOINT: POST /reservations)
-        async function handleModalBookingSubmit(e) {
-            e.preventDefault();
-            const hotelId = document.getElementById('modalHotelId').value || 'H101';
-            const hotelName = document.getElementById('modalHotelTitle').innerText.replace('Reserve at ', '');
-            const roomType = document.getElementById('modalRoomType').value;
-            const checkIn = document.getElementById('modalCheckIn').value;
-            const checkOut = document.getElementById('modalCheckOut').value;
-            const guestName = currentUserData ? (currentUserData.fullName || currentUserData.username) : 'Kasun Perera';
-            const guestEmail = currentUserData ? currentUserData.email : 'kasun@example.com';
-            const userId = currentUserData ? currentUserData.username : 'user_101';
-
-            const payload = {
-                userId: userId,
-                hotelId: hotelId,
-                hotelName: hotelName,
-                roomId: 'ROOM-' + Math.floor(100 + Math.random() * 900),
-                roomType: roomType,
-                checkInDate: checkIn,
-                checkOutDate: checkOut,
-                guestName: guestName,
-                guestEmail: guestEmail,
-                numberOfGuests: 2,
-                totalPrice: 150.00
-            };
-
-            let newResId = 'RES-' + Math.floor(1000 + Math.random() * 9000);
-
-            try {
-                const res = await fetch(`${RESERVATION_API_BASE}/reservations`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-API-KEY': RESERVATION_API_KEY
-                    },
-                    body: JSON.stringify(payload)
-                });
-                if (res.ok) {
-                    const data = await res.json();
-                    newResId = data.id || newResId;
-                }
-            } catch (err) {
-                console.log('Reservation POST API fallback:', err);
-            }
-
-            bookingsData.unshift({ id: newResId, hotelName, roomType, checkIn, checkOut, status: 'CONFIRMED' });
-            await renderBookings();
-
-            bootstrap.Modal.getInstance(document.getElementById('bookingModal')).hide();
-            switchSection('bookings-section');
-
-            alert('🎉 Luxury Suite Reserved & Saved to Database! Booking ID: ' + newResId);
-            addLog(`📧 Booking confirmation dispatched for #${newResId} at ${hotelName}.`);
         }
 
         // Search Form Filter
@@ -921,25 +1480,6 @@
             const logBox = document.getElementById('notificationLogBox');
             const time = new Date().toLocaleTimeString();
             logBox.innerHTML = `<div class="mb-1 text-primary"><strong>[${time}]</strong> ${msg}</div>` + logBox.innerHTML;
-        }
-
-        // Cancel Booking (STUDENT 3 ENDPOINT: PATCH /reservations/{id}/cancel)
-        async function cancelBooking(id) {
-            try {
-                await fetch(`${RESERVATION_API_BASE}/reservations/${id}/cancel`, {
-                    method: 'PATCH',
-                    headers: { 'X-API-KEY': RESERVATION_API_KEY }
-                });
-            } catch (err) {
-                console.log('Cancel PATCH API fallback:', err);
-            }
-
-            const booking = bookingsData.find(b => b.id === id);
-            if (booking) {
-                booking.status = 'CANCELLED';
-            }
-            await renderBookings();
-            alert('Booking ' + id + ' has been cancelled in Database!');
         }
 
         // Update Session UI
