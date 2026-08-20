@@ -181,7 +181,7 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link nav-link-custom text-warning font-mono fw-bold" id="nav-swagger" onclick="switchSection('swagger-section')">
-                            <i class="fa-solid fa-code me-1"></i> Swagger UIs (Lecturer Demo)
+                            <i class="fa-solid fa-code me-1"></i> Swagger UI
                         </a>
                     </li>
                 </ul>
@@ -513,81 +513,132 @@
             </div>
         </section>
 
-        <!-- SECTION 5: SWAGGER UI HUB FOR ALL MICROSERVICES (LECTURER DEMO) -->
+        <!-- SECTION 5: SWAGGER UI HUB FOR ALL MICROSERVICES -->
         <section id="swagger-section" class="content-section d-none">
             <div class="card border-0 shadow-sm rounded-4 p-4 mb-4">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <div>
-                        <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-code text-warning me-2"></i> All Microservices OpenAPI & Swagger UIs/h2>
-                        <p class="text-muted mb-0">Interactive documentation for all 5 team microservices running live on Docker containers.</p>
+                        <h2 class="fw-bold text-dark mb-1"><i class="fa-solid fa-code text-warning me-2"></i> All Microservices Swagger UI Documentation</h2>
+                        <p class="text-muted mb-0">Interactive OpenAPI Swagger documentation for all 5 team microservices running live on Docker containers.</p>
                     </div>
-                    <span class="badge bg-warning text-dark px-3 py-2 fs-6 rounded-pill fw-bold"><i class="fa-solid fa-bolt me-1"></i> 5 Active Microservices</span>
+                    <span class="badge bg-warning text-dark px-3 py-2 fs-6 rounded-pill fw-bold"><i class="fa-solid fa-bolt me-1"></i> 5 Active Services</span>
                 </div>
 
-                <!-- 5 Interactive Student Cards -->
-                <div class="row g-3 mb-4">
-                    <div class="col-lg-2 col-md-4 col-6">
-                        <div class="card border text-center p-3 h-100 shadow-sm">
-                            <i class="fa-solid fa-shield-halved text-primary fs-3 mb-2"></i>
-                            <h6 class="fw-bold text-dark mb-1">Student 1</h6>
-                            <small class="text-muted d-block mb-2">Gateway & Auth (8085)</small>
-                            <a href="http://localhost:8085/swagger-ui/index.html" target="_blank" class="btn btn-outline-primary btn-sm w-100 mb-1"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Open Tab</a>
-                            <button type="button" class="btn btn-primary btn-sm w-100" onclick="embedSwagger('http://localhost:8085/swagger-ui/index.html', 'Student 1 - Gateway & Auth API (Port 8085)')">Embed Here</button>
+                <!-- 5 High-End Student Swagger Cards -->
+                <div class="row g-4">
+                    <!-- Student 1 -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-light">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary text-white rounded-3 p-3 me-3">
+                                    <i class="fa-solid fa-shield-halved fs-3"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-0">Student 1 API</h5>
+                                    <small class="text-muted">API Gateway & Auth Service (Port 8085)</small>
+                                </div>
+                            </div>
+                            <p class="small text-muted mb-4">User registration, login authentication, OAuth 2.0 JWT token generation, user profiles, and rate limiting filter.</p>
+                            <a href="http://localhost:8085/swagger-ui/index.html" target="_blank" class="btn btn-primary w-100 py-2 fw-bold mt-auto">
+                                <i class="fa-solid fa-arrow-up-right-from-square me-2"></i> Launch Student 1 Swagger UI
+                            </a>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-4 col-6">
-                        <div class="card border text-center p-3 h-100 shadow-sm">
-                            <i class="fa-solid fa-hotel text-success fs-3 mb-2"></i>
-                            <h6 class="fw-bold text-dark mb-1">Student 2</h6>
-                            <small class="text-muted d-block mb-2">Hotel & Room (8082)</small>
-                            <a href="http://localhost:8082/swagger-ui.html" target="_blank" class="btn btn-outline-success btn-sm w-100 mb-1"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Open Tab</a>
-                            <button type="button" class="btn btn-success btn-sm w-100" onclick="embedSwagger('http://localhost:8082/swagger-ui.html', 'Student 2 - Hotel & Room Service API (Port 8082)')">Embed Here</button>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-6">
-                        <div class="card border text-center p-3 h-100 shadow-sm">
-                            <i class="fa-solid fa-calendar-check text-warning fs-3 mb-2"></i>
-                            <h6 class="fw-bold text-dark mb-1">Student 3</h6>
-                            <small class="text-muted d-block mb-2">Reservation (8083)</small>
-                            <a href="http://localhost:8083/swagger-ui.html" target="_blank" class="btn btn-outline-warning btn-sm w-100 mb-1"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Open Tab</a>
-                            <button type="button" class="btn btn-warning btn-sm w-100 text-dark fw-bold" onclick="embedSwagger('http://localhost:8083/swagger-ui.html', 'Student 3 - Reservation Service API (Port 8083)')">Embed Here</button>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-6">
-                        <div class="card border text-center p-3 h-100 shadow-sm">
-                            <i class="fa-solid fa-star text-info fs-3 mb-2"></i>
-                            <h6 class="fw-bold text-dark mb-1">Student 4</h6>
-                            <small class="text-muted d-block mb-2">Review & Rating (8084)</small>
-                            <a href="http://localhost:8084/swagger-ui.html" target="_blank" class="btn btn-outline-info btn-sm w-100 mb-1"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Open Tab</a>
-                            <button type="button" class="btn btn-info btn-sm w-100 text-white" onclick="embedSwagger('http://localhost:8084/swagger-ui.html', 'Student 4 - Review & Rating Service API (Port 8084)')">Embed Here</button>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-6">
-                        <div class="card border text-center p-3 h-100 shadow-sm">
-                            <i class="fa-solid fa-bell text-danger fs-3 mb-2"></i>
-                            <h6 class="fw-bold text-dark mb-1">Student 5</h6>
-                            <small class="text-muted d-block mb-2">Notification (8086)</small>
-                            <a href="http://localhost:8086/swagger-ui/index.html" target="_blank" class="btn btn-outline-danger btn-sm w-100 mb-1"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Open Tab</a>
-                            <button type="button" class="btn btn-danger btn-sm w-100" onclick="embedSwagger('http://localhost:8086/swagger-ui/index.html', 'Student 5 - Notification & Offer Service API (Port 8086)')">Embed Here</button>
-                        </div>
-                    </div>
-                    <div class="col-lg-2 col-md-4 col-6">
-                        <div class="card bg-dark text-white text-center p-3 h-100 shadow-sm">
-                            <i class="fa-solid fa-layer-group text-warning fs-3 mb-2"></i>
-                            <h6 class="fw-bold mb-1">Full System</h6>
-                            <small class="text-light d-block mb-2">All 5 Services</small>
-                            <button type="button" class="btn btn-warning btn-sm w-100 text-dark fw-bold mt-auto" onclick="switchSection('catalog-section')">Go to Web App</button>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Live Embedded iFrame Container -->
-                <div class="border rounded-4 overflow-hidden bg-light shadow-sm">
-                    <div class="bg-dark text-white p-3 d-flex justify-content-between align-items-center">
-                        <span class="fw-bold font-mono" id="swaggerTitleText"><i class="fa-solid fa-circle-play text-success me-2"></i>Student 1 - Gateway & Auth API (Port 8085)</span>
-                        <a id="swaggerDirectLink" href="http://localhost:8085/swagger-ui/index.html" target="_blank" class="btn btn-sm btn-outline-light"><i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Open in Full Window</a>
+                    <!-- Student 2 -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-light">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-success text-white rounded-3 p-3 me-3">
+                                    <i class="fa-solid fa-hotel fs-3"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-0">Student 2 API</h5>
+                                    <small class="text-muted">Hotel & Room Service (Port 8082)</small>
+                                </div>
+                            </div>
+                            <p class="small text-muted mb-4">Hotel property management, destination search, room suite cataloging, amenities listing, and hotel CRUD endpoints.</p>
+                            <a href="http://localhost:8082/swagger-ui.html" target="_blank" class="btn btn-success w-100 py-2 fw-bold mt-auto">
+                                <i class="fa-solid fa-arrow-up-right-from-square me-2"></i> Launch Student 2 Swagger UI
+                            </a>
+                        </div>
                     </div>
-                    <iframe id="swaggerIframe" src="http://localhost:8085/swagger-ui/index.html" style="width: 100%; height: 650px; border: none;"></iframe>
+
+                    <!-- Student 3 -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-light">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-warning text-dark rounded-3 p-3 me-3">
+                                    <i class="fa-solid fa-calendar-check fs-3"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-0">Student 3 API</h5>
+                                    <small class="text-muted">Reservation Service (Port 8083)</small>
+                                </div>
+                            </div>
+                            <p class="small text-muted mb-4">Hotel stay booking requests, check-in/out date calculations, guest history logs, and reservation cancellation processing.</p>
+                            <a href="http://localhost:8083/swagger-ui.html" target="_blank" class="btn btn-warning text-dark w-100 py-2 fw-bold mt-auto">
+                                <i class="fa-solid fa-arrow-up-right-from-square me-2"></i> Launch Student 3 Swagger UI
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Student 4 -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-light">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-info text-white rounded-3 p-3 me-3">
+                                    <i class="fa-solid fa-star fs-3"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-0">Student 4 API</h5>
+                                    <small class="text-muted">Review & Rating Service (Port 8084)</small>
+                                </div>
+                            </div>
+                            <p class="small text-muted mb-4">Guest ratings, hotel feedback reviews submission, 1-5 star score calculations, and verified guest comments feed.</p>
+                            <a href="http://localhost:8084/swagger-ui.html" target="_blank" class="btn btn-info text-white w-100 py-2 fw-bold mt-auto">
+                                <i class="fa-solid fa-arrow-up-right-from-square me-2"></i> Launch Student 4 Swagger UI
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Student 5 -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card border-0 shadow-sm rounded-4 p-4 h-100 bg-light">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-danger text-white rounded-3 p-3 me-3">
+                                    <i class="fa-solid fa-bell fs-3"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold text-dark mb-0">Student 5 API</h5>
+                                    <small class="text-muted">Notification & Offer Service (Port 8086)</small>
+                                </div>
+                            </div>
+                            <p class="small text-muted mb-4">Promotional promo code validation, discount rate calculation, booking confirmation receipts, and notification logging.</p>
+                            <a href="http://localhost:8086/swagger-ui/index.html" target="_blank" class="btn btn-danger w-100 py-2 fw-bold mt-auto">
+                                <i class="fa-solid fa-arrow-up-right-from-square me-2"></i> Launch Student 5 Swagger UI
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Web App Back Button Card -->
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card bg-dark text-white border-0 shadow-sm rounded-4 p-4 h-100">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-warning text-dark rounded-3 p-3 me-3">
+                                    <i class="fa-solid fa-crown fs-3"></i>
+                                </div>
+                                <div>
+                                    <h5 class="fw-bold text-white mb-0">AURA Hotel App</h5>
+                                    <small class="text-muted">Return to Client Web App</small>
+                                </div>
+                            </div>
+                            <p class="small text-light mb-4">Return to the main luxury hotel booking portal, view live hotel listings, search destinations, or manage bookings.</p>
+                            <button type="button" class="btn btn-warning text-dark w-100 py-2 fw-bold mt-auto" onclick="switchSection('catalog-section')">
+                                <i class="fa-solid fa-arrow-left me-2"></i> Back to Main Web App
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
