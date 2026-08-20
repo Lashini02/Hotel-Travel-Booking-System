@@ -179,6 +179,18 @@
                             <i class="fa-solid fa-gift me-1"></i> Offers & Rewards (Student 5)
                         </a>
                     </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link nav-link-custom dropdown-toggle text-warning font-mono" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fa-solid fa-code me-1"></i> Swagger UIs (Lecturer Demo)
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark shadow border-0">
+                            <li><a class="dropdown-item" href="http://localhost:8085/swagger-ui/index.html" target="_blank"><i class="fa-solid fa-shield-halved text-primary me-2"></i>Student 1 - Gateway & Auth Swagger (8085)</a></li>
+                            <li><a class="dropdown-item" href="http://localhost:8082/swagger-ui.html" target="_blank"><i class="fa-solid fa-hotel text-success me-2"></i>Student 2 - Hotel Service Swagger (8082)</a></li>
+                            <li><a class="dropdown-item" href="http://localhost:8083/swagger-ui.html" target="_blank"><i class="fa-solid fa-calendar-check text-warning me-2"></i>Student 3 - Reservation Service Swagger (8083)</a></li>
+                            <li><a class="dropdown-item" href="http://localhost:8084/swagger-ui.html" target="_blank"><i class="fa-solid fa-star text-info me-2"></i>Student 4 - Review Service Swagger (8084)</a></li>
+                            <li><a class="dropdown-item" href="http://localhost:8086/swagger-ui/index.html" target="_blank"><i class="fa-solid fa-bell text-danger me-2"></i>Student 5 - Notification Service Swagger (8086)</a></li>
+                        </ul>
+                    </li>
                 </ul>
                 
                 <!-- Auth Section in Navbar -->
@@ -257,8 +269,34 @@
 
             <div id="hotelStatusAlert"></div>
 
-            <div class="row g-4" id="hotelGridContainer">
+            <div class="row g-4 mb-5" id="hotelGridContainer">
                 <!-- Dynamically Rendered Hotel Cards -->
+            </div>
+
+            <!-- STUDENT 2: MONGO DB LIVE HOTEL DATABASE TABLE -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 mt-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="fw-bold text-dark mb-0"><i class="fa-solid fa-database text-success me-2"></i> Student 2 - MongoDB Live Hotel Database Table</h4>
+                    <span class="badge bg-success-subtle text-success px-3 py-2 border border-success-subtle"><i class="fa-solid fa-link me-1"></i> Connected: `GET /api/v1/hotels`</span>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>MongoDB ID</th>
+                                <th>Hotel Name</th>
+                                <th>Location</th>
+                                <th>Rating</th>
+                                <th>Full Address</th>
+                                <th>Contact Email</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hotelTableBody">
+                            <!-- Dynamic MongoDB Hotel Rows -->
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </section>
 
@@ -717,33 +755,53 @@
 
         function renderHotels(filteredLocation = '') {
             const container = document.getElementById('hotelGridContainer');
-            if (!container) return;
+            const tableBody = document.getElementById('hotelTableBody');
             const filtered = filteredLocation ? hotelsData.filter(h => h.location.toLowerCase() === filteredLocation.toLowerCase()) : hotelsData;
 
-            container.innerHTML = filtered.map(h => `
-                <div class="col-lg-4 col-md-6">
-                    <div class="card hotel-card h-100">
-                        <img src="${h.image}" class="card-img-top" alt="${h.name}">
-                        <div class="card-body p-4">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="badge bg-light text-muted small"><i class="fa-solid fa-location-dot text-danger me-1"></i>${h.location}</span>
-                                <span class="badge-rating"><i class="fa-solid fa-star me-1"></i>${h.rating}</span>
-                            </div>
-                            <h4 class="card-title font-serif fw-bold text-dark mb-2">${h.name}</h4>
-                            <p class="extra-small text-muted mb-3"><i class="fa-solid fa-map-pin me-1"></i>${h.address}</p>
-                            <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
-                                <div>
-                                    <span class="text-muted small">Starting from</span>
-                                    <div class="fw-bold text-dark fs-5">$${h.price} <span class="fs-6 text-muted font-sans font-normal">/ night</span></div>
+            if (container) {
+                container.innerHTML = filtered.map(h => `
+                    <div class="col-lg-4 col-md-6">
+                        <div class="card hotel-card h-100">
+                            <img src="${h.image}" class="card-img-top" alt="${h.name}">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge bg-light text-muted small"><i class="fa-solid fa-location-dot text-danger me-1"></i>${h.location}</span>
+                                    <span class="badge-rating"><i class="fa-solid fa-star me-1"></i>${h.rating}</span>
                                 </div>
-                                <button type="button" class="btn btn-accent btn-sm" onclick="openBookingModal('${h.id}', '${h.name}')">
-                                    <i class="fa-solid fa-calendar-plus me-1"></i> Reserve Suite
-                                </button>
+                                <h4 class="card-title font-serif fw-bold text-dark mb-2">${h.name}</h4>
+                                <p class="extra-small text-muted mb-3"><i class="fa-solid fa-map-pin me-1"></i>${h.address}</p>
+                                <div class="d-flex justify-content-between align-items-center mt-3 pt-3 border-top">
+                                    <div>
+                                        <span class="text-muted small">Starting from</span>
+                                        <div class="fw-bold text-dark fs-5">$${h.price} <span class="fs-6 text-muted font-sans font-normal">/ night</span></div>
+                                    </div>
+                                    <button type="button" class="btn btn-accent btn-sm" onclick="openBookingModal('${h.id}', '${h.name}')">
+                                        <i class="fa-solid fa-calendar-plus me-1"></i> Reserve Suite
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            `).join('');
+                `).join('');
+            }
+
+            if (tableBody) {
+                tableBody.innerHTML = filtered.map(h => `
+                    <tr>
+                        <td><code class="fw-bold text-success">${h.id}</code></td>
+                        <td class="fw-bold text-dark">${h.name}</td>
+                        <td><span class="badge bg-light text-dark"><i class="fa-solid fa-location-dot me-1 text-danger"></i>${h.location}</span></td>
+                        <td><span class="badge-rating"><i class="fa-solid fa-star me-1"></i>${h.rating}</span></td>
+                        <td><small class="text-muted">${h.address}</small></td>
+                        <td><small class="text-muted">${h.contactEmail}</small></td>
+                        <td>
+                            <button type="button" class="btn btn-accent btn-sm" onclick="openBookingModal('${h.id}', '${h.name}')">
+                                <i class="fa-solid fa-calendar-plus me-1"></i> Reserve Suite
+                            </button>
+                        </td>
+                    </tr>
+                `).join('');
+            }
         }
 
         function openAddHotelModal() {
@@ -778,7 +836,7 @@
             renderHotels();
 
             hideModal('addHotelModal');
-            alert('🎉 Hotel property "' + name + '" added to catalog!');
+            alert('🎉 Hotel property "' + name + '" added to catalog & live database table!');
         }
 
         // ==========================================
@@ -787,10 +845,14 @@
 
         async function fetchLiveReservations() {
             try {
-                const userId = currentUserData ? currentUserData.id || 'USER123' : 'USER123';
-                const res = await fetch(`${API_RESERVATION}/reservations/user/${userId}`, {
+                let res = await fetch(`${API_RESERVATION}/reservations`, {
                     headers: { 'X-API-KEY': 'SOC-SECRET-API-KEY-2026' }
                 });
+                if (!res.ok && currentUserData) {
+                    res = await fetch(`${API_RESERVATION}/reservations/user/${currentUserData.id}`, {
+                        headers: { 'X-API-KEY': 'SOC-SECRET-API-KEY-2026' }
+                    });
+                }
 
                 if (res.ok) {
                     const data = await res.json();
